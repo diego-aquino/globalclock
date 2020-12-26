@@ -12,7 +12,7 @@ export const Container = styled.div`
   width: 100%;
   max-width: 1520px;
   height: 100%;
-  max-height: 1080px;
+  min-height: 100vh;
   margin: 0 auto;
   padding: 5rem 12rem 10rem;
 
@@ -23,6 +23,18 @@ export const Container = styled.div`
   justify-content: flex-end;
 
   color: #fff;
+
+  @media (max-width: 1080px) {
+    padding: 5rem 8rem 10rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 5rem 5rem 10rem;
+  }
+
+  @media (max-width: 640px) {
+    padding: 5rem 2rem 10rem;
+  }
 `;
 
 export const Location = styled.p`
