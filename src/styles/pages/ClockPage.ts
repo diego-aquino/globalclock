@@ -45,4 +45,12 @@ export const Location = styled.p`
   letter-spacing: 0.18rem;
   word-spacing: 0.3rem;
   text-transform: uppercase;
+
+  @media (max-width: 768px) {
+    font-size: 1.9rem;
+  }
+
+  @media (max-width: 640px) {
+    font-size: 1.8rem;
+  }
 `;
