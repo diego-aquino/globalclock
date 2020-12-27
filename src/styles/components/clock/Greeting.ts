@@ -16,26 +16,4 @@ export const Container = styled.div`
     height: 2.2rem;
     margin-right: 0.7rem;
   }
-
-  @media (max-width: 1080px) {
-    font-size: 1.85rem;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 2rem;
-
-    svg {
-      width: 2.5rem;
-      height: 2.5rem;
-    }
-  }
-
-  @media (max-width: 640px) {
-    font-size: 2.1rem;
-
-    svg {
-      width: 2.7rem;
-      height: 2.7rem;
-    }
-  }
 `;
