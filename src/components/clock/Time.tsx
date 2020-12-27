@@ -47,7 +47,7 @@ const Time: FC<Props> = ({ initialDate, ...rest }) => {
     const interval: IntervalReference = { current: null };
     const secondsToNextMinute = 60 - initialDate.getSeconds();
 
-    setTimeout(() => {
+    const intervalSetupTimeout = setTimeout(() => {
       setDisplayTime(getUpToDateDisplayTime());
 
       interval.current = setInterval(() => {
@@ -56,6 +56,7 @@ const Time: FC<Props> = ({ initialDate, ...rest }) => {
     }, secondsToNextMinute * 1000);
 
     return () => {
+      clearTimeout(intervalSetupTimeout);
       if (interval.current) {
         clearInterval(interval.current);
       }
