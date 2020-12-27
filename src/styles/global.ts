@@ -8,6 +8,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   :root {
+    font-family: 'Source Sans Pro', sans-serif;
     font-size: 62.5%;
   }
 
