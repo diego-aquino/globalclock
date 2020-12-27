@@ -6,53 +6,17 @@ export const Container = styled.div`
   display: flex;
   align-items: flex-end;
 
-  p {
-    margin: 2rem 0 4.5rem;
-    padding: 0 1rem;
-
-    flex: 1;
-
-    font-size: 3.2rem;
-    word-wrap: break-word;
-  }
-
-  @media (max-width: 1080px) {
-    p {
-      font-size: 2.9rem;
-    }
-  }
-
   @media (max-width: 768px) {
     padding: 0.8rem 0;
-
-    p {
-      margin-bottom: 4.4rem;
-      font-size: 2.5rem;
-    }
   }
 
   @media (max-width: 640px) {
     padding: 1.8rem 0;
-
-    p {
-      margin-bottom: 3rem;
-      font-size: 2.3rem;
-    }
   }
 
   @media (max-width: 520px) {
     flex-direction: column;
     align-items: flex-start;
-
-    p {
-      margin-top: -1.5rem;
-    }
-  }
-
-  @media (max-width: 400px) {
-    p {
-      font-size: 2.2rem;
-    }
   }
 `;
 
@@ -79,5 +43,37 @@ export const StyledTime = styled(Time)`
 
   @media (max-width: 400px) {
     font-size: 8.5rem;
+  }
+`;
+
+export const TimeZone = styled.p`
+  margin: 2rem 0 4.5rem;
+  padding: 0 1rem;
+
+  flex: 1;
+
+  font-size: 3.2rem;
+  word-wrap: break-word;
+
+  @media (max-width: 1080px) {
+    font-size: 2.9rem;
+  }
+
+  @media (max-width: 768px) {
+    margin-bottom: 4.4rem;
+    font-size: 2.5rem;
+  }
+
+  @media (max-width: 640px) {
+    margin-bottom: 3rem;
+    font-size: 2.3rem;
+  }
+
+  @media (max-width: 520px) {
+    margin-top: -1.5rem;
+  }
+
+  @media (max-width: 400px) {
+    font-size: 2.2rem;
   }
 `;

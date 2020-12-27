@@ -1,6 +1,10 @@
 import { FC } from 'react';
 
-import { Container, StyledTime } from 'styles/components/clock/ClockTime';
+import {
+  Container,
+  StyledTime,
+  TimeZone,
+} from 'styles/components/clock/ClockTime';
 
 interface Props {
   initialDate: Date;
@@ -10,7 +14,7 @@ interface Props {
 const ClockTime: FC<Props> = ({ initialDate, timeZone }) => (
   <Container>
     <StyledTime initialDate={initialDate} />
-    {false && <p>{timeZone}</p>}
+    {false && <TimeZone>{timeZone}</TimeZone>}
   </Container>
 );
 
