@@ -12,7 +12,7 @@ const herePlatform = Here
     })
   : null;
 
-export async function reverseGeocode(
+export function reverseGeocode(
   position: Position,
 ): Promise<HereLocationResult | null> {
   return new Promise((resolve, reject) => {

@@ -1,15 +1,4 @@
-export interface Address {
-  city: string;
-  countryCode: string;
-  countryName: string;
-  district: string;
-  houseNumber: number;
-  label: string;
-  postalCode: string;
-  state: string;
-  stateCode: string;
-  street: string;
-}
+import { Address } from 'typings';
 
 interface HereLocationItem {
   address: Address;
