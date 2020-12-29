@@ -3,14 +3,14 @@ import { Position } from 'typings';
 const isClient = typeof window !== 'undefined';
 
 type UserPositionResponse = {
-  position: Position;
+  position: Position | null;
   status: 'SUCCESS' | 'NOT_SUPPORTED' | 'FAILED';
 };
 
 export async function requestUserPosition(): Promise<UserPositionResponse> {
   if (!isClient || !navigator.geolocation)
     return {
-      position: { latitude: null, longitude: null },
+      position: null,
       status: 'NOT_SUPPORTED',
     };
 
@@ -26,7 +26,7 @@ export async function requestUserPosition(): Promise<UserPositionResponse> {
       },
       () =>
         resolve({
-          position: { latitude: null, longitude: null },
+          position: null,
           status: 'FAILED',
         }),
     );

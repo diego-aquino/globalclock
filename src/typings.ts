@@ -3,8 +3,8 @@ import { SVGAttributes } from 'react';
 export type TimeOfDay = 'morning' | 'afternoon' | 'evening' | 'night';
 
 export interface Position {
-  latitude: number | null;
-  longitude: number | null;
+  latitude: number;
+  longitude: number;
 }
 
 export type Action<T, V = void> = V extends void
