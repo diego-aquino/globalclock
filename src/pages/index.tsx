@@ -9,6 +9,8 @@ import { StyledLayout, Container, Location } from 'styles/pages/ClockPage';
 const ClockPage: FC = () => {
   const [{ position, address }, dispatch] = useLocation();
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [loading, setLoading] = useState(true);
+
   const formattedLocation = useMemo(() => 'London, United Kingdom', []);
 
   useEffect(() => {
@@ -46,13 +48,19 @@ const ClockPage: FC = () => {
     updateLocationDetailsIfAvailable();
   }, [position, dispatch]);
 
+  useEffect(() => {
+    if (position && currentDate && address) {
+      setLoading(false);
+    }
+  }, [position, currentDate, address]);
+
   return (
     <StyledLayout pageTitle={`${formattedLocation} | GlobalClock`}>
       <Container>
-        {currentDate && (
+        {!loading && (
           <>
             <Greeting timeOfDay="morning" />
-            <ClockTime initialDate={currentDate} timeZone="BST" />
+            <ClockTime initialDate={currentDate as Date} timeZone="BST" />
             <Location>In {formattedLocation}</Location>
           </>
         )}
