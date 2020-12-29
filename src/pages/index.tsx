@@ -11,7 +11,10 @@ const ClockPage: FC = () => {
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const formattedLocation = useMemo(() => 'London, United Kingdom', []);
+  const formattedLocation = useMemo(
+    () => (address ? `${address.city}, ${address.countryName}` : ''),
+    [address],
+  );
 
   useEffect(() => {
     setCurrentDate(new Date());
