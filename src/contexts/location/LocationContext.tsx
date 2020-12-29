@@ -11,6 +11,7 @@ const LocationContext = createContext<[LocationState, LocationDispatch]>([
 export const LocationContextProvider: FC = ({ children }) => {
   const [contextState, dispatch] = useReducer(locationReducer, {
     position: null,
+    address: null,
   });
 
   return (
