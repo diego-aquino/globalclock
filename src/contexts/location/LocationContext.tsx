@@ -1,6 +1,6 @@
 import { FC, createContext, useContext, useReducer } from 'react';
 
-import { LocationState, LocationDispatch } from './locationTypes';
+import { LocationState, LocationDispatch } from './types';
 import locationReducer from './locationReducer';
 
 const LocationContext = createContext<[LocationState, LocationDispatch]>([

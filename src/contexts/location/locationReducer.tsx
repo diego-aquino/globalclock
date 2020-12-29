@@ -1,4 +1,4 @@
-import { LocationState, LocationAction } from './locationTypes';
+import { LocationState, LocationAction } from './types';
 
 function locationReducer(
   state: LocationState,
