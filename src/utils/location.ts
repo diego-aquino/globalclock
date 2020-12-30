@@ -64,10 +64,7 @@ export function getAddressTimeZone(address: Address): TimeZone | null {
   const locationResources = [countryName, state, city];
 
   while (locationResources.length > 0) {
-    const searchString = locationResources
-      .reverse()
-      .filter((resource) => !!resource)
-      .join(' ');
+    const searchString = locationResources.join(' ');
 
     const matchedLocations = cityTimezones.findFromCityStateProvince(
       searchString,
