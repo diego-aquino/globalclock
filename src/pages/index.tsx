@@ -1,43 +1,17 @@
-import { FC, useEffect, useState, useMemo } from 'react';
+import { FC, useCallback } from 'react';
 
 import { useLocation } from 'contexts/location';
 import { reverseGeocode } from 'services/here';
-import { Greeting, ClockThemeImage, ClockTime } from 'components/clock';
 import { requestUserPosition, getAddressTimeZone } from 'utils/location';
-import { StyledLayout, Container, Location } from 'styles/pages/ClockPage';
 
-const ClockPage: FC = () => {
-  const [{ position, address, timeZone }, dispatch] = useLocation();
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
-  const [loading, setLoading] = useState(true);
+const Home: FC = () => {
+  const [_, dispatch] = useLocation();
 
-  const formattedLocation = useMemo(
-    () => (address ? `${address.city}, ${address.countryName}` : ''),
-    [address],
-  );
+  const handleUseUserLocation = useCallback(async () => {
+    const response = await requestUserPosition();
 
-  useEffect(() => {
-    setCurrentDate(new Date());
-
-    async function updateUserPositionIfAvailable() {
-      const response = await requestUserPosition();
-
-      if (response.status === 'SUCCESS') {
-        dispatch({
-          type: 'SET_POSITION',
-          position: response.position,
-        });
-      }
-    }
-
-    updateUserPositionIfAvailable();
-  }, [dispatch]);
-
-  useEffect(() => {
-    async function updateLocationDetailsIfAvailable() {
-      if (!position) return;
-
-      const locationResult = await reverseGeocode(position);
+    if (response.status === 'SUCCESS') {
+      const locationResult = await reverseGeocode(response.position);
       const location = locationResult?.items[0];
 
       if (location) {
@@ -48,31 +22,13 @@ const ClockPage: FC = () => {
         });
       }
     }
-
-    updateLocationDetailsIfAvailable();
-  }, [position, dispatch]);
-
-  useEffect(() => {
-    if (position && address && currentDate) {
-      setLoading(false);
-    }
-  }, [position, address, currentDate]);
+  }, [dispatch]);
 
   return (
-    <StyledLayout pageTitle={`${`${formattedLocation} |`} GlobalClock`}>
-      <Container>
-        {!loading && (
-          <>
-            <Greeting timeOfDay="morning" />
-            <ClockTime initialDate={currentDate as Date} timeZone="BST" />
-            <Location>In {formattedLocation}</Location>
-          </>
-        )}
-
-        <ClockThemeImage timeOfDay="morning" />
-      </Container>
-    </StyledLayout>
+    <button type="button" onClick={handleUseUserLocation}>
+      Use my location
+    </button>
   );
 };
 
-export default ClockPage;
+export default Home;
