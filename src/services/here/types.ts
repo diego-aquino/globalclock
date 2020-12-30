@@ -13,7 +13,7 @@ export type HereLocationResult = { items: HereLocationItem[] };
 
 interface HereSearchService {
   reverseGeocode(
-    params: { at: string },
+    params: { at: string; lang?: string },
     onResult: (result: HereLocationResult) => void,
     onError: (error: Error) => void,
   ): void;

@@ -25,6 +25,7 @@ export function reverseGeocode(
     searchService.reverseGeocode(
       {
         at: `${position.latitude},${position.longitude}`,
+        lang: 'en-US', // temporary hardcoded for `cityTimezone` library
       },
       (result) => resolve(result),
       (error) => reject(error),
