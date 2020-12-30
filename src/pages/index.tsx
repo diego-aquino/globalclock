@@ -53,10 +53,10 @@ const ClockPage: FC = () => {
   }, [position, dispatch]);
 
   useEffect(() => {
-    if (position && address && timeZone && currentDate) {
+    if (position && address && currentDate) {
       setLoading(false);
     }
-  }, [position, address, timeZone, currentDate]);
+  }, [position, address, currentDate]);
 
   return (
     <StyledLayout pageTitle={`${`${formattedLocation} |`} GlobalClock`}>
