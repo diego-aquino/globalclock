@@ -59,7 +59,7 @@ const ClockPage: FC = () => {
   }, [position, address, timeZone, currentDate]);
 
   return (
-    <StyledLayout pageTitle={`${formattedLocation} | GlobalClock`}>
+    <StyledLayout pageTitle={`${`${formattedLocation} |`} GlobalClock`}>
       <Container>
         {!loading && (
           <>
