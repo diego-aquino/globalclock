@@ -7,7 +7,6 @@ const Here = isClient ? (window as FinalWindow).H : null;
 
 const herePlatform = Here
   ? new Here.service.Platform({
-      app_id: process.env.NEXT_PUBLIC_HERE_APP_ID as string,
       apikey: process.env.NEXT_PUBLIC_HERE_API_KEY as string,
     })
   : null;

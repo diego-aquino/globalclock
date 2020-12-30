@@ -23,9 +23,9 @@ interface HerePlatform {
   getSearchService(): HereSearchService;
 }
 
-type HerePlatformConstructor = new (
-  options: { app_id: string; apikey: string }, // eslint-disable-line camelcase
-) => HerePlatform;
+type HerePlatformConstructor = new (options: {
+  apikey: string;
+}) => HerePlatform;
 
 export interface HereService {
   Platform: HerePlatformConstructor;
