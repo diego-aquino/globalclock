@@ -1,4 +1,7 @@
-import { Position } from 'typings';
+import { DateTime } from 'luxon';
+import cityTimezones from 'city-timezones';
+
+import { Address, Position, TimeZone } from 'typings';
 
 const isClient = typeof window !== 'undefined';
 
@@ -31,4 +34,50 @@ export async function requestUserPosition(): Promise<UserPositionResponse> {
         }),
     );
   });
+}
+
+export function getTimeZoneData(timeZoneName: string): TimeZone {
+  const localDateInMatchedTimeZone = DateTime.local().setZone(timeZoneName);
+  const {
+    zoneName,
+    offset,
+    offsetNameShort,
+    offsetNameLong,
+    isOffsetFixed,
+    isInDST,
+  } = localDateInMatchedTimeZone;
+
+  const timeZone: TimeZone = {
+    zoneName,
+    offset,
+    offsetNameShort,
+    offsetNameLong,
+    isOffsetFixed,
+    isInDST,
+  };
+
+  return timeZone;
+}
+
+export function getAddressTimeZone(address: Address): TimeZone | null {
+  const { countryName, state, city } = address;
+  const locationResources = [countryName, state, city];
+
+  while (locationResources.length > 0) {
+    const searchString = locationResources.join(' ');
+
+    const matchedLocations = cityTimezones.findFromCityStateProvince(
+      searchString,
+    );
+
+    if (matchedLocations.length > 0) {
+      const timeZoneName = matchedLocations[0].timezone;
+
+      return getTimeZoneData(timeZoneName);
+    }
+
+    locationResources.pop();
+  }
+
+  return null;
 }

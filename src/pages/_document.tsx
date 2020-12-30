@@ -51,6 +51,17 @@ class GlobalDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@700&display=swap"
             rel="stylesheet"
           />
+
+          <script
+            src="https://js.api.here.com/v3/3.1/mapsjs-core.js"
+            type="text/javascript"
+            charSet="utf-8"
+          />
+          <script
+            src="https://js.api.here.com/v3/3.1/mapsjs-service.js"
+            type="text/javascript"
+            charSet="utf-8"
+          />
         </Head>
 
         <body>

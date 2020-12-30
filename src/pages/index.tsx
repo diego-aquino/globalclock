@@ -1,14 +1,20 @@
 import { FC, useEffect, useState, useMemo } from 'react';
 
 import { useLocation } from 'contexts/location';
+import { reverseGeocode } from 'services/here';
 import { Greeting, ClockThemeImage, ClockTime } from 'components/clock';
-import { requestUserPosition } from 'utils/location';
+import { requestUserPosition, getAddressTimeZone } from 'utils/location';
 import { StyledLayout, Container, Location } from 'styles/pages/ClockPage';
 
 const ClockPage: FC = () => {
-  const [_, dispatch] = useLocation();
+  const [{ position, address, timeZone }, dispatch] = useLocation();
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
-  const formattedLocation = useMemo(() => 'London, United Kingdom', []);
+  const [loading, setLoading] = useState(true);
+
+  const formattedLocation = useMemo(
+    () => (address ? `${address.city}, ${address.countryName}` : ''),
+    [address],
+  );
 
   useEffect(() => {
     setCurrentDate(new Date());
@@ -27,13 +33,38 @@ const ClockPage: FC = () => {
     updateUserPositionIfAvailable();
   }, [dispatch]);
 
+  useEffect(() => {
+    async function updateLocationDetailsIfAvailable() {
+      if (!position) return;
+
+      const locationResult = await reverseGeocode(position);
+      const location = locationResult?.items[0];
+
+      if (location) {
+        dispatch({
+          type: 'SET_LOCATION_DETAILS',
+          address: location.address,
+          timeZone: getAddressTimeZone(location.address),
+        });
+      }
+    }
+
+    updateLocationDetailsIfAvailable();
+  }, [position, dispatch]);
+
+  useEffect(() => {
+    if (position && address && currentDate) {
+      setLoading(false);
+    }
+  }, [position, address, currentDate]);
+
   return (
-    <StyledLayout pageTitle={`${formattedLocation} | GlobalClock`}>
+    <StyledLayout pageTitle={`${`${formattedLocation} |`} GlobalClock`}>
       <Container>
-        {currentDate && (
+        {!loading && (
           <>
             <Greeting timeOfDay="morning" />
-            <ClockTime initialDate={currentDate} timeZone="BST" />
+            <ClockTime initialDate={currentDate as Date} timeZone="BST" />
             <Location>In {formattedLocation}</Location>
           </>
         )}

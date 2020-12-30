@@ -1,6 +1,6 @@
 import { FC, createContext, useContext, useReducer } from 'react';
 
-import { LocationState, LocationDispatch } from './locationTypes';
+import { LocationState, LocationDispatch } from './types';
 import locationReducer from './locationReducer';
 
 const LocationContext = createContext<[LocationState, LocationDispatch]>([
@@ -11,6 +11,8 @@ const LocationContext = createContext<[LocationState, LocationDispatch]>([
 export const LocationContextProvider: FC = ({ children }) => {
   const [contextState, dispatch] = useReducer(locationReducer, {
     position: null,
+    address: null,
+    timeZone: null,
   });
 
   return (
