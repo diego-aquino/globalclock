@@ -5,10 +5,15 @@ import { Address, Position, TimeZone } from 'typings';
 
 const isClient = typeof window !== 'undefined';
 
-type UserPositionResponse = {
-  position: Position | null;
-  status: 'SUCCESS' | 'NOT_SUPPORTED' | 'FAILED';
-};
+type UserPositionResponse =
+  | {
+      status: 'SUCCESS';
+      position: Position;
+    }
+  | {
+      status: 'NOT_SUPPORTED' | 'FAILED';
+      position: null;
+    };
 
 export async function requestUserPosition(): Promise<UserPositionResponse> {
   if (!isClient || !navigator.geolocation)
