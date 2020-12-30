@@ -3,11 +3,11 @@ import { FC, useEffect, useState, useMemo } from 'react';
 import { useLocation } from 'contexts/location';
 import { reverseGeocode } from 'services/here';
 import { Greeting, ClockThemeImage, ClockTime } from 'components/clock';
-import { requestUserPosition } from 'utils/location';
+import { requestUserPosition, getAddressTimeZone } from 'utils/location';
 import { StyledLayout, Container, Location } from 'styles/pages/ClockPage';
 
 const ClockPage: FC = () => {
-  const [{ position, address }, dispatch] = useLocation();
+  const [{ position, address, timeZone }, dispatch] = useLocation();
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -42,8 +42,9 @@ const ClockPage: FC = () => {
 
       if (location) {
         dispatch({
-          type: 'SET_ADDRESS',
+          type: 'SET_LOCATION_DETAILS',
           address: location.address,
+          timeZone: getAddressTimeZone(location.address),
         });
       }
     }
@@ -52,10 +53,10 @@ const ClockPage: FC = () => {
   }, [position, dispatch]);
 
   useEffect(() => {
-    if (position && currentDate && address) {
+    if (position && address && timeZone && currentDate) {
       setLoading(false);
     }
-  }, [position, currentDate, address]);
+  }, [position, address, timeZone, currentDate]);
 
   return (
     <StyledLayout pageTitle={`${formattedLocation} | GlobalClock`}>

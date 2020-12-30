@@ -12,6 +12,7 @@ export const LocationContextProvider: FC = ({ children }) => {
   const [contextState, dispatch] = useReducer(locationReducer, {
     position: null,
     address: null,
+    timeZone: null,
   });
 
   return (
