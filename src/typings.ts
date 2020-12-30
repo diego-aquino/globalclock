@@ -21,6 +21,15 @@ export interface Address {
   street: string;
 }
 
+export type TimeZone = {
+  zoneName: string;
+  offset: number;
+  offsetNameShort: string;
+  offsetNameLong: string;
+  isOffsetFixed: boolean;
+  isInDST: boolean;
+};
+
 export type Action<T, V = void> = V extends void
   ? { type: T }
   : { type: T } & V;
