@@ -6,10 +6,10 @@
     "jest": true
   },
   "extends": [
+    "airbnb",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
-    "airbnb",
     "prettier",
     "prettier/@typescript-eslint",
     "prettier/standard",
@@ -57,41 +57,46 @@
     "react-hooks/exhaustive-deps": "error",
     "@typescript-eslint/no-use-before-define": ["error"],
 
-    "indent": [
-      "error",
-      2,
-      {
-        "ignoredNodes": [
-          "JSXElement",
-          "JSXElement *",
-          "JSXElement > *",
-          "JSXAttribute",
-          "JSXIdentifier",
-          "JSXNamespacedName",
-          "JSXMemberExpression",
-          "JSXSpreadAttribute",
-          "JSXExpressionContainer",
-          "JSXOpeningElement",
-          "JSXClosingElement",
-          "JSXText",
-          "JSXEmptyExpression",
-          "JSXSpreadChild"
-        ],
-        "ignoreComments": true
-      }
-    ],
+    "indent": "off",
+    "@typescript-eslint/indent": "off",
+
+    // "@typescript-eslint/indent": [
+    //   "error",
+    //   2,
+    //   {
+    //     "ignoredNodes": [
+    //       "JSXElement",
+    //       "JSXElement *",
+    //       "JSXElement > *",
+    //       "JSXAttribute",
+    //       "JSXIdentifier",
+    //       "JSXNamespacedName",
+    //       "JSXMemberExpression",
+    //       "JSXSpreadAttribute",
+    //       "JSXExpressionContainer",
+    //       "JSXOpeningElement",
+    //       "JSXClosingElement",
+    //       "JSXText",
+    //       "JSXEmptyExpression",
+    //       "JSXSpreadChild"
+    //     ],
+    //     "ignoreComments": true,
+    //     "SwitchCase": 1
+    //   }
+    // ],
+
     "comma-dangle": ["warn", "always-multiline"],
     "implicit-arrow-linebreak": "off",
     "no-plusplus": "off",
-    "object-curly-newline": [
-      "warn",
-      {
-        "ObjectExpression": { "multiline": true },
-        "ObjectPattern": { "multiline": true },
-        "ImportDeclaration": { "multiline": true },
-        "ExportDeclaration": { "multiline": true }
-      }
-    ],
+    // "object-curly-newline": [
+    //   "warn",
+    //   {
+    //     "ObjectExpression": { "multiline": true },
+    //     "ObjectPattern": { "multiline": true },
+    //     "ImportDeclaration": { "multiline": true },
+    //     "ExportDeclaration": { "multiline": true }
+    //   }
+    // ],
     "no-unused-vars": [
       "warn",
       {
