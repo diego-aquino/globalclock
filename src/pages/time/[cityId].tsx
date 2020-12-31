@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
-import { Address, TimeZone } from 'typings';
+import { Address } from 'typings';
 import {
   extractCityLabel,
   parseGeolocationResponseToLocation,
@@ -12,7 +12,6 @@ import { geocode } from 'services/here';
 interface Props {
   address?: Address;
   localISOTime?: string;
-  timeZone?: TimeZone;
 }
 
 interface Params extends ParsedUrlQuery {
@@ -41,12 +40,11 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({
     if (!geolocationResponse) return {};
 
     const location = parseGeolocationResponseToLocation(geolocationResponse);
-    const { address, localDateTime, timeZone } = location;
+    const { address, localDateTime } = location;
 
     return {
       address,
       localISOTime: localDateTime.toISO(),
-      timeZone,
     };
   }
 

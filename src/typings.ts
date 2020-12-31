@@ -17,20 +17,10 @@ export interface Address {
   stateCode: string;
 }
 
-export interface TimeZone {
-  zoneName: string;
-  offset: number;
-  offsetNameShort: string;
-  offsetNameLong: string;
-  isOffsetFixed: boolean;
-  isInDST: boolean;
-}
-
 export interface Location {
   position: Position;
   address: Address;
   localDateTime: DateTime;
-  timeZone: TimeZone;
 }
 
 export type Action<T, V = void> = V extends void
