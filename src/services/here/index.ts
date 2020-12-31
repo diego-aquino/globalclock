@@ -24,6 +24,7 @@ function generateHereRequestURL(
   const requestURL = [
     `${endpoint}`,
     `?${queryParams.join('&')}`,
+    'language=en-US',
     `&apiKey=${process.env.NEXT_PUBLIC_HERE_API_KEY}`,
   ].join('');
 
