@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon';
 import cityTimezones from 'city-timezones';
 
-import { Address, Position, TimeZone } from 'typings';
+import { Address, Position, Location, TimeZone } from 'typings';
+import { GeolocationResponse } from 'services/here/types';
 
 const isClient = typeof window !== 'undefined';
 
@@ -39,6 +40,71 @@ export async function requestUserPosition(): Promise<UserPositionResponse> {
         }),
     );
   });
+}
+
+export function parseGeolocationResponseToLocation(
+  geolocationResponse: GeolocationResponse,
+): Location {
+  const {
+    MetaInfo: { Timestamp: timestamp },
+    View: [{ Result }],
+  } = geolocationResponse.Response;
+
+  const {
+    DisplayPosition,
+    Address: LocationAddress,
+    AdminInfo,
+  } = Result[0].Location;
+
+  const position: Position = {
+    latitude: DisplayPosition.Latitude,
+    longitude: DisplayPosition.Longitude,
+  };
+
+  const AdditionalDataObject = {
+    CountryName: '',
+    StateName: '',
+  };
+  LocationAddress.AdditionalData.forEach((item) => {
+    AdditionalDataObject[item.key] = item.value;
+  });
+
+  const address: Address = {
+    city: LocationAddress.City,
+    countryCode: LocationAddress.Country,
+    countryName: AdditionalDataObject.CountryName,
+    label: LocationAddress.Label,
+    stateCode: LocationAddress.State,
+    stateName: AdditionalDataObject.StateName,
+  };
+
+  const timeZoneOffsetName = AdminInfo.TimeZoneOffset;
+
+  const localDateTime = DateTime.fromISO(timestamp).setZone(timeZoneOffsetName);
+  const {
+    zoneName,
+    offset,
+    offsetNameShort,
+    offsetNameLong,
+    isOffsetFixed,
+    isInDST,
+  } = localDateTime;
+
+  const timeZone = {
+    zoneName,
+    offset,
+    offsetNameShort,
+    offsetNameLong,
+    isOffsetFixed,
+    isInDST,
+  };
+
+  return {
+    position,
+    address,
+    localDateTime,
+    timeZone,
+  };
 }
 
 export function getTimeZoneData(timeZoneName: string): TimeZone {
