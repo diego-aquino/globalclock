@@ -1,28 +1,56 @@
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
+import { Address } from 'typings';
 import { useLocation } from 'contexts/location';
 import { reverseGeocode } from 'services/here';
-import { requestUserPosition, getAddressTimeZone } from 'utils/location';
+import {
+  requestUserPosition,
+  parseGeolocationResponseToLocation,
+  generateCityId,
+} from 'utils/location';
 
 const Home: FC = () => {
-  const [_, dispatch] = useLocation();
+  const [{ address }, dispatch] = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
 
   const handleUseUserLocation = useCallback(async () => {
-    const response = await requestUserPosition();
+    const userPositionResponse = await requestUserPosition();
 
-    if (response.status === 'SUCCESS') {
-      const locationResult = await reverseGeocode(response.position);
-      const location = locationResult?.items[0];
+    if (userPositionResponse.status === 'SUCCESS') {
+      setIsLoading(true);
 
-      if (location) {
-        dispatch({
-          type: 'SET_LOCATION_DETAILS',
-          address: location.address,
-          timeZone: getAddressTimeZone(location.address),
-        });
-      }
+      const geolocationResponse = await reverseGeocode(
+        userPositionResponse.position,
+      );
+
+      if (!geolocationResponse) return;
+
+      const location = parseGeolocationResponseToLocation(geolocationResponse);
+
+      dispatch({ type: 'SET_LOCATION_DETAILS', ...location });
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    const isLocationDataReady = !!address;
+
+    if (isLocationDataReady) {
+      setIsLoading(false);
+    }
+  }, [address]);
+
+  useEffect(() => {
+    const isReadyToGoToTimePage = !!(address && !isLoading);
+
+    if (isReadyToGoToTimePage) {
+      const cityId = generateCityId(address as Address);
+
+      router.push({ pathname: `/time/${cityId}` });
+    }
+  }, [router, address, isLoading]);
 
   return (
     <button type="button" onClick={handleUseUserLocation}>
