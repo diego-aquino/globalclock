@@ -130,29 +130,6 @@ export function getTimeZoneData(timeZoneName: string): TimeZone {
   return timeZone;
 }
 
-export function getAddressTimeZone(address: Address): TimeZone | null {
-  const { countryName, state, city } = address;
-  const locationResources = [countryName, state, city];
-
-  while (locationResources.length > 0) {
-    const searchString = locationResources.join(' ');
-
-    const matchedLocations = cityTimezones.findFromCityStateProvince(
-      searchString,
-    );
-
-    if (matchedLocations.length > 0) {
-      const timeZoneName = matchedLocations[0].timezone;
-
-      return getTimeZoneData(timeZoneName);
-    }
-
-    locationResources.pop();
-  }
-
-  return null;
-}
-
 export function generateCityId(address: Address): string {
   const { city, stateName, countryName } = address;
 

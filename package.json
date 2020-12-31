@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "city-timezones": "^1.2.0",
     "luxon": "^1.25.0",
     "next": "10.0.4",
     "next-images": "^1.6.2",
