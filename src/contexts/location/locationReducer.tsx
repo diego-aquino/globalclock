@@ -11,10 +11,18 @@ function locationReducer(
       return { ...state, address: action.address };
     case 'SET_TIME_ZONE':
       return { ...state, timeZone: action.timeZone };
+    case 'SET_LOCAL_DATE_TIME':
+      return { ...state, localDateTime: action.localDateTime };
     case 'SET_LOCATION_DETAILS':
-      return { ...state, address: action.address, timeZone: action.timeZone };
+      return {
+        ...state,
+        position: action.position || state.position,
+        address: action.address || state.address,
+        localDateTime: action.localDateTime || state.localDateTime,
+        timeZone: action.timeZone || state.timeZone,
+      };
     default:
-      throw new Error(`Unknown action type: ${action.type}`);
+      throw new Error(`Unknown action: ${action}`);
   }
 }
 

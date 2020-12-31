@@ -1,4 +1,5 @@
 import { SVGAttributes } from 'react';
+import { DateTime } from 'luxon';
 
 export type TimeOfDay = 'morning' | 'afternoon' | 'evening' | 'night';
 
@@ -11,26 +12,33 @@ export interface Address {
   city: string;
   countryCode: string;
   countryName: string;
-  district: string;
-  houseNumber: string;
   label: string;
-  postalCode: string;
-  state: string;
+  stateName: string;
   stateCode: string;
-  street: string;
 }
 
-export type TimeZone = {
+export interface TimeZone {
   zoneName: string;
   offset: number;
   offsetNameShort: string;
   offsetNameLong: string;
   isOffsetFixed: boolean;
   isInDST: boolean;
-};
+}
+
+export interface Location {
+  position: Position;
+  address: Address;
+  localDateTime: DateTime;
+  timeZone: TimeZone;
+}
 
 export type Action<T, V = void> = V extends void
   ? { type: T }
   : { type: T } & V;
+
+export type Optional<T> = { [P in keyof T]?: T[P] };
+
+export type PossiblyNull<T> = { [P in keyof T]: T[P] | null };
 
 export type SVGElementProps = SVGAttributes<SVGElement>;
