@@ -6,7 +6,7 @@ import { Greeting, ClockThemeImage, ClockTime } from 'components/clock';
 import { requestUserPosition, getAddressTimeZone } from 'utils/location';
 import { StyledLayout, Container, Location } from 'styles/pages/ClockPage';
 
-const TimeAt: FC = () => {
+const TimePage: FC = () => {
   const [{ position, address, timeZone }, dispatch] = useLocation();
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(true);
@@ -75,4 +75,4 @@ const TimeAt: FC = () => {
   );
 };
 
-export default TimeAt;
+export default TimePage;
