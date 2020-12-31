@@ -152,3 +152,14 @@ export function getAddressTimeZone(address: Address): TimeZone | null {
 
   return null;
 }
+
+export function generateCityId(address: Address): string {
+  const { city, stateName, countryName } = address;
+
+  const cityIdentifier = [city, stateName, countryName]
+    .map((resource) => (resource ? encodeURIComponent(resource) : ''))
+    .filter((resource) => resource !== '')
+    .join(',');
+
+  return `@${cityIdentifier}`;
+}
