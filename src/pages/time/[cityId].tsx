@@ -1,78 +1,58 @@
-import { FC, useEffect, useState, useMemo } from 'react';
+import { FC } from 'react';
+import { GetStaticPaths, GetStaticProps } from 'next';
+import { ParsedUrlQuery } from 'querystring';
 
-import { useLocation } from 'contexts/location';
-import { reverseGeocode } from 'services/here';
-import { Greeting, ClockThemeImage, ClockTime } from 'components/clock';
-import { requestUserPosition, getAddressTimeZone } from 'utils/location';
-import { StyledLayout, Container, Location } from 'styles/pages/ClockPage';
+import { Address, TimeZone } from 'typings';
+import {
+  extractCityLabel,
+  parseGeolocationResponseToLocation,
+} from 'utils/location';
+import { geocode } from 'services/here';
 
-const TimePage: FC = () => {
-  const [{ position, address, timeZone }, dispatch] = useLocation();
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
-  const [loading, setLoading] = useState(true);
+interface Props {
+  address?: Address;
+  localISOTime?: string;
+  timeZone?: TimeZone;
+}
 
-  const formattedLocation = useMemo(
-    () => (address ? `${address.city}, ${address.countryName}` : ''),
-    [address],
-  );
+interface Params extends ParsedUrlQuery {
+  cityId: string;
+}
 
-  useEffect(() => {
-    setCurrentDate(new Date());
+const TimePage: FC<Props> = (props) => <div />;
 
-    async function updateUserPositionIfAvailable() {
-      const response = await requestUserPosition();
+export const getStaticPaths: GetStaticPaths<Params> = async () => ({
+  paths: [],
+  fallback: true,
+});
 
-      if (response.status === 'SUCCESS') {
-        dispatch({
-          type: 'SET_POSITION',
-          position: response.position,
-        });
-      }
-    }
+export const getStaticProps: GetStaticProps<Props, Params> = async ({
+  params,
+}) => {
+  async function generateStaticPropsFromCityId(
+    cityId: string | undefined,
+  ): Promise<Props> {
+    if (!cityId) return {};
 
-    updateUserPositionIfAvailable();
-  }, [dispatch]);
+    const cityLabel = extractCityLabel(cityId);
+    if (!cityLabel) return {};
 
-  useEffect(() => {
-    async function updateLocationDetailsIfAvailable() {
-      if (!position) return;
+    const geolocationResponse = await geocode(cityLabel);
+    if (!geolocationResponse) return {};
 
-      const locationResult = await reverseGeocode(position);
-      const location = locationResult?.items[0];
+    const location = parseGeolocationResponseToLocation(geolocationResponse);
+    const { address, localDateTime, timeZone } = location;
 
-      if (location) {
-        dispatch({
-          type: 'SET_LOCATION_DETAILS',
-          address: location.address,
-          timeZone: getAddressTimeZone(location.address),
-        });
-      }
-    }
+    return {
+      address,
+      localISOTime: localDateTime.toISO(),
+      timeZone,
+    };
+  }
 
-    updateLocationDetailsIfAvailable();
-  }, [position, dispatch]);
-
-  useEffect(() => {
-    if (position && address && currentDate) {
-      setLoading(false);
-    }
-  }, [position, address, currentDate]);
-
-  return (
-    <StyledLayout pageTitle={`${`${formattedLocation} |`} GlobalClock`}>
-      <Container>
-        {!loading && (
-          <>
-            <Greeting timeOfDay="morning" />
-            <ClockTime initialDate={currentDate as Date} timeZone="BST" />
-            <Location>In {formattedLocation}</Location>
-          </>
-        )}
-
-        <ClockThemeImage timeOfDay="morning" />
-      </Container>
-    </StyledLayout>
-  );
+  return {
+    props: await generateStaticPropsFromCityId(params?.cityId),
+  };
 };
 
 export default TimePage;

@@ -140,3 +140,14 @@ export function generateCityId(address: Address): string {
 
   return `@${cityIdentifier}`;
 }
+
+export function extractCityLabel(cityId: string): string | null {
+  const cityIdentifierMatchingRegex = /(?:@)(.+)/;
+
+  const matchResult = cityId.match(cityIdentifierMatchingRegex);
+  if (!matchResult) return null;
+
+  const cityLabel = matchResult[1].replace(',', ' ');
+
+  return cityLabel;
+}
