@@ -36,7 +36,7 @@ export async function geocode(
 ): Promise<GeolocationResponse | null> {
   const requestURL = generateHereRequestURL(
     hereAPIEndpoints.geocode,
-    `searchtext=${geocodeSearch}`,
+    `searchtext=${encodeURIComponent(geocodeSearch)}`,
     `locationattributes=${[
       'address',
       'additionalData',
