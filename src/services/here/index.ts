@@ -42,6 +42,7 @@ export async function geocode(
       'adminInfo',
       'timeZone',
     ].join(',')}`,
+    `timestamp=${new Date().toISOString()}`,
   );
 
   const { data: locationResponse } = await axios.get<GeolocationResponse>(
@@ -65,6 +66,7 @@ export async function reverseGeocode(
       'adminInfo',
       'timeZone',
     ].join(',')}`,
+    `timestamp=${new Date().toISOString()}`,
   );
 
   const { data: locationResponse } = await axios.get<GeolocationResponse>(
