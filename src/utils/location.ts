@@ -1,14 +1,20 @@
 import { DateTime } from 'luxon';
 import cityTimezones from 'city-timezones';
 
-import { Address, Position, TimeZone } from 'typings';
+import { Address, Position, Location, TimeZone } from 'typings';
+import { GeolocationResponse } from 'services/here/types';
 
 const isClient = typeof window !== 'undefined';
 
-type UserPositionResponse = {
-  position: Position | null;
-  status: 'SUCCESS' | 'NOT_SUPPORTED' | 'FAILED';
-};
+type UserPositionResponse =
+  | {
+      status: 'SUCCESS';
+      position: Position;
+    }
+  | {
+      status: 'NOT_SUPPORTED' | 'FAILED';
+      position: null;
+    };
 
 export async function requestUserPosition(): Promise<UserPositionResponse> {
   if (!isClient || !navigator.geolocation)
@@ -36,6 +42,71 @@ export async function requestUserPosition(): Promise<UserPositionResponse> {
   });
 }
 
+export function parseGeolocationResponseToLocation(
+  geolocationResponse: GeolocationResponse,
+): Location {
+  const {
+    MetaInfo: { Timestamp: timestamp },
+    View: [{ Result }],
+  } = geolocationResponse.Response;
+
+  const {
+    DisplayPosition,
+    Address: LocationAddress,
+    AdminInfo,
+  } = Result[0].Location;
+
+  const position: Position = {
+    latitude: DisplayPosition.Latitude,
+    longitude: DisplayPosition.Longitude,
+  };
+
+  const AdditionalDataObject = {
+    CountryName: '',
+    StateName: '',
+  };
+  LocationAddress.AdditionalData.forEach((item) => {
+    AdditionalDataObject[item.key] = item.value;
+  });
+
+  const address: Address = {
+    city: LocationAddress.City,
+    countryCode: LocationAddress.Country,
+    countryName: AdditionalDataObject.CountryName,
+    label: LocationAddress.Label,
+    stateCode: LocationAddress.State,
+    stateName: AdditionalDataObject.StateName,
+  };
+
+  const timeZoneOffsetName = AdminInfo.TimeZoneOffset;
+
+  const localDateTime = DateTime.fromISO(timestamp).setZone(timeZoneOffsetName);
+  const {
+    zoneName,
+    offset,
+    offsetNameShort,
+    offsetNameLong,
+    isOffsetFixed,
+    isInDST,
+  } = localDateTime;
+
+  const timeZone = {
+    zoneName,
+    offset,
+    offsetNameShort,
+    offsetNameLong,
+    isOffsetFixed,
+    isInDST,
+  };
+
+  return {
+    position,
+    address,
+    localDateTime,
+    timeZone,
+  };
+}
+
 export function getTimeZoneData(timeZoneName: string): TimeZone {
   const localDateInMatchedTimeZone = DateTime.local().setZone(timeZoneName);
   const {
@@ -59,25 +130,13 @@ export function getTimeZoneData(timeZoneName: string): TimeZone {
   return timeZone;
 }
 
-export function getAddressTimeZone(address: Address): TimeZone | null {
-  const { countryName, state, city } = address;
-  const locationResources = [countryName, state, city];
+export function generateCityId(address: Address): string {
+  const { city, stateName, countryName } = address;
 
-  while (locationResources.length > 0) {
-    const searchString = locationResources.join(' ');
+  const cityIdentifier = [city, stateName, countryName]
+    .map((resource) => (resource ? encodeURIComponent(resource) : ''))
+    .filter((resource) => resource !== '')
+    .join(',');
 
-    const matchedLocations = cityTimezones.findFromCityStateProvince(
-      searchString,
-    );
-
-    if (matchedLocations.length > 0) {
-      const timeZoneName = matchedLocations[0].timezone;
-
-      return getTimeZoneData(timeZoneName);
-    }
-
-    locationResources.pop();
-  }
-
-  return null;
+  return `@${cityIdentifier}`;
 }

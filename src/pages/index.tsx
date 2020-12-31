@@ -1,78 +1,62 @@
-import { FC, useEffect, useState, useMemo } from 'react';
+import { FC, useCallback, useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
+import { Address } from 'typings';
 import { useLocation } from 'contexts/location';
 import { reverseGeocode } from 'services/here';
-import { Greeting, ClockThemeImage, ClockTime } from 'components/clock';
-import { requestUserPosition, getAddressTimeZone } from 'utils/location';
-import { StyledLayout, Container, Location } from 'styles/pages/ClockPage';
+import {
+  requestUserPosition,
+  parseGeolocationResponseToLocation,
+  generateCityId,
+} from 'utils/location';
 
-const ClockPage: FC = () => {
-  const [{ position, address, timeZone }, dispatch] = useLocation();
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
-  const [loading, setLoading] = useState(true);
+const Home: FC = () => {
+  const [{ address }, dispatch] = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const formattedLocation = useMemo(
-    () => (address ? `${address.city}, ${address.countryName}` : ''),
-    [address],
-  );
+  const router = useRouter();
 
-  useEffect(() => {
-    setCurrentDate(new Date());
+  const handleUseUserLocation = useCallback(async () => {
+    const userPositionResponse = await requestUserPosition();
 
-    async function updateUserPositionIfAvailable() {
-      const response = await requestUserPosition();
+    if (userPositionResponse.status === 'SUCCESS') {
+      setIsLoading(true);
 
-      if (response.status === 'SUCCESS') {
-        dispatch({
-          type: 'SET_POSITION',
-          position: response.position,
-        });
-      }
+      const geolocationResponse = await reverseGeocode(
+        userPositionResponse.position,
+      );
+
+      if (!geolocationResponse) return;
+
+      const location = parseGeolocationResponseToLocation(geolocationResponse);
+
+      dispatch({ type: 'SET_LOCATION_DETAILS', ...location });
     }
-
-    updateUserPositionIfAvailable();
   }, [dispatch]);
 
   useEffect(() => {
-    async function updateLocationDetailsIfAvailable() {
-      if (!position) return;
+    const isLocationDataReady = !!address;
 
-      const locationResult = await reverseGeocode(position);
-      const location = locationResult?.items[0];
-
-      if (location) {
-        dispatch({
-          type: 'SET_LOCATION_DETAILS',
-          address: location.address,
-          timeZone: getAddressTimeZone(location.address),
-        });
-      }
+    if (isLocationDataReady) {
+      setIsLoading(false);
     }
-
-    updateLocationDetailsIfAvailable();
-  }, [position, dispatch]);
+  }, [address]);
 
   useEffect(() => {
-    if (position && address && currentDate) {
-      setLoading(false);
+    const isReadyToGoToTimePage = !!(address && !isLoading);
+
+    if (isReadyToGoToTimePage) {
+      const cityId = generateCityId(address as Address);
+
+      router.push({ pathname: `/time/${cityId}` });
     }
-  }, [position, address, currentDate]);
+  }, [router, address, isLoading]);
 
   return (
-    <StyledLayout pageTitle={`${`${formattedLocation} |`} GlobalClock`}>
-      <Container>
-        {!loading && (
-          <>
-            <Greeting timeOfDay="morning" />
-            <ClockTime initialDate={currentDate as Date} timeZone="BST" />
-            <Location>In {formattedLocation}</Location>
-          </>
-        )}
-
-        <ClockThemeImage timeOfDay="morning" />
-      </Container>
-    </StyledLayout>
+    <button type="button" onClick={handleUseUserLocation}>
+      Use my location
+    </button>
   );
 };
 
-export default ClockPage;
+export default Home;

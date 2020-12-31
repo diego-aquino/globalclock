@@ -1,32 +1,39 @@
-import { Address } from 'typings';
+interface LocationAdditionalDataItem {
+  key: 'CountryName' | 'StateName';
+  value: string;
+}
 
-interface HereLocationItem {
-  address: Address;
-  position: {
-    lat: number;
-    lng: number;
+interface LocationAddress {
+  Label: string;
+  Country: string;
+  State: string;
+  City: string;
+  AdditionalData: LocationAdditionalDataItem[];
+}
+
+interface LocationResult {
+  DisplayPosition: {
+    Latitude: number;
+    Longitude: number;
   };
-  title: string;
+  Address: LocationAddress;
+  AdminInfo: {
+    TimeZoneOffset: string;
+    LocalTime: string;
+  };
 }
 
-export type HereLocationResult = { items: HereLocationItem[] };
-
-interface HereSearchService {
-  reverseGeocode(
-    params: { at: string; lang?: string },
-    onResult: (result: HereLocationResult) => void,
-    onError: (error: Error) => void,
-  ): void;
-}
-
-interface HerePlatform {
-  getSearchService(): HereSearchService;
-}
-
-type HerePlatformConstructor = new (options: {
-  apikey: string;
-}) => HerePlatform;
-
-export interface HereService {
-  Platform: HerePlatformConstructor;
+export interface GeolocationResponse {
+  Response: {
+    MetaInfo: {
+      Timestamp: string;
+    };
+    View: [
+      {
+        Result: Array<{
+          Location: LocationResult;
+        }>;
+      },
+    ];
+  };
 }
