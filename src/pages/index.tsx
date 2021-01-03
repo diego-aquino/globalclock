@@ -23,8 +23,6 @@ const Home: FC = () => {
         userPositionResponse.position,
       );
 
-      if (!geolocationResponse) return;
-
       const location = parseGeolocationResponseToLocation(geolocationResponse);
 
       dispatch({ type: 'SET_LOCATION_DETAILS', ...location });

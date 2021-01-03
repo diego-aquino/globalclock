@@ -37,7 +37,6 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({
     if (!cityLabel) return {};
 
     const geolocationResponse = await geocode(cityLabel);
-    if (!geolocationResponse) return {};
 
     const location = parseGeolocationResponseToLocation(geolocationResponse);
     const { address, localDateTime } = location;

@@ -10,9 +10,10 @@ const hereAPIEndpoints = {
 } as const;
 
 type HereAPIEndpointNames = keyof typeof hereAPIEndpoints;
+type HereAPIEndpointURL = typeof hereAPIEndpoints[HereAPIEndpointNames];
 
 function generateHereRequestURL(
-  endpoint: typeof hereAPIEndpoints[HereAPIEndpointNames],
+  endpointURL: HereAPIEndpointURL,
   ...queryParams: string[]
 ): string {
   if (queryParams.length === 0) {
@@ -22,9 +23,9 @@ function generateHereRequestURL(
   }
 
   const requestURL = [
-    `${endpoint}`,
+    `${endpointURL}`,
     `?${queryParams.join('&')}`,
-    'language=en-US',
+    '&language=en-US',
     `&apiKey=${process.env.NEXT_PUBLIC_HERE_API_KEY}`,
   ].join('');
 
@@ -33,7 +34,7 @@ function generateHereRequestURL(
 
 export async function geocode(
   geocodeSearch: string,
-): Promise<GeolocationResponse | null> {
+): Promise<GeolocationResponse> {
   const requestURL = generateHereRequestURL(
     hereAPIEndpoints.geocode,
     `searchtext=${encodeURIComponent(geocodeSearch)}`,
@@ -55,7 +56,7 @@ export async function geocode(
 
 export async function reverseGeocode(
   position: Position,
-): Promise<GeolocationResponse | null> {
+): Promise<GeolocationResponse> {
   const requestURL = generateHereRequestURL(
     hereAPIEndpoints.reverseGeocode,
     `prox=${position.latitude},${position.longitude}`,
