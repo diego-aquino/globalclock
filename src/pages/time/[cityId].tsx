@@ -9,28 +9,28 @@ import {
 } from 'utils/location';
 import { geocode } from 'services/here';
 
-interface Props {
+interface PageProps {
   address?: Address;
   localISOTime?: string;
 }
 
-interface Params extends ParsedUrlQuery {
+const TimePage: FC<PageProps> = (props) => <div />;
+
+interface PageParams extends ParsedUrlQuery {
   cityId: string;
 }
 
-const TimePage: FC<Props> = (props) => <div />;
-
-export const getStaticPaths: GetStaticPaths<Params> = async () => ({
+export const getStaticPaths: GetStaticPaths<PageParams> = async () => ({
   paths: [],
   fallback: true,
 });
 
-export const getStaticProps: GetStaticProps<Props, Params> = async ({
+export const getStaticProps: GetStaticProps<PageProps, PageParams> = async ({
   params,
 }) => {
   async function generateStaticPropsFromCityId(
     cityId: string | undefined,
-  ): Promise<Props> {
+  ): Promise<PageProps> {
     if (!cityId) return {};
 
     const cityLabel = extractCityLabel(cityId);
