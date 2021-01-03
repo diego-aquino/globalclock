@@ -17,10 +17,10 @@ type UserPositionResponse =
 
 export async function requestUserPosition(): Promise<UserPositionResponse> {
   if (!isClient || !navigator.geolocation)
-    return {
+    return Promise.resolve({
       position: null,
       status: 'NOT_SUPPORTED',
-    };
+    });
 
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition(
