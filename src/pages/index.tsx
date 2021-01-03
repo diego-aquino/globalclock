@@ -1,4 +1,4 @@
-import { FC, useCallback, useState, useEffect } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { Address } from 'typings';
@@ -12,7 +12,6 @@ import {
 
 const Home: FC = () => {
   const [{ address }, dispatch] = useLocation();
-  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -20,8 +19,6 @@ const Home: FC = () => {
     const userPositionResponse = await requestUserPosition();
 
     if (userPositionResponse.status === 'SUCCESS') {
-      setIsLoading(true);
-
       const geolocationResponse = await reverseGeocode(
         userPositionResponse.position,
       );
@@ -35,22 +32,14 @@ const Home: FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const isLocationDataReady = !!address;
-
-    if (isLocationDataReady) {
-      setIsLoading(false);
-    }
-  }, [address]);
-
-  useEffect(() => {
-    const isReadyToGoToTimePage = !!(address && !isLoading);
+    const isReadyToGoToTimePage = !!address;
 
     if (isReadyToGoToTimePage) {
       const cityId = generateCityId(address as Address);
 
       router.push({ pathname: `/time/${cityId}` });
     }
-  }, [router, address, isLoading]);
+  }, [router, address]);
 
   return (
     <button type="button" onClick={handleUseUserLocation}>
