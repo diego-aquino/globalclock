@@ -9,13 +9,13 @@ import {
 } from 'styles/components/clock/ClockTime';
 
 interface Props {
-  localDateTime: DateTime;
+  dateTime: DateTime;
 }
 
-const ClockTime: FC<Props> = ({ localDateTime }) => (
+const ClockTime: FC<Props> = ({ dateTime }) => (
   <Container>
-    <StyledTime initialDateTime={localDateTime} />
-    <TimeZone>{localDateTime.offsetNameShort}</TimeZone>
+    <StyledTime initialDateTime={dateTime} />
+    <TimeZone>{dateTime.offsetNameShort}</TimeZone>
   </Container>
 );
 

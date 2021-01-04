@@ -19,10 +19,13 @@ interface Props extends HTMLAttributes<HTMLParagraphElement> {
 
 const Time: FC<Props> = ({ initialDateTime, ...rest }) => {
   const getFormattedDisplayTime = useCallback((dateTime: DateTime) => {
-    const [formattedHours, formattedMinutes] = [
-      dateTime.hour,
-      dateTime.minute,
-    ].map((value) => `${value < 10 ? '0' : ''}${value}`);
+    const { hour, minute } = dateTime.toObject();
+
+    if (!hour || !minute) return '';
+
+    const [formattedHours, formattedMinutes] = [hour, minute].map(
+      (value) => `${value < 10 ? '0' : ''}${value}`,
+    );
 
     return `${formattedHours}:${formattedMinutes}`;
   }, []);
@@ -33,11 +36,10 @@ const Time: FC<Props> = ({ initialDateTime, ...rest }) => {
   const baseDateTime = useRef<DateTime>(DateTime.local());
 
   const getUpToDateDisplayTime = useCallback(() => {
-    const deltaTimeInMilliseconds = baseDateTime.current.diffNow().valueOf();
-
-    const finalDateTime = DateTime.fromMillis(
-      initialDateTime.toMillis() + deltaTimeInMilliseconds,
-    );
+    const deltaTime = baseDateTime.current.diffNow();
+    const finalDateTime = initialDateTime.plus({
+      milliseconds: Math.abs(deltaTime.valueOf()),
+    });
 
     return getFormattedDisplayTime(finalDateTime);
   }, [initialDateTime, getFormattedDisplayTime]);
