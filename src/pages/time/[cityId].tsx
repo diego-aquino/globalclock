@@ -1,78 +1,147 @@
-import { FC, useEffect, useState, useMemo } from 'react';
+import { FC, useCallback, useEffect, useState, useMemo } from 'react';
+import { GetStaticPaths, GetStaticProps } from 'next';
+import { NextRouter, useRouter } from 'next/router';
+import { ParsedUrlQuery } from 'querystring';
+import { DateTime } from 'luxon';
 
+import { Address, Position, TimeOfDay } from 'typings';
 import { useLocation } from 'contexts/location';
-import { reverseGeocode } from 'services/here';
-import { Greeting, ClockThemeImage, ClockTime } from 'components/clock';
-import { requestUserPosition, getAddressTimeZone } from 'utils/location';
-import { StyledLayout, Container, Location } from 'styles/pages/ClockPage';
+import { Greeting, ClockTime, ClockThemeImage } from 'components/clock';
+import {
+  extractCityLabel,
+  parseGeolocationResponseToLocation,
+} from 'utils/location';
+import { getTimeOfDay } from 'utils/date';
+import { geocode } from 'services/here';
+import { StyledLayout, Container, LocationLabel } from 'styles/pages/TimePage';
 
-const TimePage: FC = () => {
-  const [{ position, address, timeZone }, dispatch] = useLocation();
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
-  const [loading, setLoading] = useState(true);
+interface PageProps {
+  position?: Position;
+  address?: Address;
+}
 
-  const formattedLocation = useMemo(
-    () => (address ? `${address.city}, ${address.countryName}` : ''),
+interface PageParams extends ParsedUrlQuery {
+  cityId?: string;
+}
+
+interface PageRouter extends NextRouter {
+  query: PageParams;
+}
+
+const TimePage: FC<PageProps> = (props) => {
+  const [location] = useLocation();
+  const [localDateTime, setLocalDateTime] = useState<DateTime | null>(null);
+
+  const {
+    query: { cityId },
+  }: PageRouter = useRouter();
+
+  const getUpToDateLocalDateTime = useCallback(async () => {
+    if (location.localDateTime && location.baseDeviceDateTime) {
+      const timeSinceLocationRequest = location.baseDeviceDateTime.diffNow();
+
+      const upToDateLocalDateTime = location.localDateTime.plus({
+        milliseconds: Math.abs(timeSinceLocationRequest.valueOf()),
+      });
+
+      return Promise.resolve(upToDateLocalDateTime);
+    }
+
+    if (!cityId) return Promise.resolve(null);
+
+    const cityLabel = extractCityLabel(cityId);
+    if (!cityLabel) return Promise.resolve(null);
+
+    const geolocationResponse = await geocode(cityLabel);
+
+    const {
+      localDateTime: upToDateLocalDateTime,
+    } = parseGeolocationResponseToLocation(geolocationResponse);
+
+    return upToDateLocalDateTime;
+  }, [cityId, location.baseDeviceDateTime, location.localDateTime]);
+
+  useEffect(() => {
+    async function updateToLatestLocalDateTime() {
+      const upToDateLocalDateTime = await getUpToDateLocalDateTime();
+
+      if (cityId) {
+        setLocalDateTime(upToDateLocalDateTime);
+      }
+    }
+
+    updateToLatestLocalDateTime();
+  }, [cityId, getUpToDateLocalDateTime]);
+
+  const address = useMemo(() => location.address || props.address || null, [
+    location,
+    props,
+  ]);
+
+  const formattedCityLocation = useMemo(
+    () => (address ? `${address.city}, ${address?.countryName}` : ''),
     [address],
   );
-
-  useEffect(() => {
-    setCurrentDate(new Date());
-
-    async function updateUserPositionIfAvailable() {
-      const response = await requestUserPosition();
-
-      if (response.status === 'SUCCESS') {
-        dispatch({
-          type: 'SET_POSITION',
-          position: response.position,
-        });
-      }
-    }
-
-    updateUserPositionIfAvailable();
-  }, [dispatch]);
-
-  useEffect(() => {
-    async function updateLocationDetailsIfAvailable() {
-      if (!position) return;
-
-      const locationResult = await reverseGeocode(position);
-      const location = locationResult?.items[0];
-
-      if (location) {
-        dispatch({
-          type: 'SET_LOCATION_DETAILS',
-          address: location.address,
-          timeZone: getAddressTimeZone(location.address),
-        });
-      }
-    }
-
-    updateLocationDetailsIfAvailable();
-  }, [position, dispatch]);
-
-  useEffect(() => {
-    if (position && address && currentDate) {
-      setLoading(false);
-    }
-  }, [position, address, currentDate]);
+  const timeOfDay = useMemo<TimeOfDay | null>(
+    () => (localDateTime ? getTimeOfDay(localDateTime) : null),
+    [localDateTime],
+  );
 
   return (
-    <StyledLayout pageTitle={`${`${formattedLocation} |`} GlobalClock`}>
+    <StyledLayout
+      pageTitle={
+        formattedCityLocation
+          ? `${formattedCityLocation} | GlobalClock`
+          : 'GlobalClock'
+      }
+    >
       <Container>
-        {!loading && (
+        {localDateTime && address && timeOfDay ? (
           <>
-            <Greeting timeOfDay="morning" />
-            <ClockTime initialDate={currentDate as Date} timeZone="BST" />
-            <Location>In {formattedLocation}</Location>
+            <Greeting timeOfDay={timeOfDay} />
+            <ClockTime dateTime={localDateTime} />
+            <LocationLabel>In {formattedCityLocation}</LocationLabel>
+            <ClockThemeImage address={address} timeOfDay={timeOfDay} />
           </>
+        ) : (
+          <p>Loading...</p>
         )}
-
-        <ClockThemeImage timeOfDay="morning" />
       </Container>
     </StyledLayout>
   );
+};
+
+export const getStaticPaths: GetStaticPaths<PageParams> = async () => ({
+  paths: [],
+  fallback: true,
+});
+
+export const getStaticProps: GetStaticProps<PageProps, PageParams> = async ({
+  params,
+}) => {
+  async function generateStaticPropsFromCityId(
+    cityId: string | undefined,
+  ): Promise<PageProps> {
+    if (!cityId) return {};
+
+    const cityLabel = extractCityLabel(cityId);
+    if (!cityLabel) return {};
+
+    const geolocationResponse = await geocode(cityLabel);
+
+    const location = parseGeolocationResponseToLocation(geolocationResponse);
+    const { position, address } = location;
+
+    const serializableStaticProps = JSON.parse(
+      JSON.stringify({ position, address }, (_, value) => value ?? null),
+    );
+
+    return serializableStaticProps;
+  }
+
+  return {
+    props: await generateStaticPropsFromCityId(params?.cityId),
+  };
 };
 
 export default TimePage;

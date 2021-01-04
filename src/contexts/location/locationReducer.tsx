@@ -9,8 +9,6 @@ function locationReducer(
       return { ...state, position: action.position };
     case 'SET_ADDRESS':
       return { ...state, address: action.address };
-    case 'SET_TIME_ZONE':
-      return { ...state, timeZone: action.timeZone };
     case 'SET_LOCAL_DATE_TIME':
       return { ...state, localDateTime: action.localDateTime };
     case 'SET_LOCATION_DETAILS':
@@ -19,7 +17,8 @@ function locationReducer(
         position: action.position || state.position,
         address: action.address || state.address,
         localDateTime: action.localDateTime || state.localDateTime,
-        timeZone: action.timeZone || state.timeZone,
+        baseDeviceDateTime:
+          action.baseDeviceDateTime || state.baseDeviceDateTime,
       };
     default:
       throw new Error(`Unknown action: ${action}`);

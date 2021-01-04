@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon';
-import cityTimezones from 'city-timezones';
 
-import { Address, Position, Location, TimeZone } from 'typings';
+import { Address, Position, Location } from 'typings';
 import { GeolocationResponse } from 'services/here/types';
 
 const isClient = typeof window !== 'undefined';
@@ -18,10 +17,10 @@ type UserPositionResponse =
 
 export async function requestUserPosition(): Promise<UserPositionResponse> {
   if (!isClient || !navigator.geolocation)
-    return {
+    return Promise.resolve({
       position: null,
       status: 'NOT_SUPPORTED',
-    };
+    });
 
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition(
@@ -81,53 +80,12 @@ export function parseGeolocationResponseToLocation(
   const timeZoneOffsetName = AdminInfo.TimeZoneOffset;
 
   const localDateTime = DateTime.fromISO(timestamp).setZone(timeZoneOffsetName);
-  const {
-    zoneName,
-    offset,
-    offsetNameShort,
-    offsetNameLong,
-    isOffsetFixed,
-    isInDST,
-  } = localDateTime;
-
-  const timeZone = {
-    zoneName,
-    offset,
-    offsetNameShort,
-    offsetNameLong,
-    isOffsetFixed,
-    isInDST,
-  };
 
   return {
     position,
     address,
     localDateTime,
-    timeZone,
   };
-}
-
-export function getTimeZoneData(timeZoneName: string): TimeZone {
-  const localDateInMatchedTimeZone = DateTime.local().setZone(timeZoneName);
-  const {
-    zoneName,
-    offset,
-    offsetNameShort,
-    offsetNameLong,
-    isOffsetFixed,
-    isInDST,
-  } = localDateInMatchedTimeZone;
-
-  const timeZone: TimeZone = {
-    zoneName,
-    offset,
-    offsetNameShort,
-    offsetNameLong,
-    isOffsetFixed,
-    isInDST,
-  };
-
-  return timeZone;
 }
 
 export function generateCityId(address: Address): string {
@@ -139,4 +97,15 @@ export function generateCityId(address: Address): string {
     .join(',');
 
   return `@${cityIdentifier}`;
+}
+
+export function extractCityLabel(cityId: string): string | null {
+  const cityIdentifierMatchingRegex = /(?:@)(.+)/;
+
+  const matchResult = cityId.match(cityIdentifierMatchingRegex);
+  if (!matchResult) return null;
+
+  const cityLabel = matchResult[1].replace(',', ' ');
+
+  return cityLabel;
 }

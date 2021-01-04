@@ -13,24 +13,14 @@ export interface Address {
   countryCode: string;
   countryName: string;
   label: string;
-  stateName: string;
-  stateCode: string;
-}
-
-export interface TimeZone {
-  zoneName: string;
-  offset: number;
-  offsetNameShort: string;
-  offsetNameLong: string;
-  isOffsetFixed: boolean;
-  isInDST: boolean;
+  stateName: string | null;
+  stateCode: string | null;
 }
 
 export interface Location {
   position: Position;
   address: Address;
   localDateTime: DateTime;
-  timeZone: TimeZone;
 }
 
 export type Action<T, V = void> = V extends void

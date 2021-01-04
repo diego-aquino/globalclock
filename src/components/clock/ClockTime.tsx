@@ -1,5 +1,7 @@
 import { FC } from 'react';
 
+import { DateTime } from 'luxon';
+
 import {
   Container,
   StyledTime,
@@ -7,14 +9,13 @@ import {
 } from 'styles/components/clock/ClockTime';
 
 interface Props {
-  initialDate: Date;
-  timeZone: string;
+  dateTime: DateTime;
 }
 
-const ClockTime: FC<Props> = ({ initialDate, timeZone }) => (
+const ClockTime: FC<Props> = ({ dateTime }) => (
   <Container>
-    <StyledTime initialDate={initialDate} />
-    {false && <TimeZone>{timeZone}</TimeZone>}
+    <StyledTime initialDateTime={dateTime} />
+    <TimeZone>{dateTime.offsetNameShort}</TimeZone>
   </Container>
 );
 

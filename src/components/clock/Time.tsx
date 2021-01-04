@@ -7,45 +7,50 @@ import {
   HTMLAttributes,
 } from 'react';
 
+import { DateTime } from 'luxon';
+
 interface IntervalReference {
   current: NodeJS.Timeout | null;
 }
 
 interface Props extends HTMLAttributes<HTMLParagraphElement> {
-  initialDate: Date;
+  initialDateTime: DateTime;
 }
 
-const Time: FC<Props> = ({ initialDate, ...rest }) => {
-  const getFormattedDisplayTime = useCallback((date: Date) => {
-    const [hours, minutes] = [date.getHours(), date.getMinutes()];
+const Time: FC<Props> = ({ initialDateTime, ...rest }) => {
+  const getFormattedDisplayTime = useCallback((dateTime: DateTime) => {
+    const { hour, minute } = dateTime.toObject();
 
-    const formattedHours = `${hours < 10 ? '0' : ''}${hours}`;
-    const formattedMinutes = `${minutes < 10 ? '0' : ''}${minutes}`;
+    if (!hour || !minute) return '';
+
+    const [formattedHours, formattedMinutes] = [hour, minute].map(
+      (value) => `${value < 10 ? '0' : ''}${value}`,
+    );
 
     return `${formattedHours}:${formattedMinutes}`;
   }, []);
 
   const [displayTime, setDisplayTime] = useState(
-    getFormattedDisplayTime(initialDate),
+    getFormattedDisplayTime(initialDateTime),
   );
-  const baseDate = useRef<Date>(new Date());
+  const baseDateTime = useRef<DateTime>(DateTime.local());
 
   const getUpToDateDisplayTime = useCallback(() => {
-    const currentDate = new Date();
-    const deltaTime = currentDate.getTime() - baseDate.current.getTime();
+    const deltaTime = baseDateTime.current.diffNow();
+    const finalDateTime = initialDateTime.plus({
+      milliseconds: Math.abs(deltaTime.valueOf()),
+    });
 
-    const finalDate = new Date(initialDate.getTime() + deltaTime);
-
-    return getFormattedDisplayTime(finalDate);
-  }, [initialDate, getFormattedDisplayTime]);
+    return getFormattedDisplayTime(finalDateTime);
+  }, [initialDateTime, getFormattedDisplayTime]);
 
   useEffect(() => {
-    baseDate.current = new Date();
+    baseDateTime.current = DateTime.local();
 
     setDisplayTime(getUpToDateDisplayTime());
 
     const interval: IntervalReference = { current: null };
-    const secondsToNextMinute = 60 - initialDate.getSeconds();
+    const secondsToNextMinute = 60 - initialDateTime.second;
 
     const intervalSetupTimeout = setTimeout(() => {
       setDisplayTime(getUpToDateDisplayTime());
@@ -61,7 +66,7 @@ const Time: FC<Props> = ({ initialDate, ...rest }) => {
         clearInterval(interval.current);
       }
     };
-  }, [initialDate, getUpToDateDisplayTime]);
+  }, [initialDateTime, getUpToDateDisplayTime]);
 
   return <p {...rest}>{displayTime}</p>;
 };

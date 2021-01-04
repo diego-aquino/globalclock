@@ -13,7 +13,7 @@ export const LocationContextProvider: FC = ({ children }) => {
     position: null,
     address: null,
     localDateTime: null,
-    timeZone: null,
+    baseDeviceDateTime: null,
   });
 
   return (
