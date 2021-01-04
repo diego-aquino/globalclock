@@ -23,6 +23,8 @@ export interface Location {
   localDateTime: DateTime;
 }
 
+export type Direction = 'up' | 'right' | 'down' | 'left';
+
 export type Action<T, V = void> = V extends void
   ? { type: T }
   : { type: T } & V;
