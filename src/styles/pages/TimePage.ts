@@ -37,7 +37,7 @@ export const Container = styled.div`
   }
 `;
 
-export const Location = styled.p`
+export const LocationLabel = styled.p`
   margin-top: -1.6rem;
 
   font-size: 2.1rem;
