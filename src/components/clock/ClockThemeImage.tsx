@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import Image from 'next/image';
 
 import { TimeOfDay } from 'typings';
 import { Container, Overlay } from 'styles/components/clock/ClockThemeImage';
@@ -14,7 +15,12 @@ interface Props {
 const ClockThemeImage: FC<Props> = ({ location, timeOfDay }) => (
   <Container>
     <Overlay />
-    <img src={placeholderThemeImageSrc} alt="" />
+    <Image
+      src={placeholderThemeImageSrc}
+      alt=""
+      layout="fill"
+      objectFit="cover"
+    />
   </Container>
 );
 
