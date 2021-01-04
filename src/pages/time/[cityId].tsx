@@ -4,14 +4,13 @@ import { NextRouter, useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
 import { DateTime } from 'luxon';
 
-import { Address, Position, TimeOfDay } from 'typings';
+import { Address, Position } from 'typings';
 import { useLocation } from 'contexts/location';
 import { Greeting, ClockTime, ClockThemeImage } from 'components/clock';
 import {
   extractCityLabel,
   parseGeolocationResponseToLocation,
 } from 'utils/location';
-import { getTimeOfDay } from 'utils/date';
 import { geocode } from 'services/here';
 import { StyledLayout, Container, LocationLabel } from 'styles/pages/TimePage';
 
@@ -82,10 +81,6 @@ const TimePage: FC<PageProps> = (props) => {
     () => (address ? `${address.city}, ${address?.countryName}` : ''),
     [address],
   );
-  const timeOfDay = useMemo<TimeOfDay | null>(
-    () => (localDateTime ? getTimeOfDay(localDateTime) : null),
-    [localDateTime],
-  );
 
   return (
     <StyledLayout
@@ -96,12 +91,12 @@ const TimePage: FC<PageProps> = (props) => {
       }
     >
       <Container>
-        {localDateTime && address && timeOfDay ? (
+        {localDateTime && address ? (
           <>
-            <Greeting timeOfDay={timeOfDay} />
+            <Greeting dateTime={localDateTime} />
             <ClockTime dateTime={localDateTime} />
             <LocationLabel>In {formattedCityLocation}</LocationLabel>
-            <ClockThemeImage address={address} timeOfDay={timeOfDay} />
+            <ClockThemeImage address={address} dateTime={localDateTime} />
           </>
         ) : (
           <p>Loading...</p>
