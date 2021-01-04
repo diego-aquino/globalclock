@@ -40,13 +40,13 @@ export const getStaticProps: GetStaticProps<PageProps, PageParams> = async ({
     const geolocationResponse = await geocode(cityLabel);
 
     const location = parseGeolocationResponseToLocation(geolocationResponse);
-    const { position, address, localDateTime } = location;
+    const { position, address } = location;
 
-    return {
-      position,
-      address,
-      localISOTime: localDateTime.toISO(),
-    };
+    const serializableStaticProps = JSON.parse(
+      JSON.stringify({ position, address }, (_, value) => value ?? null),
+    );
+
+    return serializableStaticProps;
   }
 
   return {

@@ -13,8 +13,8 @@ export interface Address {
   countryCode: string;
   countryName: string;
   label: string;
-  stateName: string;
-  stateCode: string;
+  stateName: string | null;
+  stateCode: string | null;
 }
 
 export interface Location {
