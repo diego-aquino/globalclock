@@ -9,7 +9,11 @@ import {
   Location,
 } from 'typings';
 
-export type LocationState = PossiblyNull<Location>;
+export type LocationState = PossiblyNull<
+  Location & {
+    baseDeviceDateTime: DateTime;
+  }
+>;
 
 export type LocationAction =
   | Action<'SET_POSITION', { position: Position | null }>

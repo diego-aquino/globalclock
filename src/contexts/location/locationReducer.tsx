@@ -17,6 +17,8 @@ function locationReducer(
         position: action.position || state.position,
         address: action.address || state.address,
         localDateTime: action.localDateTime || state.localDateTime,
+        baseDeviceDateTime:
+          action.baseDeviceDateTime || state.baseDeviceDateTime,
       };
     default:
       throw new Error(`Unknown action: ${action}`);

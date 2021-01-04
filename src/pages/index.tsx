@@ -1,5 +1,6 @@
 import { FC, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { DateTime } from 'luxon';
 
 import { Address } from 'typings';
 import { useLocation } from 'contexts/location';
@@ -23,9 +24,14 @@ const Home: FC = () => {
         userPositionResponse.position,
       );
 
+      const baseDeviceDateTime = DateTime.local();
       const location = parseGeolocationResponseToLocation(geolocationResponse);
 
-      dispatch({ type: 'SET_LOCATION_DETAILS', ...location });
+      dispatch({
+        type: 'SET_LOCATION_DETAILS',
+        baseDeviceDateTime,
+        ...location,
+      });
     }
   }, [dispatch]);
 
