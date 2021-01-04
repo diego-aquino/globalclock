@@ -7,7 +7,7 @@ import { getTimeOfDay } from 'utils/date';
 import { Container } from 'styles/components/clock/Greeting';
 import theme from 'styles/theme';
 
-const { clockPage: pageColors } = theme.colors;
+const { timePage: pageColors } = theme.colors;
 
 type GreetingIconFor = {
   [key in TimeOfDay]: typeof SunIcon | typeof MoonIcon;

@@ -1,6 +1,6 @@
 const theme = {
   colors: {
-    clockPage: {
+    timePage: {
       primaryText: '#ffffff',
       primaryTextDim: 'rgba(255, 255, 255, 0.95)',
     },
