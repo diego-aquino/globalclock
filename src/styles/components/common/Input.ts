@@ -41,7 +41,6 @@ export const StyledInput = styled.input<StyledInputProps>`
 
   font-size: ${theme.general.fontSize.normal};
 
-  background-color: ${theme.colors.input.background};
   transition: box-shadow ${theme.general.transitionDuration};
 
   ${({ hasIcon }) =>

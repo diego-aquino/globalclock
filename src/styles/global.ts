@@ -21,6 +21,8 @@ const GlobalStyle = createGlobalStyle`
 
   input, textarea, select, button {
     font-family: 'Source Sans Pro', sans-serif;
+    color: ${({ theme }) => theme.colors.secondaryText};
+    background-color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
