@@ -23,6 +23,8 @@ export interface Location {
   localDateTime: DateTime;
 }
 
+export type Direction = 'up' | 'right' | 'down' | 'left';
+
 export type Action<T, V = void> = V extends void
   ? { type: T }
   : { type: T } & V;
@@ -30,5 +32,7 @@ export type Action<T, V = void> = V extends void
 export type Optional<T> = { [P in keyof T]?: T[P] };
 
 export type PossiblyNull<T> = { [P in keyof T]: T[P] | null };
+
+export type Merge<L, R> = R & Pick<L, Exclude<keyof L, keyof R>>;
 
 export type SVGElementProps = SVGAttributes<SVGElement>;

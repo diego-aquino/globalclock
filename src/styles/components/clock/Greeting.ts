@@ -9,7 +9,7 @@ export const Container = styled.div`
   font-size: 1.7rem;
   letter-spacing: 0.18rem;
   text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.clockPage.primaryTextDim};
+  color: ${({ theme }) => theme.colors.primaryTextDim};
 
   svg {
     width: 2.2rem;

@@ -18,6 +18,12 @@ const GlobalStyle = createGlobalStyle`
 
     font-size: 1.6rem;
   }
+
+  input, textarea, select, button {
+    font-family: 'Source Sans Pro', sans-serif;
+    color: ${({ theme }) => theme.colors.secondaryText};
+    background-color: ${({ theme }) => theme.colors.primary};
+  }
 `;
 
 export default GlobalStyle;
