@@ -1,3 +1,4 @@
 import SmartLocationInput from './SmartLocationInput';
+import LocationModeSelect from './LocationModeSelect';
 
-export { SmartLocationInput };
+export { SmartLocationInput, LocationModeSelect };
