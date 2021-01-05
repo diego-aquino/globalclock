@@ -7,8 +7,6 @@ import { getTimeOfDay } from 'utils/date';
 import { Container } from 'styles/components/clock/Greeting';
 import theme from 'styles/theme';
 
-const { timePage: pageColors } = theme.colors;
-
 type GreetingIconFor = {
   [key in TimeOfDay]: typeof SunIcon | typeof MoonIcon;
 };
@@ -34,7 +32,7 @@ const Greeting: FC<Props> = (props) => {
 
   return (
     <Container>
-      <GreetingIcon fill={pageColors.primaryText} />
+      <GreetingIcon fill={theme.colors.primaryText} />
       Good {timeOfDay}, it&apos;s currently
     </Container>
   );
