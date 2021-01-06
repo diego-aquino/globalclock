@@ -6,13 +6,14 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
 
+    font-family: 'Source Sans Pro', sans-serif;
+
     ::selection {
       background-color: ${({ theme }) => theme.colors.detail}
     }
   }
 
   :root {
-    font-family: 'Source Sans Pro', sans-serif;
     font-size: 62.5%;
   }
 
@@ -26,6 +27,7 @@ const GlobalStyle = createGlobalStyle`
   input, textarea, select, button {
     font-family: 'Source Sans Pro', sans-serif;
     color: ${({ theme }) => theme.colors.secondaryText};
+
     background-color: ${({ theme }) => theme.colors.primary};
   }
 
