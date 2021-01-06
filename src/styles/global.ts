@@ -5,6 +5,10 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
+    ::selection {
+      background-color: ${({ theme }) => theme.colors.detail}
+    }
   }
 
   :root {
@@ -23,6 +27,17 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Source Sans Pro', sans-serif;
     color: ${({ theme }) => theme.colors.secondaryText};
     background-color: ${({ theme }) => theme.colors.primary};
+  }
+
+  .antDesign__messageContainer {
+    .anticon {
+      top: 0;
+    }
+
+    .anticon svg {
+      width: 1.9rem;
+      height: 1.9rem;
+    }
   }
 `;
 
