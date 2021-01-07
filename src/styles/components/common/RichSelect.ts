@@ -20,12 +20,13 @@ interface CollapsibleOptionsContainerProps {
 export const Container = styled.div<ContainerProps>`
   width: 21.4rem;
   margin-left: 1rem;
-  border-radius: ${theme.general.borderRadius};
+  border-radius: ${theme.general.borderRadius.normal};
 
   position: relative;
 
   background-color: transparent;
-  box-shadow: ${({ isFocused }) => isFocused && theme.general.boxShadowOnFocus};
+  box-shadow: ${({ isFocused }) =>
+    isFocused && theme.general.secondaryBoxShadowOnFocus};
   transition: box-shadow ${theme.general.transitionDuration};
 `;
 
@@ -33,9 +34,9 @@ export const Option = styled.button<OptionProps>`
   width: 100%;
   border: none;
   outline: none;
-  padding: ${theme.general.padding};
+  padding: ${theme.general.padding.normal};
 
-  border-radius: ${theme.general.borderRadius};
+  border-radius: ${theme.general.borderRadius.normal};
   ${({ isPrecededByOption, isFollowedByOption }) => css`
     ${isPrecededByOption &&
     css`
@@ -56,11 +57,11 @@ export const Option = styled.button<OptionProps>`
   font-size: ${theme.general.fontSize.normal};
 
   background-color: ${({ isSelected }) =>
-    isSelected ? theme.colors.primaryDarkest : theme.colors.primaryDark};
+    isSelected ? theme.colors.primaryLight : theme.colors.primaryLighter};
   transition: background-color ${theme.general.transitionDuration};
 
   :hover {
-    background-color: ${theme.colors.primaryDarker};
+    background-color: ${theme.colors.primaryLight};
   }
 `;
 
@@ -83,15 +84,15 @@ const boxShadowFadeIn = keyframes`
   from {
     box-shadow: none
   } to {
-    box-shadow: ${theme.general.boxShadowOnFocus};
+    box-shadow: ${theme.general.secondaryBoxShadowOnFocus};
   }
 `;
 
 export const CollapsibleOptionsContainer = styled.div<CollapsibleOptionsContainerProps>`
   width: 100%;
   padding-top: 0.75rem;
-  border-bottom-left-radius: ${theme.general.borderRadius};
-  border-bottom-right-radius: ${theme.general.borderRadius};
+  border-bottom-left-radius: ${theme.general.borderRadius.normal};
+  border-bottom-right-radius: ${theme.general.borderRadius.normal};
 
   display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
 
@@ -99,7 +100,7 @@ export const CollapsibleOptionsContainer = styled.div<CollapsibleOptionsContaine
   top: calc(100% + 0.5rem);
   left: 0;
 
-  background-color: ${theme.colors.primaryDark};
+  background-color: ${theme.colors.secondaryWhite};
 
   animation: ${boxShadowFadeIn} ${theme.general.transitionDuration} forwards;
 `;
@@ -119,14 +120,14 @@ export const Separator = styled.div`
 
   transform: translateX(-50%);
 
-  background-color: ${theme.colors.primaryDark};
+  background-color: ${theme.colors.secondaryWhite};
 
   ::after {
     content: '';
     width: 90%;
     height: 0.1rem;
 
-    background-color: ${theme.colors.secondaryLighter};
+    background-color: ${theme.colors.primaryLighter};
     opacity: 0.65;
   }
 `;

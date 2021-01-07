@@ -32,7 +32,7 @@ const Greeting: FC<Props> = (props) => {
 
   return (
     <Container>
-      <GreetingIcon fill={theme.colors.primaryText} />
+      <GreetingIcon fill={theme.colors.secondaryWhite} />
       Good {timeOfDay}, it&apos;s currently
     </Container>
   );

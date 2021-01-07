@@ -7,10 +7,6 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
 
     font-family: 'Source Sans Pro', sans-serif;
-
-    ::selection {
-      background-color: ${({ theme }) => theme.colors.detail}
-    }
   }
 
   :root {
@@ -26,9 +22,9 @@ const GlobalStyle = createGlobalStyle`
 
   input, textarea, select, button {
     font-family: 'Source Sans Pro', sans-serif;
-    color: ${({ theme }) => theme.colors.secondaryText};
+    color: ${({ theme }) => theme.colors.primary};
 
-    background-color: ${({ theme }) => theme.colors.primary};
+    background-color: ${({ theme }) => theme.colors.secondaryWhite};
   }
 
   .antDesign__messageContainer {

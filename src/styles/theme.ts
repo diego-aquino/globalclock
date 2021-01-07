@@ -1,42 +1,39 @@
-const baseColors = {
-  primary: '#ffffff',
-  primaryDark: '#efefef',
-  primaryDarker: '#e0e0e0',
-  primaryDarkest: '#d7d7d7',
-  secondary: '#0a0808',
-  secondaryLight: '#0a0808bf',
-  secondaryLighter: '#0a080899',
-  secondaryLightest: '#0a080859',
-  tertiary: '#e1c5b9',
-  tertiaryLight: '#f4ece9',
-  detail: '#1890ff',
+import { toRBGA } from '../utils/general';
 
-  green: '#52c41a',
-  yellow: '#faad14',
-  red: '#f5222d',
+const baseColors = {
+  primary: '#000214',
+  primaryLight: '#3c3b43',
+  primaryLighter: '#7B7D8B',
+  primaryOnHover: '#060A26',
+  secondaryWhite: '#ffffff',
+  secondaryBeige: '#ebddd6',
 };
 
 const theme = {
   general: {
-    padding: '1.2rem',
-    borderRadius: '0.7rem',
+    padding: {
+      normal: '1.6rem',
+      small: '1.4rem',
+    },
+    borderRadius: {
+      normal: '1rem',
+      small: '0.7rem',
+    },
     fontSize: {
-      normal: '1.75rem',
-      small: '1.6rem',
+      medium: '1.7rem',
+      normal: '1.6rem',
+      small: '1.3rem',
+      tiny: '1.1rem',
     },
     transitionDuration: '0.15s',
-    boxShadowBase:
-      '0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
-    boxShadowOnFocus: '0px 0px 7px 1px rgba(0, 0, 0, 0.2)',
+    boxShadowBase: `0px 4px 4px ${toRBGA(baseColors.primary, 0.25)}`,
+    secondaryBoxShadowOnFocus: `0px 0px 4px 1px ${toRBGA(
+      baseColors.secondaryBeige,
+      0.65,
+    )}`,
   },
 
-  colors: {
-    ...baseColors,
-
-    primaryText: baseColors.primary,
-    primaryTextDim: baseColors.primary,
-    secondaryText: baseColors.secondary,
-  },
+  colors: { ...baseColors },
 };
 
 export default theme;
