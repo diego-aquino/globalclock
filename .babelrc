@@ -1,7 +1,4 @@
 {
   "presets": ["next/babel"],
-  "plugins": [
-    ["styled-components", { "ssr": true }],
-    ["import", { "libraryName": "antd", "style": true }]
-  ]
+  "plugins": [["styled-components", { "ssr": true }]]
 }

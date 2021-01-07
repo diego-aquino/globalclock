@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { toRBGA } from 'utils/general';
+
 export const Container = styled.div`
   margin-bottom: -1.5rem;
 
@@ -9,7 +11,7 @@ export const Container = styled.div`
   font-size: 1.7rem;
   letter-spacing: 0.18rem;
   text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.primaryTextDim};
+  color: ${({ theme }) => toRBGA(theme.colors.secondaryWhite, 0.9)};
 
   svg {
     width: 2.2rem;

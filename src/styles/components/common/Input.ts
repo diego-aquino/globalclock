@@ -18,7 +18,7 @@ export const IconWrapper = styled.div`
 
   position: absolute;
   top: 50%;
-  left: ${theme.general.padding};
+  left: ${theme.general.padding.normal};
   transform: translateY(-50%);
 
   opacity: 0.7;
@@ -34,9 +34,9 @@ export const IconWrapper = styled.div`
 `;
 
 export const StyledInput = styled.input<StyledInputProps>`
-  padding: ${theme.general.padding};
+  padding: ${theme.general.padding.normal};
   border: none;
-  border-radius: ${theme.general.borderRadius};
+  border-radius: ${theme.general.borderRadius.normal};
   outline: none;
 
   font-size: ${theme.general.fontSize.normal};
@@ -45,18 +45,16 @@ export const StyledInput = styled.input<StyledInputProps>`
 
   ${({ hasIcon }) =>
     hasIcon &&
-    /* eslint-disable prettier/prettier */
     css`
-      padding-left:
-        ${2 * parseFloat(theme.general.padding) + parseFloat(inputIconSize)}rem;
+      padding-left: ${2 * parseFloat(theme.general.padding.normal) +
+      parseFloat(inputIconSize)}rem;
     `}
-    /* eslint-enable prettier/prettier */
 
   :hover {
     cursor: not-allowed;
   }
 
   :focus {
-    box-shadow: ${theme.general.boxShadowOnFocus};
+    box-shadow: ${theme.general.secondaryBoxShadowOnFocus};
   }
 `;
