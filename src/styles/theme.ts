@@ -39,5 +39,4 @@ const theme = {
   },
 };
 
-// Compromise necessary to allow the theme to be required on `next.config.js`
-module.exports = theme;
+export default theme;
