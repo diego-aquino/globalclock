@@ -35,4 +35,6 @@ export type PossiblyNull<T> = { [P in keyof T]: T[P] | null };
 
 export type Merge<L, R> = R & Pick<L, Exclude<keyof L, keyof R>>;
 
+export type RemoveFrom<L, R> = Pick<L, Exclude<keyof L, R>>;
+
 export type SVGElementProps = SVGAttributes<SVGElement>;
