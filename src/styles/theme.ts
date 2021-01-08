@@ -7,7 +7,7 @@ const baseColors = {
   primaryOnHover: '#060A26',
   secondaryWhite: '#ffffff',
   secondaryBeige: '#ebddd6',
-};
+} as const;
 
 const theme = {
   general: {
@@ -34,6 +34,6 @@ const theme = {
   },
 
   colors: { ...baseColors },
-};
+} as const;
 
 export default theme;
