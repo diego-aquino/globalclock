@@ -7,8 +7,6 @@ export const StyledLayout = styled(Layout)`
   display: flex;
   justify-content: center;
   align-items: center;
-
-  background-color: #dddddd; /* TEMPORARY */
 `;
 
 export const SearchContainer = styled.div`
