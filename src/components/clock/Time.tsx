@@ -21,7 +21,12 @@ const Time: FC<Props> = ({ initialDateTime, ...rest }) => {
   const getFormattedDisplayTime = useCallback((dateTime: DateTime) => {
     const { hour, minute } = dateTime.toObject();
 
-    if (!hour || !minute) return '';
+    if (hour === undefined || minute === undefined) {
+      throw new Error(
+        'Could not determine hours and/or minutes of DateTime ' +
+          dateTime.toString(),
+      );
+    }
 
     const [formattedHours, formattedMinutes] = [hour, minute].map(
       (value) => `${value < 10 ? '0' : ''}${value}`,
