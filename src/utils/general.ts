@@ -2,7 +2,7 @@ export function getTypedObjectKeys<T>(object: T): (keyof T)[] {
   return Object.keys(object) as (keyof T)[];
 }
 
-export function toRBGA(hexColor: string, opacity = 1): string {
+export function toRGBA(hexColor: string, opacity = 1): string {
   const hexCode = hexColor.slice(1, 7);
 
   const hexGroupedCodes: string[] = [];

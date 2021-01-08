@@ -1,4 +1,4 @@
-import { toRBGA } from '../utils/general';
+import { toRGBA } from '../utils/general';
 
 const baseColors = {
   primary: '#000214',
@@ -7,7 +7,7 @@ const baseColors = {
   primaryOnHover: '#060A26',
   secondaryWhite: '#ffffff',
   secondaryBeige: '#ebddd6',
-};
+} as const;
 
 const theme = {
   general: {
@@ -26,14 +26,14 @@ const theme = {
       tiny: '1.1rem',
     },
     transitionDuration: '0.15s',
-    boxShadowBase: `0px 4px 4px ${toRBGA(baseColors.primary, 0.25)}`,
-    secondaryBoxShadowOnFocus: `0px 0px 4px 1px ${toRBGA(
+    boxShadowBase: `0px 4px 4px ${toRGBA(baseColors.primary, 0.25)}`,
+    secondaryBoxShadowOnFocus: `0px 0px 4px 1px ${toRGBA(
       baseColors.secondaryBeige,
       0.65,
     )}`,
   },
 
   colors: { ...baseColors },
-};
+} as const;
 
 export default theme;
