@@ -10,10 +10,12 @@ import {
   parseGeolocationResponseToLocation,
   generateCityId,
 } from 'utils/location';
+import { MapMarkerIcon } from 'assets';
 import {
   StyledLayout,
   SearchContainer,
   StyledSmartLocationInput,
+  StyledButton,
 } from 'styles/pages/HomePage';
 
 const Home: FC = () => {
@@ -54,6 +56,14 @@ const Home: FC = () => {
     <StyledLayout pageTitle="GlobalClock">
       <SearchContainer>
         <StyledSmartLocationInput onSubmit={() => {}} />
+        <StyledButton
+          type="button"
+          styleMode="primary"
+          icon={<MapMarkerIcon />}
+          onClick={handleUseUserLocation}
+        >
+          Use my location
+        </StyledButton>
       </SearchContainer>
     </StyledLayout>
   );
