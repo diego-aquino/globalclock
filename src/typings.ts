@@ -37,4 +37,9 @@ export type Merge<L, R> = R & Pick<L, Exclude<keyof L, keyof R>>;
 
 export type RemoveFrom<L, R> = Pick<L, Exclude<keyof L, R>>;
 
+export type OnlyOne<T> = {
+  [K in keyof T]: Required<Pick<T, K>> &
+    Partial<Record<Exclude<keyof T, K>, undefined>>;
+}[keyof T];
+
 export type SVGElementProps = SVGAttributes<SVGElement>;
