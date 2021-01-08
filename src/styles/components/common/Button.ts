@@ -1,7 +1,6 @@
 import styled, { css } from 'styled-components';
 
 import theme from 'styles/theme';
-import { toRGBA } from 'utils/general';
 
 const buttonIconSize = '2rem';
 
@@ -21,10 +20,9 @@ const primaryButtonStyles = css`
     opacity: 0.9;
   }
 
-  :focus,
-  :active {
+  :focus {
     box-shadow: ${theme.general.boxShadowBase},
-      inset 0px 0px 0px 2px ${toRGBA(theme.colors.secondaryBeige, 0.65)};
+      ${theme.general.secondaryBoxShadowOnFocus};
   }
 `;
 

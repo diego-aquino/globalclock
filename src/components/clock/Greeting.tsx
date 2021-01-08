@@ -1,7 +1,7 @@
 import { FC, useMemo } from 'react';
 import { DateTime } from 'luxon';
 
-import { TimeOfDay } from 'typings';
+import { OnlyOne, TimeOfDay } from 'typings';
 import { SunIcon, MoonIcon } from 'assets';
 import { getTimeOfDay } from 'utils/date';
 import { Container } from 'styles/components/clock/Greeting';
@@ -18,9 +18,7 @@ const greetingIconFor: GreetingIconFor = {
   night: MoonIcon,
 };
 
-type Props =
-  | { timeOfDay: TimeOfDay; dateTime?: undefined }
-  | { timeOfDay?: undefined; dateTime: DateTime };
+type Props = OnlyOne<{ timeOfDay: TimeOfDay; dateTime: DateTime }>;
 
 const Greeting: FC<Props> = (props) => {
   const timeOfDay = useMemo(
