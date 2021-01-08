@@ -14,8 +14,7 @@ type Props = Merge<InputComponentProps, PartialProps>;
 const SmartLocationInput: FC<Props> = ({ onSubmit, ...rest }) => (
   <SmartInput
     icon={<SearchIcon />}
-    placeholder="Search for a city (available soon...)"
-    disabled
+    placeholder="Search for a city..."
     {...rest}
   />
 );

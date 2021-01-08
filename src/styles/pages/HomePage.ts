@@ -17,5 +17,5 @@ export const SearchContainer = styled.div`
 `;
 
 export const StyledSmartLocationInput = styled(SmartLocationInput)`
-  width: 40rem;
+  width: 46rem;
 `;
