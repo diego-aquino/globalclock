@@ -1,6 +1,6 @@
 import Greeting from './Greeting';
 import ClockTime from './ClockTime';
-import ClockThemeImage from './ClockThemeImage';
+import CityThemeImage from './CityThemeImage';
 import Time from './Time';
 
-export { Greeting, ClockTime, ClockThemeImage, Time };
+export { Greeting, ClockTime, CityThemeImage, Time };

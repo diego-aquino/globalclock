@@ -6,7 +6,7 @@ import { DateTime } from 'luxon';
 
 import { Address, Position } from 'typings';
 import { useLocation } from 'contexts/location';
-import { Greeting, ClockTime, ClockThemeImage } from 'components/clock';
+import { Greeting, ClockTime, CityThemeImage } from 'components/clock';
 import {
   extractCityLabel,
   parseGeolocationResponseToLocation,
@@ -96,7 +96,7 @@ const TimePage: FC<PageProps> = (props) => {
             <Greeting dateTime={localDateTime} />
             <ClockTime dateTime={localDateTime} />
             <LocationLabel>In {formattedCityLocation}</LocationLabel>
-            <ClockThemeImage address={address} dateTime={localDateTime} />
+            <CityThemeImage address={address} dateTime={localDateTime} />
           </>
         ) : (
           <p>Loading...</p>
