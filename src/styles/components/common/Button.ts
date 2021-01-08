@@ -1,4 +1,5 @@
-import styled, { css } from 'styled-components';
+import { LoadingIcon } from 'assets';
+import styled, { css, keyframes } from 'styled-components';
 
 import theme from 'styles/theme';
 
@@ -32,10 +33,9 @@ export const Container = styled.button<ContainerProps>`
   border-radius: ${theme.general.borderRadius.normal};
   outline: none;
 
-  display: flex;
-  align-items: center;
-
   font-size: ${theme.general.fontSize.medium};
+
+  position: relative;
 
   box-shadow: ${theme.general.boxShadowBase};
   transition: background-color ${theme.general.transitionDuration},
@@ -47,6 +47,35 @@ export const Container = styled.button<ContainerProps>`
   }
 
   ${({ styleMode }) => styleMode === 'primary' && primaryButtonStyles}
+`;
+
+export const PrimaryWrapper = styled.div<{ isHidden?: boolean }>`
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  opacity: ${({ isHidden }) => (isHidden ? 0 : 1)};
+  transition: opacity ${theme.general.transitionDuration};
+`;
+
+const customLoadingIconRotate = keyframes`
+  0% {
+    transform: rotate(0deg) translate(-50%, -50%);
+  } 100% {
+    transform: rotate(360deg) translate(-50%, -50%);
+  }
+`;
+
+export const StyledLoadingIcon = styled(LoadingIcon)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform-origin: 0 0;
+  animation-name: ${customLoadingIconRotate};
 `;
 
 export const IconWrapper = styled.div<{ hasIcon: boolean }>`
