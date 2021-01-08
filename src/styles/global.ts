@@ -26,17 +26,6 @@ const GlobalStyle = createGlobalStyle`
 
     background-color: ${({ theme }) => theme.colors.secondaryWhite};
   }
-
-  .antDesign__messageContainer {
-    .anticon {
-      top: 0;
-    }
-
-    .anticon svg {
-      width: 1.9rem;
-      height: 1.9rem;
-    }
-  }
 `;
 
 export default GlobalStyle;
