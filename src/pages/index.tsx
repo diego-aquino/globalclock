@@ -10,8 +10,6 @@ import {
   parseGeolocationResponseToLocation,
   generateCityId,
 } from 'utils/location';
-import { LocationModeSelect } from 'components/home';
-import { LocationMode } from 'components/home/LocationModeSelect';
 import {
   StyledLayout,
   SearchContainer,
@@ -42,15 +40,6 @@ const Home: FC = () => {
     }
   }, [dispatch]);
 
-  const handleLocationModeChange = useCallback(
-    (newLocationMode: LocationMode) => {
-      if (newLocationMode === 'userLocation') {
-        handleUseUserLocation();
-      }
-    },
-    [handleUseUserLocation],
-  );
-
   useEffect(() => {
     const isReadyToGoToTimePage = !!address;
 
@@ -65,7 +54,6 @@ const Home: FC = () => {
     <StyledLayout pageTitle="GlobalClock">
       <SearchContainer>
         <StyledSmartLocationInput onSubmit={() => {}} />
-        <LocationModeSelect onChange={handleLocationModeChange} />
       </SearchContainer>
     </StyledLayout>
   );
