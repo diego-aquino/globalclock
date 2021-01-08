@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 
 import theme from 'styles/theme';
 
-const inputIconSize = '2.3rem';
+const inputIconSize = '2rem';
 
 interface StyledInputProps {
   hasIcon: boolean;
@@ -21,15 +21,10 @@ export const IconWrapper = styled.div`
   left: ${theme.general.padding.normal};
   transform: translateY(-50%);
 
-  opacity: 0.7;
-
-  :hover {
-    cursor: not-allowed;
-  }
-
-  > * {
+  > svg {
     width: 100%;
     height: 100%;
+    stroke: ${theme.colors.primaryLight};
   }
 `;
 
@@ -39,8 +34,10 @@ export const StyledInput = styled.input<StyledInputProps>`
   border-radius: ${theme.general.borderRadius.normal};
   outline: none;
 
-  font-size: ${theme.general.fontSize.normal};
+  font-size: ${theme.general.fontSize.medium};
+  color: ${theme.colors.primary};
 
+  box-shadow: ${theme.general.boxShadowBase};
   transition: box-shadow ${theme.general.transitionDuration};
 
   ${({ hasIcon }) =>
@@ -50,11 +47,8 @@ export const StyledInput = styled.input<StyledInputProps>`
       parseFloat(inputIconSize)}rem;
     `}
 
-  :hover {
-    cursor: not-allowed;
-  }
-
   :focus {
-    box-shadow: ${theme.general.secondaryBoxShadowOnFocus};
+    box-shadow: ${theme.general.boxShadowBase},
+      ${theme.general.secondaryBoxShadowOnFocus};
   }
 `;
