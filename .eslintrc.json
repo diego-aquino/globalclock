@@ -88,6 +88,7 @@
     "comma-dangle": ["warn", "always-multiline"],
     "implicit-arrow-linebreak": "off",
     "no-plusplus": "off",
+    "prefer-template": "off",
     // "object-curly-newline": [
     //   "warn",
     //   {

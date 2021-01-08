@@ -77,9 +77,13 @@ export function parseGeolocationResponseToLocation(
     stateName: AdditionalDataObject.StateName,
   };
 
-  const timeZoneOffsetName = AdminInfo.TimeZoneOffset;
+  const localISOTime = AdminInfo.LocalTime;
 
-  const localDateTime = DateTime.fromISO(timestamp).setZone(timeZoneOffsetName);
+  const localZoneName = DateTime.fromISO(localISOTime, {
+    setZone: true,
+  }).zone.name;
+
+  const localDateTime = DateTime.fromISO(timestamp).setZone(localZoneName);
 
   return {
     position,
