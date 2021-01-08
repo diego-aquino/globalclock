@@ -4,13 +4,14 @@ import { NextRouter, useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
 import { DateTime } from 'luxon';
 
-import { Address, Position } from 'typings';
+import { Address, Location, Position } from 'typings';
 import { useLocation } from 'contexts/location';
 import { Greeting, ClockTime, CityThemeImage } from 'components/clock';
 import {
   extractCityLabel,
   parseGeolocationResponseToLocation,
 } from 'utils/location';
+import { serializeObject } from 'utils/general';
 import { geocode } from 'services/here';
 import { StyledLayout, Container, LocationLabel } from 'styles/pages/TimePage';
 
@@ -31,46 +32,53 @@ const TimePage: FC<PageProps> = (props) => {
   const [location] = useLocation();
   const [localDateTime, setLocalDateTime] = useState<DateTime | null>(null);
 
-  const {
-    query: { cityId },
-  }: PageRouter = useRouter();
+  const { query }: PageRouter = useRouter();
 
-  const getUpToDateLocalDateTime = useCallback(async () => {
-    if (location.localDateTime && location.baseDeviceDateTime) {
-      const timeSinceLocationRequest = location.baseDeviceDateTime.diffNow();
+  const getAvailableLocalTime = useCallback(() => {
+    if (!location.localDateTime || !location.baseDeviceDateTime) return null;
 
-      const upToDateLocalDateTime = location.localDateTime.plus({
-        milliseconds: Math.abs(timeSinceLocationRequest.valueOf()),
-      });
+    const millisecondsSinceLocationRequest = Math.abs(
+      location.baseDeviceDateTime.diffNow().valueOf(),
+    );
 
-      return Promise.resolve(upToDateLocalDateTime);
-    }
+    const currentLocalTime = location.localDateTime.plus({
+      milliseconds: millisecondsSinceLocationRequest,
+    });
 
-    if (!cityId) return Promise.resolve(null);
+    return currentLocalTime;
+  }, [location]);
 
-    const cityLabel = extractCityLabel(cityId);
-    if (!cityLabel) return Promise.resolve(null);
+  const requestCurrentLocalTime = useCallback(async () => {
+    if (!query.cityId) return null;
+
+    const cityLabel = extractCityLabel(query.cityId);
+    if (!cityLabel) return null;
 
     const geolocationResponse = await geocode(cityLabel);
 
     const {
-      localDateTime: upToDateLocalDateTime,
+      localDateTime: currentLocalTime,
     } = parseGeolocationResponseToLocation(geolocationResponse);
 
-    return upToDateLocalDateTime;
-  }, [cityId, location.baseDeviceDateTime, location.localDateTime]);
+    return currentLocalTime;
+  }, [query.cityId]);
+
+  const getCurrentLocalTime = useCallback(
+    () => getAvailableLocalTime() || requestCurrentLocalTime(),
+    [getAvailableLocalTime, requestCurrentLocalTime],
+  );
 
   useEffect(() => {
-    async function updateToLatestLocalDateTime() {
-      const upToDateLocalDateTime = await getUpToDateLocalDateTime();
+    async function updateToLatestLocalTime() {
+      const currentLocalTime = await getCurrentLocalTime();
 
-      if (cityId) {
-        setLocalDateTime(upToDateLocalDateTime);
+      if (query.cityId) {
+        setLocalDateTime(currentLocalTime);
       }
     }
 
-    updateToLatestLocalDateTime();
-  }, [cityId, getUpToDateLocalDateTime]);
+    updateToLatestLocalTime();
+  }, [query.cityId, getCurrentLocalTime]);
 
   const address = useMemo(() => location.address || props.address || null, [
     location,
@@ -114,24 +122,31 @@ export const getStaticPaths: GetStaticPaths<PageParams> = async () => ({
 export const getStaticProps: GetStaticProps<PageProps, PageParams> = async ({
   params,
 }) => {
+  async function getLocationBasedOnCityId(
+    cityId: string,
+  ): Promise<Location | null> {
+    const cityLabel = extractCityLabel(cityId);
+    if (!cityLabel) return null;
+
+    const geolocationResponse = await geocode(cityLabel);
+    const location = parseGeolocationResponseToLocation(geolocationResponse);
+
+    return location;
+  }
+
   async function generateStaticPropsFromCityId(
     cityId: string | undefined,
   ): Promise<PageProps> {
     if (!cityId) return {};
 
-    const cityLabel = extractCityLabel(cityId);
-    if (!cityLabel) return {};
+    const location = await getLocationBasedOnCityId(cityId);
+    if (!location) return {};
 
-    const geolocationResponse = await geocode(cityLabel);
+    const serializedStaticProps = serializeObject({
+      address: location.address,
+    });
 
-    const location = parseGeolocationResponseToLocation(geolocationResponse);
-    const { position, address } = location;
-
-    const serializableStaticProps = JSON.parse(
-      JSON.stringify({ position, address }, (_, value) => value ?? null),
-    );
-
-    return serializableStaticProps;
+    return serializedStaticProps;
   }
 
   return {
