@@ -23,38 +23,39 @@ const placeholderThemeImageSrc =
   'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1366&q=80';
 
 const Home: FC = () => {
-  const [{ address }, dispatch] = useLocation();
+  const [_, dispatch] = useLocation();
 
   const router = useRouter();
+
+  const redirectToTimePageBasedOn = useCallback(
+    (cityAddress: Address) => {
+      const cityId = generateCityId(cityAddress);
+
+      router.push({ pathname: `/time/${cityId}` });
+    },
+    [router],
+  );
 
   const handleUseUserLocation = useCallback(async () => {
     const userPositionResponse = await requestUserPosition();
 
-    if (userPositionResponse.status === 'SUCCESS') {
-      const geolocationResponse = await reverseGeocode(
-        userPositionResponse.position,
-      );
+    if (userPositionResponse.status !== 'SUCCESS') return;
 
-      const baseDeviceDateTime = DateTime.local();
-      const location = parseGeolocationResponseToLocation(geolocationResponse);
+    const geolocationResponse = await reverseGeocode(
+      userPositionResponse.position,
+    );
 
-      dispatch({
-        type: 'SET_LOCATION_DETAILS',
-        baseDeviceDateTime,
-        ...location,
-      });
-    }
-  }, [dispatch]);
+    const baseDeviceDateTime = DateTime.local();
+    const location = parseGeolocationResponseToLocation(geolocationResponse);
 
-  useEffect(() => {
-    const isReadyToGoToTimePage = !!address;
+    dispatch({
+      type: 'SET_LOCATION_DETAILS',
+      baseDeviceDateTime,
+      ...location,
+    });
 
-    if (isReadyToGoToTimePage) {
-      const cityId = generateCityId(address as Address);
-
-      router.push({ pathname: `/time/${cityId}` });
-    }
-  }, [router, address]);
+    redirectToTimePageBasedOn(location.address);
+  }, [dispatch, redirectToTimePageBasedOn]);
 
   return (
     <StyledLayout pageTitle="GlobalClock">
