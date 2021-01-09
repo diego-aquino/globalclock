@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { Address, Position, TimeZone } from 'typings';
+import { encodeQueryObject } from 'utils/general';
 
 interface ParsedGeocodeResponse {
   address: Address;
@@ -8,6 +9,8 @@ interface ParsedGeocodeResponse {
 }
 
 type GeocodeClientResponse = ParsedGeocodeResponse;
+
+type GeocodeQualifiedQuery = Partial<Address>;
 
 function parseHereGeocodeResponse(
   response: Here.GeocodeResponse,
@@ -54,4 +57,38 @@ export async function reverseGeocodeClient(
     address,
     timeZone,
   };
+}
+
+export async function geocodeClient(
+  query: GeocodeQualifiedQuery,
+): Promise<GeocodeClientResponse> {
+  const { city, state, country } = query;
+  const encodedQualifiedQuery = encodeQueryObject({ city, state, country });
+
+  const { data } = await axios.get<Here.GeocodeResponse>(
+    `/api/geocode?${encodedQualifiedQuery}`,
+  );
+
+  const { address, timeZone } = parseHereGeocodeResponse(data);
+
+  return {
+    address,
+    timeZone,
+  };
+}
+
+export async function requestAddressDetails(
+  qualifiedQuery: Partial<Address>,
+): Promise<Address> {
+  const { address } = await geocodeClient(qualifiedQuery);
+
+  return address;
+}
+
+export async function requestLocalTimeZone(
+  address: Partial<Address>,
+): Promise<TimeZone> {
+  const { timeZone } = await geocodeClient(address);
+
+  return timeZone;
 }
