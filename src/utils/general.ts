@@ -1,3 +1,5 @@
+import { QueryObject } from 'typings';
+
 export function getTypedObjectKeys<T>(object: T): (keyof T)[] {
   return Object.keys(object) as (keyof T)[];
 }
@@ -32,4 +34,26 @@ export function serializeObject<Original, Result = any>(
   const serializedObject = JSON.parse(JSON.stringify(object));
 
   return serializedObject;
+}
+
+export function encodeQueryObject(queryObject: QueryObject): string {
+  const paramNames = getTypedObjectKeys(queryObject);
+
+  const encodedQueryItems = paramNames
+    .filter((paramName) => {
+      const paramValue = queryObject[paramName];
+      const isValueTruthy = !!paramValue;
+
+      return isValueTruthy;
+    })
+    .map((paramName) => {
+      const paramValue = queryObject[paramName];
+
+      const encodedParamName = encodeURIComponent(paramName);
+      const encodedParamValue = encodeURIComponent(String(paramValue));
+
+      return `${encodedParamName}=${encodedParamValue}`;
+    });
+
+  return encodedQueryItems.join('&');
 }
