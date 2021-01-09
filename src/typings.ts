@@ -25,6 +25,8 @@ export interface Location {
 
 export type Direction = 'up' | 'right' | 'down' | 'left';
 
+export type QueryObject = Record<string, unknown>;
+
 export type Action<T, V = void> = V extends void
   ? { type: T }
   : { type: T } & V;

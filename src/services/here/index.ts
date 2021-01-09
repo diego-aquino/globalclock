@@ -1,33 +1,33 @@
 import axios from 'axios';
 
-import { Position } from 'typings';
+import { Position, QueryObject } from 'typings';
+import { encodeQueryObject } from 'utils/general';
 import { GeolocationResponse } from './types';
 
-const hereAPIEndpoints = {
+export const hereEndpoints = {
   geocode: 'https://geocoder.ls.hereapi.com/6.2/geocode.json',
   reverseGeocode:
     'https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json',
 } as const;
 
-type HereAPIEndpointNames = keyof typeof hereAPIEndpoints;
-type HereAPIEndpointURL = typeof hereAPIEndpoints[HereAPIEndpointNames];
+const defaultQueryParams = {
+  language: 'en-US',
+  gen: '9',
+  jsonattributes: '1',
+  apiKey: process.env.NEXT_PUBLIC_HERE_API_KEY,
+};
 
-function generateHereRequestURL(
-  endpointURL: HereAPIEndpointURL,
-  ...queryParams: string[]
+type HereEndpointName = keyof typeof hereEndpoints;
+type HereEndpointURL = typeof hereEndpoints[HereEndpointName];
+
+export function generateHereRequestURL(
+  endpointURL: HereEndpointURL,
+  query: QueryObject,
 ): string {
-  if (queryParams.length === 0) {
-    throw new Error(
-      'No enough query parameters. Could not generate a valid request URL.',
-    );
-  }
+  const completeQuery = Object.assign(query, defaultQueryParams);
+  const encodedCompleteQuery = encodeQueryObject(completeQuery);
 
-  const requestURL = [
-    `${endpointURL}`,
-    `?${queryParams.join('&')}`,
-    '&language=en-US',
-    `&apiKey=${process.env.NEXT_PUBLIC_HERE_API_KEY}`,
-  ].join('');
+  const requestURL = `${endpointURL}?${encodedCompleteQuery}`;
 
   return requestURL;
 }
@@ -35,17 +35,11 @@ function generateHereRequestURL(
 export async function geocode(
   geocodeSearch: string,
 ): Promise<GeolocationResponse> {
-  const requestURL = generateHereRequestURL(
-    hereAPIEndpoints.geocode,
-    `searchtext=${encodeURIComponent(geocodeSearch)}`,
-    `locationattributes=${[
-      'address',
-      'additionalData',
-      'adminInfo',
-      'timeZone',
-    ].join(',')}`,
-    `timestamp=${new Date().toISOString()}`,
-  );
+  const requestURL = generateHereRequestURL(hereEndpoints.geocode, {
+    searchtext: geocodeSearch,
+    locationattributes: 'adminInfo,timeZone',
+    timestamp: new Date().toISOString(),
+  });
 
   const { data: locationResponse } = await axios.get<GeolocationResponse>(
     requestURL,
@@ -57,19 +51,13 @@ export async function geocode(
 export async function reverseGeocode(
   position: Position,
 ): Promise<GeolocationResponse> {
-  const requestURL = generateHereRequestURL(
-    hereAPIEndpoints.reverseGeocode,
-    `prox=${position.latitude},${position.longitude}`,
-    'mode=retrieveAddresses',
-    'maxresults=1',
-    `locationattributes=${[
-      'address',
-      'additionalData',
-      'adminInfo',
-      'timeZone',
-    ].join(',')}`,
-    `timestamp=${new Date().toISOString()}`,
-  );
+  const requestURL = generateHereRequestURL(hereEndpoints.reverseGeocode, {
+    prox: `${position.latitude},${position.longitude}`,
+    mode: 'retrieveAddresses',
+    maxresults: 1,
+    locationattributes: 'adminInfo,timeZone',
+    timestamp: new Date().toISOString(),
+  });
 
   const { data: locationResponse } = await axios.get<GeolocationResponse>(
     requestURL,
