@@ -7,10 +7,10 @@ interface ParsedGeocodeResponse {
   timeZone: TimeZone;
 }
 
-type ReverseGeocodeClientResponse = ParsedGeocodeResponse;
+type GeocodeClientResponse = ParsedGeocodeResponse;
 
-function parseReverseGeocodeResponse(
-  response: Here.ReverseGeocodeResponse,
+function parseHereGeocodeResponse(
+  response: Here.GeocodeResponse,
 ): ParsedGeocodeResponse {
   const [{ result }] = response.response.view;
   const { location } = result[0];
@@ -41,14 +41,14 @@ function parseReverseGeocodeResponse(
 
 export async function reverseGeocodeClient(
   position: Position,
-): Promise<ReverseGeocodeClientResponse> {
+): Promise<GeocodeClientResponse> {
   const { latitude, longitude } = position;
 
-  const { data } = await axios.get<Here.ReverseGeocodeResponse>(
+  const { data } = await axios.get<Here.GeocodeResponse>(
     `/api/reverse-geocode?position=${latitude},${longitude}`,
   );
 
-  const { address, timeZone } = parseReverseGeocodeResponse(data);
+  const { address, timeZone } = parseHereGeocodeResponse(data);
 
   return {
     address,

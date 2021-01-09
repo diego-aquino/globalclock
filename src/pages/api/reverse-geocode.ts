@@ -7,7 +7,7 @@ interface RequestQuery extends NowRequestQuery {
   position: string;
 }
 
-type ResponseData = Here.ReverseGeocodeResponse;
+type ResponseData = Here.GeocodeResponse;
 
 const reverseGeocodeHandler: APIRequestHandler = async (request, response) => {
   const { position } = request.query as RequestQuery;

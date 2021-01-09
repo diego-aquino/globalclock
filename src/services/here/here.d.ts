@@ -45,11 +45,7 @@ declare namespace Here {
     view: ViewItem[];
   }
 
-  export interface ReverseGeocodeResponse {
-    response: Response;
-  }
-
   export interface GeocodeResponse {
-    response: any;
+    response: Response;
   }
 }
