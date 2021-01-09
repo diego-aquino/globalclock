@@ -15,7 +15,7 @@ const reverseGeocodeHandler: APIRequestHandler = async (request, response) => {
 
   const locationResponse = await reverseGeocode({ latitude, longitude });
 
-  return response.json(locationResponse);
+  return response.status(200).json(locationResponse);
 };
 
 export default reverseGeocodeHandler;
