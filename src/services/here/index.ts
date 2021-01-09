@@ -31,11 +31,19 @@ export function generateHereRequestURL(
   return requestURL;
 }
 
+interface GeocodeQueryObject {
+  city?: string;
+  state?: string;
+  country?: string;
+}
+
 export async function geocode(
-  geocodeSearch: string,
+  query: string | GeocodeQueryObject,
 ): Promise<Here.GeocodeResponse> {
+  const queryObject = typeof query === 'string' ? { searchtext: query } : query;
+
   const requestURL = generateHereRequestURL(hereEndpoints.geocode, {
-    searchtext: geocodeSearch,
+    ...queryObject,
     locationattributes: 'adminInfo,timeZone',
     timestamp: new Date().toISOString(),
   });
