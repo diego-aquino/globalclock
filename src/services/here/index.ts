@@ -2,7 +2,6 @@ import axios from 'axios';
 
 import { Position, QueryObject } from 'typings';
 import { encodeQueryObject } from 'utils/general';
-import { GeolocationResponse } from './types';
 
 export const hereEndpoints = {
   geocode: 'https://geocoder.ls.hereapi.com/6.2/geocode.json',
@@ -34,14 +33,14 @@ export function generateHereRequestURL(
 
 export async function geocode(
   geocodeSearch: string,
-): Promise<GeolocationResponse> {
+): Promise<Here.GeolocationResponse> {
   const requestURL = generateHereRequestURL(hereEndpoints.geocode, {
     searchtext: geocodeSearch,
     locationattributes: 'adminInfo,timeZone',
     timestamp: new Date().toISOString(),
   });
 
-  const { data: locationResponse } = await axios.get<GeolocationResponse>(
+  const { data: locationResponse } = await axios.get<Here.GeolocationResponse>(
     requestURL,
   );
 
@@ -50,7 +49,7 @@ export async function geocode(
 
 export async function reverseGeocode(
   position: Position,
-): Promise<GeolocationResponse> {
+): Promise<Here.ReverseGeolocationResponse> {
   const requestURL = generateHereRequestURL(hereEndpoints.reverseGeocode, {
     prox: `${position.latitude},${position.longitude}`,
     mode: 'retrieveAddresses',
@@ -59,9 +58,9 @@ export async function reverseGeocode(
     timestamp: new Date().toISOString(),
   });
 
-  const { data: locationResponse } = await axios.get<GeolocationResponse>(
-    requestURL,
-  );
+  const {
+    data: locationResponse,
+  } = await axios.get<Here.ReverseGeolocationResponse>(requestURL);
 
   return locationResponse;
 }
