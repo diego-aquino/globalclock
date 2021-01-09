@@ -1,23 +1,19 @@
 import { FC, useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
-import { DateTime } from 'luxon';
 
 import { Address } from 'typings';
-import { useLocation } from 'contexts/location';
-import { reverseGeocode } from 'services/here';
-import {
-  requestUserPosition,
-  parseGeolocationResponseToLocation,
-  generateCityId,
-} from 'utils/location';
 import { MapMarkerIcon } from 'assets';
+import { useLocation } from 'contexts/location';
+import { BackgroundImage } from 'components/common';
+import { encodeQueryObject } from 'utils/general';
+import { requestUserPosition } from 'utils/location';
+import { reverseGeocodeClient } from 'services/here/client';
 import {
   StyledLayout,
   SearchContainer,
   StyledSmartLocationInput,
   StyledButton,
 } from 'styles/pages/HomePage';
-import { BackgroundImage } from 'components/common';
 
 const placeholderThemeImageSrc =
   'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1366&q=80';
@@ -30,9 +26,10 @@ const Home: FC = () => {
 
   const redirectToTimePageBasedOn = useCallback(
     (cityAddress: Address) => {
-      const cityId = generateCityId(cityAddress);
+      const { city, state, country } = cityAddress;
+      const query = encodeQueryObject({ city, state, country });
 
-      router.push({ pathname: `/time/${cityId}` });
+      router.push({ pathname: `/time`, query });
     },
     [router],
   );
@@ -44,22 +41,18 @@ const Home: FC = () => {
 
     setIsUserLocationLoading(true);
 
-    const geolocationResponse = await reverseGeocode(
-      userPositionResponse.position,
-    );
-
-    const baseDeviceDateTime = DateTime.local();
-    const location = parseGeolocationResponseToLocation(geolocationResponse);
+    const { position } = userPositionResponse;
+    const { address, timeZone } = await reverseGeocodeClient(position);
 
     setIsUserLocationLoading(false);
 
     dispatch({
       type: 'SET_LOCATION_DETAILS',
-      baseDeviceDateTime,
-      ...location,
+      address,
+      timeZone,
     });
 
-    redirectToTimePageBasedOn(location.address);
+    redirectToTimePageBasedOn(address);
   }, [dispatch, redirectToTimePageBasedOn]);
 
   return (
