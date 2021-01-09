@@ -1,4 +1,5 @@
 import { SVGAttributes } from 'react';
+import { NowRequest, NowResponse } from '@vercel/node';
 import { DateTime } from 'luxon';
 
 export type TimeOfDay = 'morning' | 'afternoon' | 'evening' | 'night';
@@ -45,3 +46,8 @@ export type OnlyOne<T> = {
 }[keyof T];
 
 export type SVGElementProps = SVGAttributes<SVGElement>;
+
+export type APIRequestHandler = (
+  request: NowRequest,
+  response: NowResponse,
+) => Promise<NowResponse>;
