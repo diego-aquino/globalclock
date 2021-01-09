@@ -33,23 +33,23 @@ export function generateHereRequestURL(
 
 export async function geocode(
   geocodeSearch: string,
-): Promise<Here.GeolocationResponse> {
+): Promise<Here.ReverseGeocodeResponse> {
   const requestURL = generateHereRequestURL(hereEndpoints.geocode, {
     searchtext: geocodeSearch,
     locationattributes: 'adminInfo,timeZone',
     timestamp: new Date().toISOString(),
   });
 
-  const { data: locationResponse } = await axios.get<Here.GeolocationResponse>(
-    requestURL,
-  );
+  const {
+    data: locationResponse,
+  } = await axios.get<Here.ReverseGeocodeResponse>(requestURL);
 
   return locationResponse;
 }
 
 export async function reverseGeocode(
   position: Position,
-): Promise<Here.ReverseGeolocationResponse> {
+): Promise<Here.ReverseGeocodeResponse> {
   const requestURL = generateHereRequestURL(hereEndpoints.reverseGeocode, {
     prox: `${position.latitude},${position.longitude}`,
     mode: 'retrieveAddresses',
@@ -60,7 +60,7 @@ export async function reverseGeocode(
 
   const {
     data: locationResponse,
-  } = await axios.get<Here.ReverseGeolocationResponse>(requestURL);
+  } = await axios.get<Here.ReverseGeocodeResponse>(requestURL);
 
   return locationResponse;
 }
