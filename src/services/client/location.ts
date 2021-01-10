@@ -1,6 +1,12 @@
 import axios from 'axios';
 
-import { Address, Position, TimeZone } from 'typings';
+import { Address, Position, QueryObject, TimeZone } from 'typings';
+import { // eslint-disable-line prettier/prettier
+  RequestQuery as GeocodeRequestQuery,
+} from 'pages/api/geocode';
+import { // eslint-disable-line prettier/prettier
+  RequestQuery as ReverseGeocodeRequestQuery,
+} from 'pages/api/reverse-geocode';
 import { encodeQueryObject } from 'utils/general';
 
 interface ParsedGeocodeResponse {
@@ -9,8 +15,6 @@ interface ParsedGeocodeResponse {
 }
 
 type GeocodeClientResponse = ParsedGeocodeResponse;
-
-type GeocodeQualifiedQuery = Partial<Address>;
 
 function parseHereGeocodeResponse(
   response: Here.GeocodeResponse,
@@ -22,9 +26,9 @@ function parseHereGeocodeResponse(
   const { timeZone } = location.adminInfo;
 
   const address: Address = {
-    city,
-    state,
-    country,
+    cityName: city,
+    stateCode: state,
+    countryCode: country,
   };
 
   additionalData.forEach((item) => {
@@ -45,10 +49,13 @@ function parseHereGeocodeResponse(
 export async function reverseGeocodeClient(
   position: Position,
 ): Promise<GeocodeClientResponse> {
-  const { latitude, longitude } = position;
+  const requestQuery: ReverseGeocodeRequestQuery = {
+    position: `${position.latitude},${position.longitude}`,
+  };
+  const encodedQuery = encodeQueryObject(requestQuery as QueryObject);
 
   const { data } = await axios.get<Here.GeocodeResponse>(
-    `/api/reverse-geocode?position=${latitude},${longitude}`,
+    `/api/reverse-geocode?${encodedQuery}`,
   );
 
   const { address, timeZone } = parseHereGeocodeResponse(data);
@@ -60,7 +67,7 @@ export async function reverseGeocodeClient(
 }
 
 export async function geocodeClient(
-  query: GeocodeQualifiedQuery,
+  query: GeocodeRequestQuery,
 ): Promise<GeocodeClientResponse> {
   const { city, state, country } = query;
   const encodedQualifiedQuery = encodeQueryObject({ city, state, country });
@@ -69,26 +76,31 @@ export async function geocodeClient(
     `/api/geocode?${encodedQualifiedQuery}`,
   );
 
-  const { address, timeZone } = parseHereGeocodeResponse(data);
+  const geocodeResponse = parseHereGeocodeResponse(data);
 
-  return {
-    address,
-    timeZone,
-  };
+  return geocodeResponse;
 }
 
 export async function requestAddressDetails(
-  qualifiedQuery: Partial<Address>,
+  query: Partial<Address>,
 ): Promise<Address> {
-  const { address } = await geocodeClient(qualifiedQuery);
+  const { address } = await geocodeClient({
+    city: query.cityName,
+    state: query.stateCode || query.stateName,
+    country: query.countryCode || query.countryName,
+  });
 
   return address;
 }
 
 export async function requestLocalTimeZone(
-  address: Partial<Address>,
+  query: Partial<Address>,
 ): Promise<TimeZone> {
-  const { timeZone } = await geocodeClient(address);
+  const { timeZone } = await geocodeClient({
+    city: query.cityName,
+    state: query.stateCode || query.stateName,
+    country: query.countryCode || query.countryName,
+  });
 
   return timeZone;
 }

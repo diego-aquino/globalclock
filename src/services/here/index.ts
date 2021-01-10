@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { Position, QueryObject } from 'typings';
+import { Address, Position, QueryObject } from 'typings';
 import { encodeQueryObject } from 'utils/general';
 
 export const hereEndpoints = {
@@ -31,16 +31,19 @@ export function generateHereRequestURL(
   return requestURL;
 }
 
-interface GeocodeQueryObject {
-  city?: string;
-  state?: string;
-  country?: string;
-}
+type GeocodeQuery = Partial<Address> & {
+  searchtext?: string;
+};
 
 export async function geocode(
-  query: string | GeocodeQueryObject,
+  query: GeocodeQuery,
 ): Promise<Here.GeocodeResponse> {
-  const queryObject = typeof query === 'string' ? { searchtext: query } : query;
+  const queryObject = {
+    searchtext: query.searchtext,
+    city: query.cityName,
+    state: query.stateCode || query.stateName,
+    country: query.countryCode || query.countryName,
+  };
 
   const requestURL = generateHereRequestURL(hereEndpoints.geocode, {
     ...queryObject,
@@ -61,7 +64,7 @@ export async function reverseGeocode(
   const requestURL = generateHereRequestURL(hereEndpoints.reverseGeocode, {
     prox: `${position.latitude},${position.longitude}`,
     mode: 'retrieveAddresses',
-    maxresults: 1,
+    maxresults: '1',
     locationattributes: 'adminInfo,timeZone',
     timestamp: new Date().toISOString(),
   });

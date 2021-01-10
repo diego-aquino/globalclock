@@ -1,32 +1,23 @@
-import { NowRequest } from '@vercel/node';
-
-import { Address, ServerlessRequestHandler, Merge } from 'typings';
+import { ServerlessRequestHandler } from 'typings';
 import { geocode } from 'services/here';
 
 const CACHE_TIME_IN_SECONDS = 15768000; // 6 months
 
-type Request = Merge<
-  NowRequest,
-  {
-    query: Partial<Address>;
-  }
->;
+export interface RequestQuery {
+  city?: string;
+  state?: string;
+  country?: string;
+}
 
 type ResponseData = Here.GeocodeResponse;
 
 const geocodeHandler: ServerlessRequestHandler = async (request, response) => {
-  const {
-    city,
-    state,
-    stateName,
-    country,
-    countryName,
-  } = (request as Request).query;
+  const { city, state, country }: RequestQuery = request.query;
 
   const locationResponseData: ResponseData = await geocode({
-    city,
-    state: state || stateName,
-    country: country || countryName,
+    cityName: city,
+    stateCode: state,
+    countryCode: country,
   });
 
   response.setHeader(

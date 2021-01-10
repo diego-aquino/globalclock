@@ -26,8 +26,19 @@ const Home: FC = () => {
 
   const redirectToTimePageBasedOn = useCallback(
     (cityAddress: Address) => {
-      const { city, state, country } = cityAddress;
-      const query = encodeQueryObject({ city, state, country });
+      const {
+        cityName,
+        stateName,
+        stateCode,
+        countryName,
+        countryCode,
+      } = cityAddress;
+
+      const query = encodeQueryObject({
+        city: cityName,
+        state: stateCode || stateName,
+        country: countryCode || countryName,
+      });
 
       router.push({ pathname: `/time`, query });
     },

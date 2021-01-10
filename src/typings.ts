@@ -24,16 +24,18 @@ export interface Position {
 }
 
 export interface Address {
-  city: string;
-  state: string;
+  cityName: string;
+  stateCode: string;
   stateName?: string;
-  country: string;
+  countryCode: string;
   countryName?: string;
 }
 
 export type TimeZone = Here.TimeZone;
 
-export type QueryObject = Record<string, unknown>;
+export interface QueryObject {
+  [key: string]: string | undefined | null;
+}
 
 export type Action<T, V = void> = V extends void
   ? { type: T }
