@@ -1,6 +1,6 @@
 import { NowRequestQuery } from '@vercel/node';
 
-import { APIRequestHandler } from 'typings';
+import { ServerlessRequestHandler } from 'typings';
 import { reverseGeocode } from 'services/here';
 
 interface RequestQuery extends NowRequestQuery {
@@ -9,7 +9,10 @@ interface RequestQuery extends NowRequestQuery {
 
 type ResponseData = Here.GeocodeResponse;
 
-const reverseGeocodeHandler: APIRequestHandler = async (request, response) => {
+const reverseGeocodeHandler: ServerlessRequestHandler = async (
+  request,
+  response,
+) => {
   const { position } = request.query as RequestQuery;
   const [latitude, longitude] = position
     .split(',')

@@ -1,6 +1,6 @@
 import { NowRequest } from '@vercel/node';
 
-import { Address, APIRequestHandler, Merge } from 'typings';
+import { Address, ServerlessRequestHandler, Merge } from 'typings';
 import { geocode } from 'services/here';
 
 type Request = Merge<
@@ -12,7 +12,7 @@ type Request = Merge<
 
 type ResponseData = Here.GeocodeResponse;
 
-const geocodeHandler: APIRequestHandler = async (request, response) => {
+const geocodeHandler: ServerlessRequestHandler = async (request, response) => {
   const {
     city,
     state,

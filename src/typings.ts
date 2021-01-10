@@ -41,7 +41,7 @@ export type Action<T, V = void> = V extends void
 
 export type SVGElementProps = SVGAttributes<SVGElement>;
 
-export type APIRequestHandler = (
+export type ServerlessRequestHandler = (
   request: NowRequest,
   response: NowResponse,
 ) => Promise<NowResponse>;
