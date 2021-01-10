@@ -104,3 +104,15 @@ export async function requestLocalTimeZone(
 
   return timeZone;
 }
+
+export async function requestAutocompleteSuggestions(
+  queryString: string,
+): Promise<Here.Suggestion[]> {
+  const autocompleteResponse = await axios.get<Here.AutocompleteResponse>(
+    `/api/autocomplete?query=${queryString}`,
+  );
+
+  const { suggestions } = autocompleteResponse.data;
+
+  return suggestions;
+}

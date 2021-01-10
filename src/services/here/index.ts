@@ -7,6 +7,7 @@ export const hereEndpoints = {
   geocode: 'https://geocoder.ls.hereapi.com/6.2/geocode.json',
   reverseGeocode:
     'https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json',
+  autocomplete: 'https://autocomplete.geocoder.ls.hereapi.com/6.2/suggest.json',
 } as const;
 
 const defaultQueryParams = {
@@ -72,4 +73,27 @@ export async function reverseGeocode(
   );
 
   return locationResponse;
+}
+
+interface AutocompleteOptions {
+  resultType?: 'areas' | 'postalCode' | 'city';
+}
+
+export async function autocomplete(
+  queryString: string,
+  options?: AutocompleteOptions,
+): Promise<Here.AutocompleteResponse> {
+  const requestURL = generateHereRequestURL(hereEndpoints.autocomplete, {
+    query: queryString,
+    beginHighlight: '[',
+    endHighlight: ']',
+    resultType: options?.resultType,
+    maxresults: '4',
+  });
+
+  const {
+    data: autocompleteResponse,
+  } = await axios.get<Here.AutocompleteResponse>(requestURL);
+
+  return autocompleteResponse;
 }
