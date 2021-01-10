@@ -28,14 +28,6 @@ export function toRGBA(hexColor: string, opacity = 1): string {
   return colorAsRGBA;
 }
 
-export function serializeObject<Original, Result = any>(
-  object: Original,
-): Result {
-  const serializedObject = JSON.parse(JSON.stringify(object));
-
-  return serializedObject;
-}
-
 export function encodeQueryObject(queryObject: QueryObject): string {
   const paramNames = getTypedObjectKeys(queryObject);
 
