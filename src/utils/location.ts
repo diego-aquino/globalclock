@@ -14,10 +14,7 @@ type UserPositionResponse =
 
 export async function requestUserPosition(): Promise<UserPositionResponse> {
   if (!isClient || !navigator.geolocation)
-    return Promise.resolve({
-      position: null,
-      status: 'NOT_SUPPORTED',
-    });
+    return { position: null, status: 'NOT_SUPPORTED' };
 
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition(
@@ -29,11 +26,7 @@ export async function requestUserPosition(): Promise<UserPositionResponse> {
           status: 'SUCCESS',
         });
       },
-      () =>
-        resolve({
-          position: null,
-          status: 'FAILED',
-        }),
+      () => resolve({ position: null, status: 'FAILED' }),
     );
   });
 }
