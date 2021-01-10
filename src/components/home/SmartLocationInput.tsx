@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 
-import { Location, Merge } from 'typings';
+import { Merge } from 'typings';
 import { SearchIcon } from 'assets';
 import { SmartInput } from 'components/common';
 import { InputComponentProps } from 'components/common/Input';
 
 interface PartialProps {
-  onSubmit(selectedLocation: Location): void;
+  onSubmit(selectedLocation: any): void;
 }
 
 type Props = Merge<InputComponentProps, PartialProps>;
