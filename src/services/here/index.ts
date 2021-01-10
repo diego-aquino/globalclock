@@ -48,7 +48,6 @@ export async function geocode(
   const requestURL = generateHereRequestURL(hereEndpoints.geocode, {
     ...queryObject,
     locationattributes: 'adminInfo,timeZone',
-    timestamp: new Date().toISOString(),
   });
 
   const { data: locationResponse } = await axios.get<Here.GeocodeResponse>(
@@ -66,7 +65,6 @@ export async function reverseGeocode(
     mode: 'retrieveAddresses',
     maxresults: '1',
     locationattributes: 'adminInfo,timeZone',
-    timestamp: new Date().toISOString(),
   });
 
   const { data: locationResponse } = await axios.get<Here.GeocodeResponse>(
