@@ -29,7 +29,7 @@ const theme = {
     boxShadowBase: `0px 4px 4px ${toRGBA(baseColors.primary, 0.25)}`,
     secondaryBoxShadowOnFocus: `0px 0px 3px 2px ${toRGBA(
       baseColors.secondaryBeige,
-      0.65,
+      0.4,
     )}`,
   },
 
