@@ -31,16 +31,24 @@ export function generateHereRequestURL(
   return requestURL;
 }
 
+interface GeocodeQueryObject {
+  city?: string;
+  state?: string;
+  country?: string;
+}
+
 export async function geocode(
-  geocodeSearch: string,
-): Promise<Here.GeolocationResponse> {
+  query: string | GeocodeQueryObject,
+): Promise<Here.GeocodeResponse> {
+  const queryObject = typeof query === 'string' ? { searchtext: query } : query;
+
   const requestURL = generateHereRequestURL(hereEndpoints.geocode, {
-    searchtext: geocodeSearch,
+    ...queryObject,
     locationattributes: 'adminInfo,timeZone',
     timestamp: new Date().toISOString(),
   });
 
-  const { data: locationResponse } = await axios.get<Here.GeolocationResponse>(
+  const { data: locationResponse } = await axios.get<Here.GeocodeResponse>(
     requestURL,
   );
 
@@ -49,7 +57,7 @@ export async function geocode(
 
 export async function reverseGeocode(
   position: Position,
-): Promise<Here.ReverseGeolocationResponse> {
+): Promise<Here.GeocodeResponse> {
   const requestURL = generateHereRequestURL(hereEndpoints.reverseGeocode, {
     prox: `${position.latitude},${position.longitude}`,
     mode: 'retrieveAddresses',
@@ -58,9 +66,9 @@ export async function reverseGeocode(
     timestamp: new Date().toISOString(),
   });
 
-  const {
-    data: locationResponse,
-  } = await axios.get<Here.ReverseGeolocationResponse>(requestURL);
+  const { data: locationResponse } = await axios.get<Here.GeocodeResponse>(
+    requestURL,
+  );
 
   return locationResponse;
 }

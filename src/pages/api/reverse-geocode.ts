@@ -7,15 +7,20 @@ interface RequestQuery extends NowRequestQuery {
   position: string;
 }
 
+type ResponseData = Here.GeocodeResponse;
+
 const reverseGeocodeHandler: APIRequestHandler = async (request, response) => {
   const { position } = request.query as RequestQuery;
   const [latitude, longitude] = position
     .split(',')
     .map((coordinate) => +coordinate);
 
-  const locationResponse = await reverseGeocode({ latitude, longitude });
+  const locationResponseData: ResponseData = await reverseGeocode({
+    latitude,
+    longitude,
+  });
 
-  return response.status(200).json(locationResponse);
+  return response.status(200).json(locationResponseData);
 };
 
 export default reverseGeocodeHandler;

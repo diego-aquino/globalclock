@@ -7,7 +7,7 @@ import { useLocation } from 'contexts/location';
 import { BackgroundImage } from 'components/common';
 import { encodeQueryObject } from 'utils/general';
 import { requestUserPosition } from 'utils/location';
-import { reverseGeocodeClient } from 'services/here/client';
+import { reverseGeocodeClient } from 'services/client/location';
 import {
   StyledLayout,
   SearchContainer,
