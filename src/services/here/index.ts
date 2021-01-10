@@ -13,7 +13,7 @@ const defaultQueryParams = {
   language: 'en-US',
   gen: '9',
   jsonattributes: '1',
-  apiKey: process.env.NEXT_PUBLIC_HERE_API_KEY,
+  apiKey: process.env.HERE_API_KEY,
 };
 
 type HereEndpointName = keyof typeof hereEndpoints;

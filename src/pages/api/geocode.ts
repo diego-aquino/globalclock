@@ -1,7 +1,9 @@
 import { NowRequest } from '@vercel/node';
 
-import { Address, APIRequestHandler, Merge } from 'typings';
+import { Address, ServerlessRequestHandler, Merge } from 'typings';
 import { geocode } from 'services/here';
+
+const CACHE_TIME_IN_SECONDS = 15768000; // 6 months
 
 type Request = Merge<
   NowRequest,
@@ -12,7 +14,7 @@ type Request = Merge<
 
 type ResponseData = Here.GeocodeResponse;
 
-const geocodeHandler: APIRequestHandler = async (request, response) => {
+const geocodeHandler: ServerlessRequestHandler = async (request, response) => {
   const {
     city,
     state,
@@ -26,6 +28,11 @@ const geocodeHandler: APIRequestHandler = async (request, response) => {
     state: state || stateName,
     country: country || countryName,
   });
+
+  response.setHeader(
+    'Cache-Control',
+    `max-age=0, s-maxage=${CACHE_TIME_IN_SECONDS}, stale-while-revalidate`,
+  );
 
   return response.status(200).json(locationResponseData);
 };

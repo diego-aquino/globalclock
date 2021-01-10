@@ -9,11 +9,11 @@ const rotationDegreesFor: { [key in Direction]: number } = {
   left: 180,
 };
 
-interface IconProps extends SVGElementProps {
+interface ContainerProps extends SVGElementProps {
   direction: Direction;
 }
 
-export const AdaptiveIcon = styled.svg<IconProps>`
+export const Container = styled.svg<ContainerProps>`
   transform: ${({ direction }) =>
     `rotate(${rotationDegreesFor[direction]}deg)`};
 `;
