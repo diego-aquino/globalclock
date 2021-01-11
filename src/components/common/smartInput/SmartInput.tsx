@@ -133,6 +133,21 @@ const SmartInput: FC<Props> = ({
     [renderSuggestions],
   );
 
+  useEffect(() => {
+    const keydownActions: { [key: string]: (event: KeyboardEvent) => void } = {
+      Enter: handleSuggestionSelect,
+    };
+
+    const handleKeydown = (event: KeyboardEvent) => {
+      const handlerFunction = keydownActions[event.key];
+      handlerFunction?.(event);
+    };
+
+    window.addEventListener('keydown', handleKeydown);
+
+    return () => window.removeEventListener('keydown', handleKeydown);
+  }, [handleSuggestionSelect]);
+
   return (
     <Container hasActiveSuggestions={shouldShowSuggestions}>
       <StyledInput hasActiveSuggestions={shouldShowSuggestions} {...rest} />
