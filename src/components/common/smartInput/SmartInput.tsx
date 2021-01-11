@@ -1,4 +1,11 @@
-import React, { FC, ReactElement, useCallback, useMemo } from 'react';
+import React, {
+  FC,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import {
   Container,
@@ -45,6 +52,14 @@ const SmartInput: FC<Props> = ({
   onSuggestionSelect,
   ...rest
 }) => {
+  const [
+    highlightedSuggestion,
+    setHighlightedSuggestion,
+  ] = useState<HighlightedSuggestions>({
+    groupIndex: null,
+    suggestionIndex: null,
+  });
+
   const shouldShowSuggestions = useMemo(() => {
     const atLeastOneGroupHasSuggestions = !!suggestionGroups?.some(
       (group) => group.suggestions.length > 0,
@@ -53,24 +68,65 @@ const SmartInput: FC<Props> = ({
     return atLeastOneGroupHasSuggestions;
   }, [suggestionGroups]);
 
-  const renderSuggestions = useCallback(
-    (suggestions: Suggestion[]) =>
-      suggestions.map(({ key, icon, title, subtitle }) => (
-        <Suggestion key={key} icon={icon} title={title} subtitle={subtitle} />
-      )),
+  const highlightSuggestion = useCallback(
+    (groupIndex: number | null, suggestionIndex: number | null) => {
+      setHighlightedSuggestion({ groupIndex, suggestionIndex });
+    },
     [],
+  );
+
+  const handleSuggestionSelect = useCallback(() => {
+    const { groupIndex, suggestionIndex } = highlightedSuggestion;
+
+    if (groupIndex !== null && suggestionIndex !== null) {
+      onSuggestionSelect?.({ groupIndex, suggestionIndex });
+    }
+  }, [highlightedSuggestion, onSuggestionSelect]);
+
+  const renderSuggestions = useCallback(
+    (suggestions: Suggestion[], groupIndex: number) =>
+      suggestions.map(({ key, icon, title, subtitle }, suggestionIndex) => {
+        const highlighted =
+          groupIndex === highlightedSuggestion.groupIndex &&
+          suggestionIndex === highlightedSuggestion.suggestionIndex;
+
+        const highlightSelf = () =>
+          highlightSuggestion(groupIndex, suggestionIndex);
+
+        const handleHighlight = () => {
+          if (!highlighted) highlightSelf();
+        };
+
+        const handleClick = () => {
+          if (highlighted) handleSuggestionSelect();
+        };
+
+        return (
+          <Suggestion
+            key={key}
+            icon={icon}
+            title={title}
+            subtitle={subtitle}
+            highlighted={highlighted}
+            onMouseEnter={handleHighlight}
+            onFocus={handleHighlight}
+            onClick={handleClick}
+          />
+        );
+      }),
+    [highlightedSuggestion, highlightSuggestion, handleSuggestionSelect],
   );
 
   const renderSuggestionGroups = useCallback(
     (groups: SuggestionGroup[]) =>
-      groups.map(({ key, label, suggestions }) => {
+      groups.map(({ key, label, suggestions }, groupIndex) => {
         const hasNoSuggestions = suggestions.length === 0;
         if (hasNoSuggestions) return null;
 
         return (
           <SuggestionGroupContainer key={key}>
             <p>{label}</p>
-            <div>{renderSuggestions(suggestions)}</div>
+            <div>{renderSuggestions(suggestions, groupIndex)}</div>
           </SuggestionGroupContainer>
         );
       }),

@@ -21,7 +21,10 @@ export const Container = styled.button<HighlightProps>`
 
   text-align: left;
 
-  background-color: ${theme.colors.secondaryWhite};
+  background-color: ${({ highlighted }) =>
+    highlighted
+      ? toRGBA(theme.colors.primaryLighter, 0.18)
+      : theme.colors.secondaryWhite};
   transition: background-color ${theme.general.transitionDuration};
 
   :hover {
@@ -47,7 +50,7 @@ export const IconWrapper = styled.div<HighlightProps>`
     height: 100%;
 
     fill: ${theme.colors.primary};
-    opacity: 0.8;
+    opacity: ${({ highlighted }) => (highlighted ? 0.8 : 0.6)};
   }
 `;
 
