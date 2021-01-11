@@ -19,12 +19,12 @@ export const Container = styled.button<HighlightProps>`
   justify-content: space-between;
   align-items: center;
 
+  position: relative;
+
   text-align: left;
 
   background-color: ${({ highlighted }) =>
-    highlighted
-      ? toRGBA(theme.colors.primaryLighter, 0.18)
-      : theme.colors.secondaryWhite};
+    highlighted && toRGBA(theme.colors.primaryLighter, 0.18)};
   transition: background-color ${theme.general.transitionDuration};
 
   :hover {
@@ -32,6 +32,20 @@ export const Container = styled.button<HighlightProps>`
   }
 
   :active {
+    background-color: ${theme.colors.secondaryWhite};
+  }
+
+  ::after {
+    content: '';
+    width: 100%;
+    height: 100%;
+    border-radius: ${theme.general.borderRadius.small};
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+
     background-color: ${theme.colors.secondaryWhite};
   }
 `;

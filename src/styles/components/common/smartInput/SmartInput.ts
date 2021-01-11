@@ -10,26 +10,6 @@ interface ActiveSuggestionProps {
 
 export const Container = styled.div<ActiveSuggestionProps>`
   position: relative;
-
-  ::after {
-    content: '';
-    width: 100%;
-    height: 100%;
-    border-radius: ${theme.general.borderRadius.normal};
-
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-
-    background-color: ${theme.colors.secondaryWhite};
-
-    ${({ hasActiveSuggestions }) =>
-      hasActiveSuggestions &&
-      css`
-        box-shadow: ${theme.general.secondaryBoxShadowOnFocus};
-      `}
-  }
 `;
 
 export const StyledInput = styled(Input)<ActiveSuggestionProps>`
@@ -51,18 +31,18 @@ export const StyledInput = styled(Input)<ActiveSuggestionProps>`
 
 export const SuggestionsContainer = styled.div`
   width: 100%;
-  padding: 1rem 1.6rem;
+  padding: 6.6rem 1.6rem 1rem;
 
   position: absolute;
-  top: 100%;
+  top: 0;
   left: 0;
+  z-index: 0;
 
   ::after {
     content: '';
     width: 100%;
     height: 100%;
-    border-bottom-left-radius: ${theme.general.borderRadius.normal};
-    border-bottom-right-radius: ${theme.general.borderRadius.normal};
+    border-radius: ${theme.general.borderRadius.normal};
 
     position: absolute;
     top: 0;
