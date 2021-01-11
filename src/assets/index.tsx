@@ -5,6 +5,7 @@ import MapIcon from './MapIcon';
 import MapMarkerIcon from './MapMarkerIcon';
 import ArrowIcon from './ArrowIcon';
 import LoadingIcon from './LoadingIcon';
+import ReturnKeyIcon from './ReturnKeyIcon';
 
 export {
   SunIcon,
@@ -14,4 +15,5 @@ export {
   MapMarkerIcon,
   ArrowIcon,
   LoadingIcon,
+  ReturnKeyIcon,
 };
