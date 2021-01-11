@@ -18,7 +18,6 @@ const primaryButtonStyles = css`
 
   :hover {
     background-color: ${theme.colors.primaryOnHover};
-    opacity: 0.9;
   }
 
   :focus {
