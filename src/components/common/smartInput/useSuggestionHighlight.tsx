@@ -11,6 +11,8 @@ interface SuggestionHighlightResources {
   highlight: (suggestion: SuggestionIdentifier) => void;
   highlightAbove: (baseSuggestion: GlobalSuggestionIdentifier) => void;
   highlightBelow: (baseSuggestion: GlobalSuggestionIdentifier) => void;
+  removeHighlight: () => void;
+  isHighlighted: (suggestion: SuggestionIdentifier) => boolean;
 }
 
 export function useSuggestionHighlight(
@@ -122,14 +124,38 @@ export function useSuggestionHighlight(
     [totalNumberOfSuggestions, generateRealSuggestionIndexes],
   );
 
+  const removeHighlight = useCallback(() => {
+    setHighlightedSuggestion({
+      groupIndex: -1,
+      suggestionIndex: -1,
+      globalIndex: -1,
+    });
+  }, []);
+
+  const isHighlighted = useCallback(
+    (suggestion: SuggestionIdentifier) =>
+      highlightedSuggestion.groupIndex === suggestion.groupIndex &&
+      highlightedSuggestion.suggestionIndex === suggestion.suggestionIndex,
+    [highlightedSuggestion],
+  );
+
   const suggestion: SuggestionHighlightResources = useMemo(
     () => ({
       highlightedSuggestion,
       highlight,
       highlightAbove,
       highlightBelow,
+      removeHighlight,
+      isHighlighted,
     }),
-    [highlightedSuggestion, highlight, highlightAbove, highlightBelow],
+    [
+      highlightedSuggestion,
+      highlight,
+      highlightAbove,
+      highlightBelow,
+      removeHighlight,
+      isHighlighted,
+    ],
   );
 
   return suggestion;

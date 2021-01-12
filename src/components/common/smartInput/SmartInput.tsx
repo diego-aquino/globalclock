@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useMemo } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   Container,
@@ -8,6 +8,7 @@ import {
 import {
   SmartInputKeydownActions,
   SuggestionGroup,
+  SuggestionIdentifier,
   SuggestionSelectHandler,
 } from './types';
 import SuggestionGroupComponent, {
@@ -28,43 +29,39 @@ const SmartInput: FC<Props> = ({
   ...rest
 }) => {
   const suggestionResources = useSuggestionHighlight(suggestionGroups);
+  const [shouldShowSuggestions, setShouldShowSuggestions] = useState(false);
 
-  const shouldShowSuggestions = useMemo(() => {
+  useEffect(() => {
     const atLeastOneGroupHasSuggestions = !!suggestionGroups?.some(
       (group) => group.suggestions.length > 0,
     );
 
-    return atLeastOneGroupHasSuggestions;
+    setShouldShowSuggestions(atLeastOneGroupHasSuggestions);
   }, [suggestionGroups]);
 
-  const handleSuggestionSelect = useCallback(() => {
-    const {
-      groupIndex,
-      suggestionIndex,
-    } = suggestionResources.highlightedSuggestion;
+  const handleSuggestionSelect = useCallback(
+    (suggestion: SuggestionIdentifier) => {
+      const isValidSuggestion =
+        suggestion.groupIndex !== -1 && suggestion.suggestionIndex !== -1;
 
-    onSuggestionSelect?.({ groupIndex, suggestionIndex });
-  }, [onSuggestionSelect, suggestionResources.highlightedSuggestion]);
+      if (isValidSuggestion) {
+        onSuggestionSelect?.(suggestion);
+      }
+    },
+    [onSuggestionSelect],
+  );
 
   const suggestionEventHandlers = useMemo<SuggestionEventHandlers>(() => {
-    const isHighlightedSuggestion = (
-      groupIndex: number,
-      suggestionIndex: number,
-    ) => {
-      const { highlightedSuggestion } = suggestionResources;
-
-      return (
-        highlightedSuggestion.groupIndex === groupIndex &&
-        highlightedSuggestion.suggestionIndex === suggestionIndex
-      );
-    };
+    const { isHighlighted, highlight } = suggestionResources;
 
     const handleHighlight: SuggestionEventHandler = (
       groupIndex,
       suggestionIndex,
     ) => {
-      if (!isHighlightedSuggestion(groupIndex, suggestionIndex)) {
-        suggestionResources.highlight({ groupIndex, suggestionIndex });
+      const suggestion = { groupIndex, suggestionIndex };
+
+      if (!isHighlighted(suggestion)) {
+        highlight(suggestion);
       }
     };
 
@@ -72,8 +69,10 @@ const SmartInput: FC<Props> = ({
       groupIndex,
       suggestionIndex,
     ) => {
-      if (isHighlightedSuggestion(groupIndex, suggestionIndex)) {
-        handleSuggestionSelect();
+      const suggestion = { groupIndex, suggestionIndex };
+
+      if (isHighlighted(suggestion)) {
+        handleSuggestionSelect(suggestion);
       }
     };
 
@@ -117,10 +116,11 @@ const SmartInput: FC<Props> = ({
     const { highlightedSuggestion } = suggestionResources;
 
     const keydownActions: SmartInputKeydownActions = {
-      Enter: handleSuggestionSelect,
+      Enter: () => handleSuggestionSelect(highlightedSuggestion),
       ArrowUp: () => suggestionResources.highlightAbove(highlightedSuggestion),
       ArrowDown: () =>
         suggestionResources.highlightBelow(highlightedSuggestion),
+      Escape: suggestionResources.removeHighlight,
     };
 
     const handleKeydown = (event: KeyboardEvent) => {
@@ -135,7 +135,9 @@ const SmartInput: FC<Props> = ({
 
   return (
     <Container hasActiveSuggestions={shouldShowSuggestions}>
-      <SuggestionsContainer>{renderSuggestionGroups()}</SuggestionsContainer>
+      {shouldShowSuggestions && (
+        <SuggestionsContainer>{renderSuggestionGroups()}</SuggestionsContainer>
+      )}
       <StyledInput hasActiveSuggestions={shouldShowSuggestions} {...rest} />
     </Container>
   );
