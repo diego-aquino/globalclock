@@ -5,26 +5,17 @@ import {
   StyledInput,
   SuggestionsContainer,
 } from 'styles/components/common/smartInput/SmartInput';
+import {
+  SmartInputKeydownActions,
+  SuggestionGroup,
+  SuggestionSelectHandler,
+} from './types';
 import SuggestionGroupComponent, {
   SuggestionEventHandler,
   SuggestionEventHandlers,
 } from './SuggestionGroup';
-import {
-  SuggestionGroup,
-  useSuggestionHighlight,
-} from './useSuggestionHighlight';
+import { useSuggestionHighlight } from './useSuggestionHighlight';
 import { InputComponentProps } from '../Input';
-
-interface KeydownActions {
-  [key: string]: (event: KeyboardEvent) => void;
-}
-
-interface SuggestionSelectEvent {
-  groupIndex: number;
-  suggestionIndex: number;
-}
-
-export type SuggestionSelectHandler = (event: SuggestionSelectEvent) => void;
 
 type Props = InputComponentProps & {
   suggestionGroups?: SuggestionGroup[];
@@ -123,10 +114,13 @@ const SmartInput: FC<Props> = ({
   );
 
   useEffect(() => {
-    const keydownActions: KeydownActions = {
+    const { highlightedSuggestion } = suggestionResources;
+
+    const keydownActions: SmartInputKeydownActions = {
       Enter: handleSuggestionSelect,
-      ArrowUp: () => suggestionResources.highlightAbove(),
-      ArrowDown: () => suggestionResources.highlightBelow(),
+      ArrowUp: () => suggestionResources.highlightAbove(highlightedSuggestion),
+      ArrowDown: () =>
+        suggestionResources.highlightBelow(highlightedSuggestion),
     };
 
     const handleKeydown = (event: KeyboardEvent) => {

@@ -1,32 +1,16 @@
-import { ReactElement, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
-interface SuggestionIdentifier {
-  groupIndex: number;
-  suggestionIndex: number;
-}
-
-type GlobalSuggestionIdentifier = SuggestionIdentifier & {
-  globalIndex: number;
-};
-
-export interface SuggestionDetails {
-  key: string;
-  title: string;
-  icon?: HTMLElement | ReactElement;
-  subtitle?: string;
-}
-
-export interface SuggestionGroup {
-  key: string;
-  label: string;
-  suggestions: SuggestionDetails[];
-}
+import {
+  GlobalSuggestionIdentifier,
+  SuggestionGroup,
+  SuggestionIdentifier,
+} from './types';
 
 interface SuggestionHighlightResources {
   highlightedSuggestion: GlobalSuggestionIdentifier;
   highlight: (suggestion: SuggestionIdentifier) => void;
-  highlightAbove: (baseSuggestion?: GlobalSuggestionIdentifier) => void;
-  highlightBelow: (baseSuggestion?: GlobalSuggestionIdentifier) => void;
+  highlightAbove: (baseSuggestion: GlobalSuggestionIdentifier) => void;
+  highlightBelow: (baseSuggestion: GlobalSuggestionIdentifier) => void;
 }
 
 export function useSuggestionHighlight(
@@ -109,7 +93,7 @@ export function useSuggestionHighlight(
   );
 
   const highlightAbove = useCallback(
-    (baseSuggestion: GlobalSuggestionIdentifier = highlightedSuggestion) => {
+    (baseSuggestion: GlobalSuggestionIdentifier) => {
       const newGlobalIndex =
         baseSuggestion.globalIndex > 0
           ? baseSuggestion.globalIndex - 1
@@ -120,14 +104,11 @@ export function useSuggestionHighlight(
         ...generateRealSuggestionIndexes(newGlobalIndex),
       });
     },
-    [
-      highlightedSuggestion,
-      totalNumberOfSuggestions,
-      generateRealSuggestionIndexes,
-    ],
+    [totalNumberOfSuggestions, generateRealSuggestionIndexes],
   );
+
   const highlightBelow = useCallback(
-    (baseSuggestion: GlobalSuggestionIdentifier = highlightedSuggestion) => {
+    (baseSuggestion: GlobalSuggestionIdentifier) => {
       const newGlobalIndex =
         baseSuggestion.globalIndex < totalNumberOfSuggestions - 1
           ? baseSuggestion.globalIndex + 1
@@ -138,11 +119,7 @@ export function useSuggestionHighlight(
         ...generateRealSuggestionIndexes(newGlobalIndex),
       });
     },
-    [
-      highlightedSuggestion,
-      totalNumberOfSuggestions,
-      generateRealSuggestionIndexes,
-    ],
+    [totalNumberOfSuggestions, generateRealSuggestionIndexes],
   );
 
   const suggestion: SuggestionHighlightResources = useMemo(
