@@ -1,12 +1,8 @@
 import axios from 'axios';
 
 import { Address, Position, QueryObject, TimeZone } from 'typings';
-import { // eslint-disable-line prettier/prettier
-  RequestQuery as GeocodeRequestQuery,
-} from 'pages/api/geocode';
-import { // eslint-disable-line prettier/prettier
-  RequestQuery as ReverseGeocodeRequestQuery,
-} from 'pages/api/reverse-geocode';
+import { RequestQuery as GeocodeRequestQuery } from 'pages/api/geocode';
+import { RequestQuery as ReverseGeocodeRequestQuery } from 'pages/api/reverse-geocode';
 import { encodeQueryObject } from 'utils/general';
 
 interface ParsedGeocodeResponse {
@@ -69,8 +65,13 @@ export async function reverseGeocodeClient(
 export async function geocodeClient(
   query: GeocodeRequestQuery,
 ): Promise<GeocodeClientResponse> {
-  const { city, state, country } = query;
-  const encodedQualifiedQuery = encodeQueryObject({ city, state, country });
+  const { city, state, country, locationid } = query;
+  const encodedQualifiedQuery = encodeQueryObject({
+    city,
+    state,
+    country,
+    locationid,
+  });
 
   const { data } = await axios.get<Here.GeocodeResponse>(
     `/api/geocode?${encodedQualifiedQuery}`,

@@ -7,17 +7,24 @@ export interface RequestQuery {
   city?: string;
   state?: string;
   country?: string;
+  locationid?: string;
 }
 
 type ResponseData = Here.GeocodeResponse;
 
 const geocodeHandler: ServerlessRequestHandler = async (request, response) => {
-  const { city, state, country }: RequestQuery = request.query;
+  const {
+    city,
+    state,
+    country,
+    locationid: locationId,
+  }: RequestQuery = request.query;
 
   const locationResponseData: ResponseData = await geocode({
     cityName: city,
     stateCode: state,
     countryCode: country,
+    locationId,
   });
 
   response.setHeader(

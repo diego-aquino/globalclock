@@ -34,6 +34,7 @@ export function generateHereRequestURL(
 
 type GeocodeQuery = Partial<Address> & {
   searchtext?: string;
+  locationId?: string;
 };
 
 export async function geocode(
@@ -44,6 +45,7 @@ export async function geocode(
     city: query.cityName,
     state: query.stateCode || query.stateName,
     country: query.countryCode || query.countryName,
+    locationid: query.locationId,
   };
 
   const requestURL = generateHereRequestURL(hereEndpoints.geocode, {
