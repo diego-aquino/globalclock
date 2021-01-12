@@ -133,9 +133,21 @@ export function useSuggestionHighlight(
   }, []);
 
   const isHighlighted = useCallback(
-    (suggestion: SuggestionIdentifier) =>
-      highlightedSuggestion.groupIndex === suggestion.groupIndex &&
-      highlightedSuggestion.suggestionIndex === suggestion.suggestionIndex,
+    (suggestion: SuggestionIdentifier) => {
+      const {
+        groupIndex: highlightedGroupIndex,
+        suggestionIndex: highlightedSuggestionIndex,
+      } = highlightedSuggestion;
+
+      if (highlightedGroupIndex === -1 || highlightedSuggestionIndex === -1) {
+        return false;
+      }
+
+      return (
+        highlightedGroupIndex === suggestion.groupIndex &&
+        highlightedSuggestionIndex === suggestion.suggestionIndex
+      );
+    },
     [highlightedSuggestion],
   );
 

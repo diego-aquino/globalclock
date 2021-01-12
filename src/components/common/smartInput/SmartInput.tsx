@@ -41,14 +41,13 @@ const SmartInput: FC<Props> = ({
 
   const handleSuggestionSelect = useCallback(
     (suggestion: SuggestionIdentifier) => {
-      const isValidSuggestion =
-        suggestion.groupIndex !== -1 && suggestion.suggestionIndex !== -1;
+      const { isHighlighted } = suggestionResources;
 
-      if (isValidSuggestion) {
+      if (isHighlighted(suggestion)) {
         onSuggestionSelect?.(suggestion);
       }
     },
-    [onSuggestionSelect],
+    [onSuggestionSelect, suggestionResources],
   );
 
   const suggestionEventHandlers = useMemo<SuggestionEventHandlers>(() => {
@@ -70,10 +69,7 @@ const SmartInput: FC<Props> = ({
       suggestionIndex,
     ) => {
       const suggestion = { groupIndex, suggestionIndex };
-
-      if (isHighlighted(suggestion)) {
-        handleSuggestionSelect(suggestion);
-      }
+      handleSuggestionSelect(suggestion);
     };
 
     return {
