@@ -151,24 +151,12 @@ export function useSuggestionHighlight(
     [highlightedSuggestion],
   );
 
-  const suggestion: SuggestionHighlightResources = useMemo(
-    () => ({
-      highlightedSuggestion,
-      highlight,
-      highlightAbove,
-      highlightBelow,
-      removeHighlight,
-      isHighlighted,
-    }),
-    [
-      highlightedSuggestion,
-      highlight,
-      highlightAbove,
-      highlightBelow,
-      removeHighlight,
-      isHighlighted,
-    ],
-  );
-
-  return suggestion;
+  return {
+    highlightedSuggestion,
+    highlight,
+    highlightAbove,
+    highlightBelow,
+    removeHighlight,
+    isHighlighted,
+  };
 }

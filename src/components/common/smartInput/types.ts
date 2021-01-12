@@ -22,9 +22,20 @@ export interface SuggestionGroup {
   suggestions: SuggestionDetails[];
 }
 
+export type SuggestionEventHandler = (
+  groupIndex: number,
+  suggestionIndex: number,
+) => void;
+
 export type SuggestionSelectHandler = (
   suggestion: SuggestionIdentifier,
 ) => void;
+
+export interface SuggestionEventHandlers {
+  mouseEnter?: SuggestionEventHandler;
+  focus?: SuggestionEventHandler;
+  click?: SuggestionEventHandler;
+}
 
 export interface SmartInputKeydownActions {
   [key: string]: (event: KeyboardEvent) => void;

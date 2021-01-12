@@ -1,25 +1,8 @@
-import React, { FC, HTMLAttributes, ReactElement, useCallback } from 'react';
+import React, { FC, HTMLAttributes, useCallback } from 'react';
 
 import { Container } from 'styles/components/common/smartInput/SuggestionGroup';
 import Suggestion from './Suggestion';
-
-interface SuggestionDetails {
-  key: string;
-  title: string;
-  icon?: HTMLElement | ReactElement;
-  subtitle?: string;
-}
-
-export type SuggestionEventHandler = (
-  groupIndex: number,
-  suggestionIndex: number,
-) => void;
-
-export interface SuggestionEventHandlers {
-  mouseEnter?: SuggestionEventHandler;
-  focus?: SuggestionEventHandler;
-  click?: SuggestionEventHandler;
-}
+import { SuggestionDetails, SuggestionEventHandlers } from './types';
 
 type Props = HTMLAttributes<HTMLDivElement> & {
   label: string;
@@ -37,24 +20,22 @@ const SuggestionGroup: FC<Props> = ({
   onSuggestion,
   ...rest
 }) => {
-  const renderSuggestions = useCallback(() => {
-    const handleSuggestionEvent = (
-      eventType: keyof SuggestionEventHandlers,
-      suggestionIndex: number,
-    ) => {
+  const handleSuggestionEvent = useCallback(
+    (eventType: keyof SuggestionEventHandlers, suggestionIndex: number) => {
       onSuggestion?.[eventType]?.(groupIndex, suggestionIndex);
-    };
+    },
+    [groupIndex, onSuggestion],
+  );
 
-    return suggestions.map(
-      ({ key, icon, title, subtitle }, suggestionIndex) => {
+  const renderSuggestions = useCallback(
+    () =>
+      suggestions.map(({ key, ...details }, suggestionIndex) => {
         const highlighted = suggestionIndex === highlightedSuggestionIndex;
 
         return (
           <Suggestion
             key={key}
-            icon={icon}
-            title={title}
-            subtitle={subtitle}
+            {...details}
             highlighted={highlighted}
             onMouseEnter={() =>
               handleSuggestionEvent('mouseEnter', suggestionIndex)
@@ -63,9 +44,9 @@ const SuggestionGroup: FC<Props> = ({
             onClick={() => handleSuggestionEvent('click', suggestionIndex)}
           />
         );
-      },
-    );
-  }, [suggestions, highlightedSuggestionIndex, onSuggestion, groupIndex]);
+      }),
+    [suggestions, highlightedSuggestionIndex, handleSuggestionEvent],
+  );
 
   return (
     <Container {...rest}>
