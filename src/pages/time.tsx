@@ -29,13 +29,13 @@ const TimePage: FC = () => {
   const { query }: PageRouter = useRouter();
 
   useEffect(() => {
-    const { city, state, country } = query;
+    const { city: cityName, state: stateCode, country: countryCode } = query;
 
-    if (!city || !country) return;
+    if (!cityName || !countryCode) return;
 
     const updateLocalTimeDetails = async () => {
       const [localTimeZone, currentUTCTime] = await Promise.all([
-        timeZone || requestLocalTimeZone({ city, state, country }),
+        timeZone || requestLocalTimeZone({ cityName, stateCode, countryCode }),
         requestCurrentUTCTime(),
       ]);
 
@@ -51,9 +51,9 @@ const TimePage: FC = () => {
       if (address) return;
 
       const localAddress = await requestAddressDetails({
-        city,
-        state,
-        country,
+        cityName,
+        stateCode,
+        countryCode,
       });
 
       dispatch({ type: 'SET_ADDRESS', address: localAddress });
@@ -64,7 +64,10 @@ const TimePage: FC = () => {
   }, [timeZone, address, dispatch, query]);
 
   const cityLocationLabel = useMemo(
-    () => (address ? `${address.city}, ${address?.countryName}` : ''),
+    () =>
+      address
+        ? `${address.cityName}, ${address.countryName || address.countryCode}`
+        : '',
     [address],
   );
 

@@ -89,6 +89,7 @@
     "implicit-arrow-linebreak": "off",
     "no-plusplus": "off",
     "prefer-template": "off",
+    "default-case": "off",
     // "object-curly-newline": [
     //   "warn",
     //   {

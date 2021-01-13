@@ -16,9 +16,9 @@ export const SearchContainer = styled.div`
 
 export const StyledSmartLocationInput = styled(SmartLocationInput)`
   width: 46rem;
-  margin-right: 1.3rem;
 `;
 
 export const StyledButton = styled(Button)`
+  margin-left: 1.3rem;
   width: 19rem;
 `;

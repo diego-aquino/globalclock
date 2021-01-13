@@ -1,12 +1,13 @@
 import axios from 'axios';
 
-import { Position, QueryObject } from 'typings';
+import { Address, Position, QueryObject } from 'typings';
 import { encodeQueryObject } from 'utils/general';
 
 export const hereEndpoints = {
   geocode: 'https://geocoder.ls.hereapi.com/6.2/geocode.json',
   reverseGeocode:
     'https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json',
+  autocomplete: 'https://autocomplete.geocoder.ls.hereapi.com/6.2/suggest.json',
 } as const;
 
 const defaultQueryParams = {
@@ -31,21 +32,25 @@ export function generateHereRequestURL(
   return requestURL;
 }
 
-interface GeocodeQueryObject {
-  city?: string;
-  state?: string;
-  country?: string;
-}
+type GeocodeQuery = Partial<Address> & {
+  searchtext?: string;
+  locationId?: string;
+};
 
 export async function geocode(
-  query: string | GeocodeQueryObject,
+  query: GeocodeQuery,
 ): Promise<Here.GeocodeResponse> {
-  const queryObject = typeof query === 'string' ? { searchtext: query } : query;
+  const queryObject = {
+    searchtext: query.searchtext,
+    city: query.cityName,
+    state: query.stateCode || query.stateName,
+    country: query.countryCode || query.countryName,
+    locationid: query.locationId,
+  };
 
   const requestURL = generateHereRequestURL(hereEndpoints.geocode, {
     ...queryObject,
     locationattributes: 'adminInfo,timeZone',
-    timestamp: new Date().toISOString(),
   });
 
   const { data: locationResponse } = await axios.get<Here.GeocodeResponse>(
@@ -61,9 +66,8 @@ export async function reverseGeocode(
   const requestURL = generateHereRequestURL(hereEndpoints.reverseGeocode, {
     prox: `${position.latitude},${position.longitude}`,
     mode: 'retrieveAddresses',
-    maxresults: 1,
+    maxresults: '1',
     locationattributes: 'adminInfo,timeZone',
-    timestamp: new Date().toISOString(),
   });
 
   const { data: locationResponse } = await axios.get<Here.GeocodeResponse>(
@@ -71,4 +75,27 @@ export async function reverseGeocode(
   );
 
   return locationResponse;
+}
+
+interface AutocompleteOptions {
+  resultType?: 'areas' | 'postalCode' | 'city';
+}
+
+export async function autocomplete(
+  queryString: string,
+  options?: AutocompleteOptions,
+): Promise<Here.AutocompleteResponse> {
+  const requestURL = generateHereRequestURL(hereEndpoints.autocomplete, {
+    query: queryString,
+    beginHighlight: '[',
+    endHighlight: ']',
+    resultType: options?.resultType,
+    maxresults: '4',
+  });
+
+  const {
+    data: autocompleteResponse,
+  } = await axios.get<Here.AutocompleteResponse>(requestURL);
+
+  return autocompleteResponse;
 }

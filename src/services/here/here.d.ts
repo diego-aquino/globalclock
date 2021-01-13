@@ -48,4 +48,20 @@ declare namespace Here {
   export interface GeocodeResponse {
     response: Response;
   }
+
+  export interface Suggestion {
+    label: string;
+    countryCode: string;
+    locationId: string;
+    matchLevel: string;
+    address: {
+      city: string;
+      state: string;
+      country: string;
+    };
+  }
+
+  export interface AutocompleteResponse {
+    suggestions: Suggestion[];
+  }
 }

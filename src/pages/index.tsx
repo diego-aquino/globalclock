@@ -7,7 +7,7 @@ import { useLocation } from 'contexts/location';
 import { BackgroundImage } from 'components/common';
 import { encodeQueryObject } from 'utils/general';
 import { requestUserPosition } from 'utils/location';
-import { reverseGeocodeClient } from 'services/client/location';
+import { geocodeClient, reverseGeocodeClient } from 'services/client/location';
 import {
   StyledLayout,
   SearchContainer,
@@ -26,8 +26,19 @@ const Home: FC = () => {
 
   const redirectToTimePageBasedOn = useCallback(
     (cityAddress: Address) => {
-      const { city, state, country } = cityAddress;
-      const query = encodeQueryObject({ city, state, country });
+      const {
+        cityName,
+        stateName,
+        stateCode,
+        countryName,
+        countryCode,
+      } = cityAddress;
+
+      const query = encodeQueryObject({
+        city: cityName,
+        state: stateCode || stateName,
+        country: countryCode || countryName,
+      });
 
       router.push({ pathname: `/time`, query });
     },
@@ -55,10 +66,27 @@ const Home: FC = () => {
     redirectToTimePageBasedOn(address);
   }, [dispatch, redirectToTimePageBasedOn]);
 
+  const handleSmartLocationInputSubmit = useCallback(
+    async (suggestion: Here.Suggestion) => {
+      const { address, timeZone } = await geocodeClient({
+        locationid: suggestion.locationId,
+      });
+
+      dispatch({
+        type: 'SET_LOCATION_DETAILS',
+        address,
+        timeZone,
+      });
+
+      redirectToTimePageBasedOn(address);
+    },
+    [dispatch, redirectToTimePageBasedOn],
+  );
+
   return (
     <StyledLayout pageTitle="GlobalClock">
       <SearchContainer>
-        <StyledSmartLocationInput onSubmit={() => {}} />
+        <StyledSmartLocationInput onSubmit={handleSmartLocationInputSubmit} />
         <StyledButton
           type="button"
           styleMode="primary"

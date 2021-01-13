@@ -1,12 +1,10 @@
-import { NowRequestQuery } from '@vercel/node';
-
 import { ServerlessRequestHandler } from 'typings';
 import { reverseGeocode } from 'services/here';
 
 const CACHE_TIME_IN_SECONDS = 15768000; // 6 months
 
-interface RequestQuery extends NowRequestQuery {
-  position: string;
+export interface RequestQuery {
+  position?: string;
 }
 
 type ResponseData = Here.GeocodeResponse;
@@ -15,7 +13,13 @@ const reverseGeocodeHandler: ServerlessRequestHandler = async (
   request,
   response,
 ) => {
-  const { position } = request.query as RequestQuery;
+  const { position }: RequestQuery = request.query;
+
+  if (!position) {
+    response.statusMessage = 'Bad request: No position specified.';
+    return response.status(500).json({ response: null });
+  }
+
   const [latitude, longitude] = position
     .split(',')
     .map((coordinate) => +coordinate);
