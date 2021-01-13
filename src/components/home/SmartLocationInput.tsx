@@ -2,7 +2,6 @@ import React, {
   ChangeEvent,
   FC,
   useCallback,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -18,7 +17,6 @@ import {
 import { InputComponentProps } from 'components/common/Input';
 import { requestAutocompleteSuggestions } from 'services/client/location';
 
-const MIN_SEARCH_STRING_IDLE_DURATION = 0;
 const suggestionIcon = <MapMarkerIcon />;
 
 type DisplaySuggestion = SuggestionDetails;
@@ -30,7 +28,7 @@ interface PartialProps {
 type Props = Merge<InputComponentProps, PartialProps>;
 
 const SmartLocationInput: FC<Props> = ({ onSubmit, ...rest }) => {
-  const [searchString, setSearchString] = useState('');
+  const searchStringRef = useRef('');
   const [displaySuggestions, setDisplaySuggestions] = useState<
     DisplaySuggestion[]
   >([]);
@@ -41,35 +39,21 @@ const SmartLocationInput: FC<Props> = ({ onSubmit, ...rest }) => {
     [displaySuggestions],
   );
 
-  const handleSmartInputChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setSearchString(event.target.value);
-    },
-    [],
-  );
+  const updateSuggestionsIfUnchangedSearchString = useCallback(async () => {
+    const searchString = searchStringRef.current;
 
-  const handleSuggestionSelect = useCallback<SuggestionSelectHandler>(
-    ({ suggestionIndex }) => {
-      const selectedDetailedSuggestion =
-        detailedSuggestions.current[suggestionIndex];
-
-      onSubmit(selectedDetailedSuggestion);
-    },
-    [onSubmit],
-  );
-
-  const updateSuggestions = useCallback(async (baseSearchString: string) => {
-    if (baseSearchString === '') {
+    if (searchString === '') {
       setDisplaySuggestions([]);
       detailedSuggestions.current = [];
       return;
     }
 
-    const autocompleteSuggestions = await requestAutocompleteSuggestions(
-      baseSearchString,
-    );
+    const suggestions = await requestAutocompleteSuggestions(searchString);
 
-    const newDisplaySuggestions = autocompleteSuggestions.map(
+    const hasSearchStringChanged = searchString !== searchStringRef.current;
+    if (hasSearchStringChanged) return;
+
+    const newDisplaySuggestions = suggestions.map(
       ({ locationId, address }) => ({
         key: locationId,
         icon: suggestionIcon,
@@ -81,22 +65,28 @@ const SmartLocationInput: FC<Props> = ({ onSubmit, ...rest }) => {
     );
 
     setDisplaySuggestions(newDisplaySuggestions);
-    detailedSuggestions.current = autocompleteSuggestions;
+    detailedSuggestions.current = suggestions;
   }, []);
 
-  useEffect(() => {
-    const lastStoredSearchString = searchString;
+  const handleSmartInputChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const newSearchString = event.target.value;
+      searchStringRef.current = newSearchString;
 
-    const timeoutToUpdateSuggestions = setTimeout(async () => {
-      const hasSearchStringChanged = searchString !== lastStoredSearchString;
+      updateSuggestionsIfUnchangedSearchString();
+    },
+    [updateSuggestionsIfUnchangedSearchString],
+  );
 
-      if (!hasSearchStringChanged) {
-        updateSuggestions(searchString);
-      }
-    }, MIN_SEARCH_STRING_IDLE_DURATION);
+  const handleSuggestionSelect = useCallback<SuggestionSelectHandler>(
+    ({ suggestionIndex }) => {
+      const selectedDetailedSuggestion =
+        detailedSuggestions.current[suggestionIndex];
 
-    return () => clearTimeout(timeoutToUpdateSuggestions);
-  }, [searchString, updateSuggestions]);
+      onSubmit(selectedDetailedSuggestion);
+    },
+    [onSubmit],
+  );
 
   return (
     <SmartInput
