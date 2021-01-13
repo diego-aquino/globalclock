@@ -1,8 +1,9 @@
 import React, {
   ReactElement,
-  FC,
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
+  forwardRef,
+  ForwardRefRenderFunction,
 } from 'react';
 import { LoadingIconStyleMode } from 'styles/assets/LoadingIcon';
 
@@ -34,15 +35,17 @@ type ActiveElementProps = PartialActiveElementProps &
     | ButtonHTMLAttributes<HTMLButtonElement>
   );
 
-const ActiveElement: FC<ActiveElementProps> = ({
-  as,
-  styleMode,
-  icon,
-  loading,
-  children,
-  ...rest
-}) => (
-  <Container as={as} styleMode={styleMode} $loading={loading} {...rest}>
+const ActiveElement: ForwardRefRenderFunction<
+  HTMLAnchorElement,
+  ActiveElementProps
+> = ({ as, styleMode, icon, loading, children, ...rest }, ref) => (
+  <Container
+    ref={ref}
+    as={as}
+    styleMode={styleMode}
+    $loading={loading}
+    {...rest}
+  >
     {loading && (
       <StyledLoadingIcon styleMode={loadingIconStyleModes[styleMode]} />
     )}
@@ -54,4 +57,4 @@ const ActiveElement: FC<ActiveElementProps> = ({
   </Container>
 );
 
-export default ActiveElement;
+export default forwardRef(ActiveElement);
