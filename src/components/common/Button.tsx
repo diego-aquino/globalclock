@@ -23,7 +23,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button: FC<Props> = ({ styleMode, icon, loading, children, ...rest }) => (
-  <Container styleMode={styleMode} {...rest}>
+  <Container styleMode={styleMode} $loading={loading} {...rest}>
     {loading && (
       <StyledLoadingIcon styleMode={loadingIconStyleModes[styleMode]} />
     )}
