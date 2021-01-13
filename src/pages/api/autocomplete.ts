@@ -1,7 +1,7 @@
 import { ServerlessRequestHandler } from 'typings';
 import { autocomplete } from 'services/here';
 
-const CACHE_TIME_IN_SECONDS = 2592000; // 1 month
+const CACHE_TIME_IN_SECONDS = 7884000; // 3 months
 
 export interface RequestQuery {
   query?: string;

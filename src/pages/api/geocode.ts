@@ -1,7 +1,7 @@
 import { ServerlessRequestHandler } from 'typings';
 import { geocode } from 'services/here';
 
-const CACHE_TIME_IN_SECONDS = 15768000; // 6 months
+const CACHE_TIME_IN_SECONDS = 21024000; // 8 months
 
 export interface RequestQuery {
   city?: string;
