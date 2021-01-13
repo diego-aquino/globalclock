@@ -5,14 +5,14 @@ import theme from 'styles/theme';
 
 const buttonIconSize = '2rem';
 
-export type ButtonStyleMode = 'primary';
+export type ActiveElementStyleMode = 'primary';
 
 interface ContainerProps {
-  styleMode: ButtonStyleMode;
+  styleMode: ActiveElementStyleMode;
   $loading?: boolean;
 }
 
-const primaryButtonStyles = css`
+const primaryStyles = css`
   color: ${theme.colors.secondaryWhite};
 
   background-color: ${theme.colors.primary};
@@ -27,7 +27,7 @@ const primaryButtonStyles = css`
   }
 `;
 
-export const Container = styled.button<ContainerProps>`
+export const Container = styled.a<ContainerProps>`
   padding: ${theme.general.padding.normal};
   border: none;
   border-radius: ${theme.general.borderRadius.normal};
@@ -50,7 +50,7 @@ export const Container = styled.button<ContainerProps>`
     cursor: ${({ $loading }) => ($loading ? 'normal' : 'pointer')};
   }
 
-  ${({ styleMode }) => styleMode === 'primary' && primaryButtonStyles}
+  ${({ styleMode }) => styleMode === 'primary' && primaryStyles}
 `;
 
 export const PrimaryWrapper = styled.div<{ $hidden?: boolean }>`
