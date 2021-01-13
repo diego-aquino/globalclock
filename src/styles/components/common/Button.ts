@@ -9,6 +9,7 @@ export type ButtonStyleMode = 'primary';
 
 interface ContainerProps {
   styleMode: ButtonStyleMode;
+  $loading?: boolean;
 }
 
 const primaryButtonStyles = css`
@@ -41,14 +42,18 @@ export const Container = styled.button<ContainerProps>`
     opacity ${theme.general.transitionDuration},
     box-shadow ${theme.general.transitionDuration};
 
+  opacity: ${({ $loading }) => $loading && 0.85};
+
+  pointer-events: ${({ $loading }) => $loading && 'none'};
+
   :hover {
-    cursor: pointer;
+    cursor: ${({ $loading }) => ($loading ? 'normal' : 'pointer')};
   }
 
   ${({ styleMode }) => styleMode === 'primary' && primaryButtonStyles}
 `;
 
-export const PrimaryWrapper = styled.div<{ isHidden?: boolean }>`
+export const PrimaryWrapper = styled.div<{ $hidden?: boolean }>`
   width: 100%;
   height: 100%;
 
@@ -56,7 +61,7 @@ export const PrimaryWrapper = styled.div<{ isHidden?: boolean }>`
   justify-content: center;
   align-items: center;
 
-  opacity: ${({ isHidden }) => (isHidden ? 0 : 1)};
+  opacity: ${({ $hidden }) => ($hidden ? 0 : 1)};
   transition: opacity ${theme.general.transitionDuration};
 `;
 

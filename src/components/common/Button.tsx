@@ -19,22 +19,16 @@ const loadingIconStyleModes: {
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   styleMode: ButtonStyleMode;
   icon?: HTMLElement | ReactElement;
-  isLoading?: boolean;
+  loading?: boolean;
 }
 
-const Button: FC<Props> = ({
-  styleMode,
-  icon,
-  isLoading,
-  children,
-  ...rest
-}) => (
-  <Container styleMode={styleMode} {...rest}>
-    {isLoading && (
+const Button: FC<Props> = ({ styleMode, icon, loading, children, ...rest }) => (
+  <Container styleMode={styleMode} $loading={loading} {...rest}>
+    {loading && (
       <StyledLoadingIcon styleMode={loadingIconStyleModes[styleMode]} />
     )}
 
-    <PrimaryWrapper isHidden={isLoading}>
+    <PrimaryWrapper $hidden={loading}>
       <IconWrapper hasIcon={!!icon}>{icon}</IconWrapper>
       <ChildrenWrapper>{children}</ChildrenWrapper>
     </PrimaryWrapper>
