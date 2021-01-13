@@ -18,7 +18,7 @@ import {
 import { InputComponentProps } from 'components/common/Input';
 import { requestAutocompleteSuggestions } from 'services/client/location';
 
-const MIN_SEARCH_STRING_IDLE_DURATION = 250;
+const MIN_SEARCH_STRING_IDLE_DURATION = 0;
 const suggestionIcon = <MapMarkerIcon />;
 
 type DisplaySuggestion = SuggestionDetails;
