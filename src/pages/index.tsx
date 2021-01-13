@@ -20,7 +20,7 @@ const placeholderThemeImageSrc =
 
 const Home: FC = () => {
   const [_, dispatch] = useLocation();
-  const [isUserLocationLoading, setIsUserLocationLoading] = useState(false);
+  const [userLocationIsLoading, setUserLocationIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -50,12 +50,12 @@ const Home: FC = () => {
 
     if (userPositionResponse.status !== 'SUCCESS') return;
 
-    setIsUserLocationLoading(true);
+    setUserLocationIsLoading(true);
 
     const { position } = userPositionResponse;
     const { address, timeZone } = await reverseGeocodeClient(position);
 
-    setIsUserLocationLoading(false);
+    setUserLocationIsLoading(false);
 
     dispatch({
       type: 'SET_LOCATION_DETAILS',
@@ -90,7 +90,7 @@ const Home: FC = () => {
         <StyledButton
           type="button"
           styleMode="primary"
-          isLoading={isUserLocationLoading}
+          loading={userLocationIsLoading}
           icon={<MapMarkerIcon />}
           onClick={handleUseUserLocation}
         >

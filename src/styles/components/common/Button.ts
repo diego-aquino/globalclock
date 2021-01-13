@@ -48,7 +48,7 @@ export const Container = styled.button<ContainerProps>`
   ${({ styleMode }) => styleMode === 'primary' && primaryButtonStyles}
 `;
 
-export const PrimaryWrapper = styled.div<{ isHidden?: boolean }>`
+export const PrimaryWrapper = styled.div<{ $hidden?: boolean }>`
   width: 100%;
   height: 100%;
 
@@ -56,7 +56,7 @@ export const PrimaryWrapper = styled.div<{ isHidden?: boolean }>`
   justify-content: center;
   align-items: center;
 
-  opacity: ${({ isHidden }) => (isHidden ? 0 : 1)};
+  opacity: ${({ $hidden }) => ($hidden ? 0 : 1)};
   transition: opacity ${theme.general.transitionDuration};
 `;
 
