@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import Time from 'components/clock/Time';
+import Time from 'components/time/Time';
 
 export const Container = styled.div`
   margin: -1.5rem 0;

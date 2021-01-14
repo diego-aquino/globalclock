@@ -4,7 +4,7 @@ import { ParsedUrlQuery } from 'querystring';
 import { DateTime } from 'luxon';
 
 import { useLocation } from 'contexts/location';
-import { Greeting, ClockTime, CityThemeImage } from 'components/clock';
+import { Greeting, LocalTime, CityThemeImage } from 'components/time';
 import {
   requestAddressDetails,
   requestLocalTimeZone,
@@ -98,7 +98,7 @@ const TimePage: FC = () => {
         {address && localDateTime && (
           <>
             <Greeting dateTime={localDateTime} />
-            <ClockTime dateTime={localDateTime} />
+            <LocalTime dateTime={localDateTime} />
             <LocationLabel>In {cityLocationLabel}</LocationLabel>
             <CityThemeImage address={address} dateTime={localDateTime} />
           </>
