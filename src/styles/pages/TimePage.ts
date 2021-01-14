@@ -64,7 +64,7 @@ export const LocationLabel = styled.p`
   word-spacing: 0.25rem;
   text-transform: uppercase;
 
-  opacity: 0.85;
+  opacity: 0.9;
 
   @media (max-width: 768px) {
     font-size: 1.9rem;
