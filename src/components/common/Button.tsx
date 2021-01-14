@@ -1,38 +1,29 @@
-import React, { ButtonHTMLAttributes, FC, ReactElement } from 'react';
+import React, { ButtonHTMLAttributes, FC } from 'react';
 
-import {
-  Container,
-  ChildrenWrapper,
-  ButtonStyleMode,
-  IconWrapper,
-  PrimaryWrapper,
-  StyledLoadingIcon,
-} from 'styles/components/common/Button';
-import { LoadingIconStyleMode } from 'styles/assets/LoadingIcon';
+import { RemoveFrom } from 'typings';
+import ActiveElement, { PartialActiveElementProps } from './ActiveElement';
 
-const loadingIconStyleModes: {
-  [key in ButtonStyleMode]: LoadingIconStyleMode;
-} = {
-  primary: 'secondaryWhite',
-};
+type Props = RemoveFrom<PartialActiveElementProps, 'as'> &
+  ButtonHTMLAttributes<HTMLButtonElement>;
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  styleMode: ButtonStyleMode;
-  icon?: HTMLElement | ReactElement;
-  loading?: boolean;
-}
-
-const Button: FC<Props> = ({ styleMode, icon, loading, children, ...rest }) => (
-  <Container styleMode={styleMode} $loading={loading} {...rest}>
-    {loading && (
-      <StyledLoadingIcon styleMode={loadingIconStyleModes[styleMode]} />
-    )}
-
-    <PrimaryWrapper $hidden={loading}>
-      <IconWrapper hasIcon={!!icon}>{icon}</IconWrapper>
-      <ChildrenWrapper>{children}</ChildrenWrapper>
-    </PrimaryWrapper>
-  </Container>
+const Button: FC<Props> = ({
+  styleMode,
+  showLabel,
+  icon,
+  loading,
+  children,
+  ...rest
+}) => (
+  <ActiveElement
+    as="button"
+    styleMode={styleMode}
+    showLabel={showLabel}
+    icon={icon}
+    loading={loading}
+    {...rest}
+  >
+    {children}
+  </ActiveElement>
 );
 
 export default Button;

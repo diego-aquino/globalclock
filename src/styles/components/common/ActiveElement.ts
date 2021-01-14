@@ -5,14 +5,14 @@ import theme from 'styles/theme';
 
 const buttonIconSize = '2rem';
 
-export type ButtonStyleMode = 'primary';
+export type ActiveElementStyleMode = 'primary';
 
 interface ContainerProps {
-  styleMode: ButtonStyleMode;
+  styleMode: ActiveElementStyleMode;
   $loading?: boolean;
 }
 
-const primaryButtonStyles = css`
+const primaryStyles = css`
   color: ${theme.colors.secondaryWhite};
 
   background-color: ${theme.colors.primary};
@@ -27,7 +27,7 @@ const primaryButtonStyles = css`
   }
 `;
 
-export const Container = styled.button<ContainerProps>`
+export const Container = styled.a<ContainerProps>`
   padding: ${theme.general.padding.normal};
   border: none;
   border-radius: ${theme.general.borderRadius.normal};
@@ -50,7 +50,7 @@ export const Container = styled.button<ContainerProps>`
     cursor: ${({ $loading }) => ($loading ? 'normal' : 'pointer')};
   }
 
-  ${({ styleMode }) => styleMode === 'primary' && primaryButtonStyles}
+  ${({ styleMode }) => styleMode === 'primary' && primaryStyles}
 `;
 
 export const PrimaryWrapper = styled.div<{ $hidden?: boolean }>`
@@ -82,10 +82,15 @@ export const StyledLoadingIcon = styled(LoadingIcon)`
   animation-name: ${customLoadingIconRotate};
 `;
 
-export const IconWrapper = styled.div<{ hasIcon: boolean }>`
+interface IconWrapperProps {
+  hasIcon: boolean;
+  isFollowedByLabel: boolean;
+}
+
+export const IconWrapper = styled.div<IconWrapperProps>`
   width: ${buttonIconSize};
   height: ${buttonIconSize};
-  margin-right: 1rem;
+  margin-right: ${({ isFollowedByLabel }) => isFollowedByLabel && '1rem'};
 
   display: ${({ hasIcon }) => (hasIcon ? 'flex' : 'none')};
   justify-content: center;
@@ -97,9 +102,11 @@ export const IconWrapper = styled.div<{ hasIcon: boolean }>`
   }
 `;
 
-export const ChildrenWrapper = styled.div`
+export const ChildrenWrapper = styled.div<{ showLabel?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 1;
+
+  font-size: ${({ showLabel }) => !showLabel && 0};
 `;

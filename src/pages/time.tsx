@@ -10,7 +10,13 @@ import {
   requestLocalTimeZone,
 } from 'services/client/location';
 import { requestCurrentUTCTime } from 'services/client/time';
-import { StyledLayout, Container, LocationLabel } from 'styles/pages/TimePage';
+import { ArrowIcon } from 'assets';
+import {
+  BackButton,
+  StyledLayout,
+  Container,
+  LocationLabel,
+} from 'styles/pages/TimePage';
 
 interface PageQuery extends ParsedUrlQuery {
   city?: string;
@@ -26,7 +32,7 @@ const TimePage: FC = () => {
   const [{ address, timeZone }, dispatch] = useLocation();
   const [localDateTime, setLocalDateTime] = useState<DateTime | null>(null);
 
-  const { query }: PageRouter = useRouter();
+  const { query, back: historyBack }: PageRouter = useRouter();
 
   useEffect(() => {
     const { city: cityName, state: stateCode, country: countryCode } = query;
@@ -80,6 +86,15 @@ const TimePage: FC = () => {
   return (
     <StyledLayout pageTitle={pageTitle}>
       <Container>
+        <BackButton
+          styleMode="primary"
+          showLabel={false}
+          icon={<ArrowIcon direction="left" />}
+          onClick={historyBack}
+        >
+          Go back
+        </BackButton>
+
         {address && localDateTime && (
           <>
             <Greeting dateTime={localDateTime} />
