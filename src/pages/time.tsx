@@ -72,7 +72,13 @@ const TimePage: FC = () => {
   const cityLocationLabel = useMemo(
     () =>
       address
-        ? `${address.cityName}, ${address.countryName || address.countryCode}`
+        ? [
+            address.cityName,
+            address.stateName || address.stateCode,
+            address.countryName || address.countryCode,
+          ]
+            .filter((resource) => !!resource)
+            .join(', ')
         : '',
     [address],
   );
