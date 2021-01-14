@@ -25,6 +25,7 @@ const loadingIconStyleModes: {
 export interface PartialActiveElementProps {
   as: 'button' | 'a';
   styleMode: ActiveElementStyleMode;
+  showLabel?: boolean;
   icon?: HTMLElement | ReactElement;
   loading?: boolean;
 }
@@ -38,7 +39,10 @@ type ActiveElementProps = PartialActiveElementProps &
 const ActiveElement: ForwardRefRenderFunction<
   HTMLAnchorElement,
   ActiveElementProps
-> = ({ as, styleMode, icon, loading, children, ...rest }, ref) => (
+> = (
+  { as, styleMode, showLabel = true, icon, loading, children, ...rest },
+  ref,
+) => (
   <Container
     ref={ref}
     as={as}
@@ -51,10 +55,10 @@ const ActiveElement: ForwardRefRenderFunction<
     )}
 
     <PrimaryWrapper $hidden={loading}>
-      <IconWrapper hasIcon={!!icon} isFollowedByChildren={!!children}>
+      <IconWrapper hasIcon={!!icon} isFollowedByLabel={showLabel && !!children}>
         {icon}
       </IconWrapper>
-      <ChildrenWrapper>{children}</ChildrenWrapper>
+      <ChildrenWrapper showLabel={showLabel}>{children}</ChildrenWrapper>
     </PrimaryWrapper>
   </Container>
 );

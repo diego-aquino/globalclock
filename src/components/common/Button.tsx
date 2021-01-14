@@ -6,10 +6,18 @@ import ActiveElement, { PartialActiveElementProps } from './ActiveElement';
 type Props = RemoveFrom<PartialActiveElementProps, 'as'> &
   ButtonHTMLAttributes<HTMLButtonElement>;
 
-const Button: FC<Props> = ({ styleMode, icon, loading, children, ...rest }) => (
+const Button: FC<Props> = ({
+  styleMode,
+  showLabel,
+  icon,
+  loading,
+  children,
+  ...rest
+}) => (
   <ActiveElement
     as="button"
     styleMode={styleMode}
+    showLabel={showLabel}
     icon={icon}
     loading={loading}
     {...rest}

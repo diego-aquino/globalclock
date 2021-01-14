@@ -84,13 +84,13 @@ export const StyledLoadingIcon = styled(LoadingIcon)`
 
 interface IconWrapperProps {
   hasIcon: boolean;
-  isFollowedByChildren: boolean;
+  isFollowedByLabel: boolean;
 }
 
 export const IconWrapper = styled.div<IconWrapperProps>`
   width: ${buttonIconSize};
   height: ${buttonIconSize};
-  margin-right: ${({ isFollowedByChildren }) => isFollowedByChildren && '1rem'};
+  margin-right: ${({ isFollowedByLabel }) => isFollowedByLabel && '1rem'};
 
   display: ${({ hasIcon }) => (hasIcon ? 'flex' : 'none')};
   justify-content: center;
@@ -102,9 +102,11 @@ export const IconWrapper = styled.div<IconWrapperProps>`
   }
 `;
 
-export const ChildrenWrapper = styled.div`
+export const ChildrenWrapper = styled.div<{ showLabel?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 1;
+
+  font-size: ${({ showLabel }) => !showLabel && 0};
 `;
