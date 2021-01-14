@@ -7,7 +7,7 @@ export const Container = styled.div`
 
   display: flex;
   align-items: flex-end;
-  opacity: 0.85;
+  /* opacity: 0.9; */
 
   @media (max-width: 768px) {
     margin: 0;
