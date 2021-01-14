@@ -77,7 +77,7 @@ export const SuggestionContent = styled.div`
     font-size: ${theme.general.fontSize.normal};
     font-weight: 400;
     opacity: 0.9;
-    margin-bottom: -0.2rem;
+    margin-bottom: -0.1rem;
   }
 
   > p {
