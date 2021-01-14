@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { Address } from 'typings';
@@ -14,6 +14,7 @@ import {
   StyledSmartLocationInput,
   StyledButton,
 } from 'styles/pages/HomePage';
+import { useWindowSize } from 'hooks';
 
 const placeholderThemeImageSrc =
   'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1366&q=80';
@@ -21,6 +22,9 @@ const placeholderThemeImageSrc =
 const Home: FC = () => {
   const [_, dispatch] = useLocation();
   const [userLocationIsLoading, setUserLocationIsLoading] = useState(false);
+
+  const windowSize = useWindowSize();
+  const [showUseMyLocationLabel, setShowUseMyLocationLabel] = useState(false);
 
   const router = useRouter();
 
@@ -83,6 +87,10 @@ const Home: FC = () => {
     [dispatch, redirectToTimePageBasedOn],
   );
 
+  useEffect(() => {
+    setShowUseMyLocationLabel(windowSize.width > 580);
+  }, [windowSize]);
+
   return (
     <StyledLayout pageTitle="GlobalClock">
       <SearchContainer>
@@ -90,6 +98,7 @@ const Home: FC = () => {
         <StyledButton
           type="button"
           styleMode="primary"
+          showLabel={showUseMyLocationLabel}
           loading={userLocationIsLoading}
           icon={<MyLocationIcon />}
           onClick={handleUseUserLocation}
