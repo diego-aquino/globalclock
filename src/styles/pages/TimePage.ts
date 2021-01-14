@@ -2,10 +2,13 @@ import styled from 'styled-components';
 import { Button, Layout } from 'components/common';
 
 export const StyledLayout = styled(Layout)`
+  min-width: 300px;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   position: relative;
 `;
 
