@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { OnlyOne, TimeOfDay } from 'typings';
 import { SunIcon, MoonIcon } from 'assets';
 import { getTimeOfDay } from 'utils/date';
-import { Container } from 'styles/components/clock/Greeting';
+import { Container } from 'styles/components/time/Greeting';
 import theme from 'styles/theme';
 
 type GreetingIconFor = {

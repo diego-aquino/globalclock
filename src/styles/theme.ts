@@ -12,8 +12,8 @@ const baseColors = {
 const theme = {
   general: {
     padding: {
-      normal: '1.6rem',
-      small: '1.4rem',
+      normal: '1.5rem',
+      small: '1.35rem',
       tiny: '1rem',
     },
     borderRadius: {
@@ -21,10 +21,11 @@ const theme = {
       small: '0.7rem',
     },
     fontSize: {
-      medium: '1.7rem',
-      normal: '1.6rem',
-      small: '1.3rem',
-      tiny: '1.2rem',
+      large: '2.1rem',
+      medium: '1.85rem',
+      normal: '1.7rem',
+      small: '1.45rem',
+      tiny: '1.35rem',
     },
     transitionDuration: '0.15s',
     boxShadowBase: `0px 4px 4px ${toRGBA(baseColors.primary, 0.25)}`,

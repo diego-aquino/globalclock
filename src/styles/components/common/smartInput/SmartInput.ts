@@ -16,15 +16,17 @@ export const StyledInput = styled(Input)<ActiveSuggestionProps>`
   ${({ hasActiveSuggestions }) =>
     hasActiveSuggestions &&
     css`
-      transition: none;
-      box-shadow: none;
-
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-      border-bottom: 1px solid ${toRGBA(theme.colors.primaryLighter, 0.35)};
-
-      :focus {
+      && {
+        transition: none;
         box-shadow: none;
+
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom: 1px solid ${toRGBA(theme.colors.primaryLighter, 0.35)};
+
+        :focus {
+          box-shadow: none;
+        }
       }
     `}
 `;

@@ -6,7 +6,7 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
 
-    font-family: 'Noto Sans', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
   }
 
   :root {
@@ -21,7 +21,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   input, textarea, select, button {
-    font-family: 'Noto Sans', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     color: ${({ theme }) => theme.colors.primary};
 
     background-color: ${({ theme }) => theme.colors.secondaryWhite};

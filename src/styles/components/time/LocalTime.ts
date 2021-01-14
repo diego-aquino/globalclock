@@ -1,17 +1,16 @@
 import styled from 'styled-components';
 
-import Time from 'components/clock/Time';
+import Time from 'components/time/Time';
 
 export const Container = styled.div`
+  margin: -1.5rem 0;
+
   display: flex;
   align-items: flex-end;
+  opacity: 0.85;
 
   @media (max-width: 768px) {
-    padding: 0.8rem 0;
-  }
-
-  @media (max-width: 640px) {
-    padding: 1.5rem 0;
+    margin: 0;
   }
 
   @media (max-width: 520px) {
@@ -48,7 +47,7 @@ export const StyledTime = styled(Time)`
 
 export const TimeZone = styled.p`
   margin: 2rem 0 4.5rem;
-  padding: 0 1rem;
+  padding: 0 0.5rem;
 
   flex: 1;
 

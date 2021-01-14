@@ -4,7 +4,7 @@ import { ParsedUrlQuery } from 'querystring';
 import { DateTime } from 'luxon';
 
 import { useLocation } from 'contexts/location';
-import { Greeting, ClockTime, CityThemeImage } from 'components/clock';
+import { Greeting, LocalTime, CityThemeImage } from 'components/time';
 import {
   requestAddressDetails,
   requestLocalTimeZone,
@@ -72,7 +72,13 @@ const TimePage: FC = () => {
   const cityLocationLabel = useMemo(
     () =>
       address
-        ? `${address.cityName}, ${address.countryName || address.countryCode}`
+        ? [
+            address.cityName,
+            address.stateName || address.stateCode,
+            address.countryName || address.countryCode,
+          ]
+            .filter((resource) => !!resource)
+            .join(', ')
         : '',
     [address],
   );
@@ -98,7 +104,7 @@ const TimePage: FC = () => {
         {address && localDateTime && (
           <>
             <Greeting dateTime={localDateTime} />
-            <ClockTime dateTime={localDateTime} />
+            <LocalTime dateTime={localDateTime} />
             <LocationLabel>In {cityLocationLabel}</LocationLabel>
             <CityThemeImage address={address} dateTime={localDateTime} />
           </>

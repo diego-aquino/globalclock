@@ -6,17 +6,17 @@ import {
   Container,
   StyledTime,
   TimeZone,
-} from 'styles/components/clock/ClockTime';
+} from 'styles/components/time/LocalTime';
 
 interface Props {
   dateTime: DateTime;
 }
 
-const ClockTime: FC<Props> = ({ dateTime }) => (
+const LocalTime: FC<Props> = ({ dateTime }) => (
   <Container>
     <StyledTime initialDateTime={dateTime} />
     <TimeZone>{dateTime.offsetNameShort}</TimeZone>
   </Container>
 );
 
-export default ClockTime;
+export default LocalTime;
