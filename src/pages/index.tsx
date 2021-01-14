@@ -2,7 +2,7 @@ import { FC, useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { Address } from 'typings';
-import { MapMarkerIcon } from 'assets';
+import { MyLocationIcon } from 'assets';
 import { useLocation } from 'contexts/location';
 import { BackgroundImage } from 'components/common';
 import { encodeQueryObject } from 'utils/general';
@@ -91,7 +91,7 @@ const Home: FC = () => {
           type="button"
           styleMode="primary"
           loading={userLocationIsLoading}
-          icon={<MapMarkerIcon />}
+          icon={<MyLocationIcon />}
           onClick={handleUseUserLocation}
         >
           Use my location
