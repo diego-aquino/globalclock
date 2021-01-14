@@ -14,6 +14,7 @@ const theme = {
     padding: {
       normal: '1.6rem',
       small: '1.4rem',
+      tiny: '1rem',
     },
     borderRadius: {
       normal: '1rem',

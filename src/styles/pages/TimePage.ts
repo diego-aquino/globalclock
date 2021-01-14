@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Layout } from 'components/common';
+import { Button, Layout } from 'components/common';
 
 export const StyledLayout = styled(Layout)`
   display: flex;
@@ -34,6 +34,20 @@ export const Container = styled.div`
 
   @media (max-width: 640px) {
     padding: 5rem 2rem 10rem;
+  }
+`;
+
+export const BackButton = styled(Button)`
+  padding: ${({ theme }) => theme.general.padding.tiny};
+  border-radius: ${({ theme }) => theme.general.borderRadius.small};
+
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
   }
 `;
 
