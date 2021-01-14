@@ -51,7 +51,9 @@ const ActiveElement: ForwardRefRenderFunction<
     )}
 
     <PrimaryWrapper $hidden={loading}>
-      <IconWrapper hasIcon={!!icon}>{icon}</IconWrapper>
+      <IconWrapper hasIcon={!!icon} isFollowedByChildren={!!children}>
+        {icon}
+      </IconWrapper>
       <ChildrenWrapper>{children}</ChildrenWrapper>
     </PrimaryWrapper>
   </Container>

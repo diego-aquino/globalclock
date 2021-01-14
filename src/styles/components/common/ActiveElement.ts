@@ -82,10 +82,15 @@ export const StyledLoadingIcon = styled(LoadingIcon)`
   animation-name: ${customLoadingIconRotate};
 `;
 
-export const IconWrapper = styled.div<{ hasIcon: boolean }>`
+interface IconWrapperProps {
+  hasIcon: boolean;
+  isFollowedByChildren: boolean;
+}
+
+export const IconWrapper = styled.div<IconWrapperProps>`
   width: ${buttonIconSize};
   height: ${buttonIconSize};
-  margin-right: 1rem;
+  margin-right: ${({ isFollowedByChildren }) => isFollowedByChildren && '1rem'};
 
   display: ${({ hasIcon }) => (hasIcon ? 'flex' : 'none')};
   justify-content: center;
