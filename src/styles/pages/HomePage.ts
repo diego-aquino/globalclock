@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import { Layout, Button } from 'components/common';
 import { SmartLocationInput } from 'components/home';
+import { SelectWithEnterHint as SuggestionSelectWithEnterHint } from 'styles/components/common/smartInput/Suggestion';
 
 export const StyledLayout = styled(Layout)`
   min-width: 200px;
@@ -14,6 +15,12 @@ export const StyledLayout = styled(Layout)`
 export const SearchContainer = styled.div`
   display: flex;
   align-items: center;
+
+  ${SuggestionSelectWithEnterHint} {
+    @media (max-width: 450px) {
+      display: none;
+    }
+  }
 `;
 
 export const StyledSmartLocationInput = styled(SmartLocationInput)`
