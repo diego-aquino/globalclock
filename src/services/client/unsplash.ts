@@ -8,22 +8,21 @@ import {
 } from 'pages/api/photos/random';
 import { QueryObject } from 'typings';
 
-const BASE_COLLECTION_ID = '317099';
-
 interface RequestOptions {
+  query: string;
   requestId?: string;
 }
 
 export async function requestRandomBackgroundPhoto({
+  query,
   requestId,
 }: RequestOptions): Promise<RandomPhotoResponseData> {
-  const query: RandomPhotoRequestQuery = {
-    collections: BASE_COLLECTION_ID,
-    featured: 'true',
+  const queryObject: RandomPhotoRequestQuery & QueryObject = {
+    query,
     orientation: 'landscape',
     requestId,
   };
-  const encodedQuery = encodeQueryObject(query as QueryObject);
+  const encodedQuery = encodeQueryObject(queryObject);
 
   const { data } = await axios.get<RandomPhotoResponseData>(
     `/api/photos/random?${encodedQuery}`,

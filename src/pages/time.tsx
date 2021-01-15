@@ -84,7 +84,10 @@ const TimePage: FC = () => {
       const { city, state, country } = query;
       const requestId = encodeQueryObject({ city, state, country });
 
-      const response = await requestRandomBackgroundPhoto({ requestId });
+      const response = await requestRandomBackgroundPhoto({
+        query: 'landscape',
+        requestId,
+      });
 
       if (response.photo) {
         setBackgroundPhoto(response.photo);

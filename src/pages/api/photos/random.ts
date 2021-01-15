@@ -1,12 +1,16 @@
-import { ServerlessRequestHandler } from 'typings';
+import { OnlyOne, ServerlessRequestHandler } from 'typings';
 import unsplash from 'services/unsplash';
 
-export interface RequestQuery {
-  collections?: string;
+export type RequestQuery = Partial<
+  OnlyOne<{
+    query?: string;
+    collections?: string;
+  }>
+> & {
   featured?: string;
   orientation?: 'landscape' | 'portrait' | 'squarish';
   requestId?: string;
-}
+};
 
 interface SuccessResponseData {
   type: 'success';
@@ -27,6 +31,7 @@ const randomPhotoHandler: ServerlessRequestHandler = async (
   response,
 ) => {
   const {
+    query,
     collections,
     featured: featuredAsString,
     orientation,
@@ -34,6 +39,7 @@ const randomPhotoHandler: ServerlessRequestHandler = async (
   const collectionIds = collections?.split(',');
 
   const unsplashResponse = (await unsplash.photos.getRandom({
+    query,
     collectionIds,
     featured: featuredAsString === 'true',
     orientation,
