@@ -92,7 +92,7 @@ const Home: FC = () => {
   }, [windowSize]);
 
   return (
-    <StyledLayout pageTitle="GlobalClock">
+    <StyledLayout pageTitle="TimeInCity">
       <SearchContainer>
         <StyledSmartLocationInput onSubmit={handleSmartLocationInputSubmit} />
         <StyledButton
