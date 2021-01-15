@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { encodeQueryObject } from 'utils/general';
+import { APP_NAME_ON_UNSPLASH } from 'services/unsplash';
 import {
   RequestQuery as RandomPhotoRequestQuery,
   ResponseData as RandomPhotoResponseData,
@@ -29,4 +30,19 @@ export async function requestRandomBackgroundPhoto({
   );
 
   return data;
+}
+
+export function withReferralParameters(referralUrl: string): string {
+  const encodedReferralParameters = encodeQueryObject({
+    utm_source: APP_NAME_ON_UNSPLASH,
+    utm_medium: 'referral',
+  });
+
+  const urlHasQueryParameters = referralUrl.match(/(?:.)(\?.+)/);
+
+  if (urlHasQueryParameters) {
+    return `${referralUrl}&${encodedReferralParameters}`;
+  }
+
+  return `${referralUrl}?${encodedReferralParameters}`;
 }

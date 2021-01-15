@@ -19,5 +19,5 @@ export const Overlay = styled.div`
   left: 0;
   z-index: 1;
 
-  background-color: rgba(0, 0, 0, 0.45);
+  background-color: rgba(0, 0, 0, 0.5);
 `;

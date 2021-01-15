@@ -4,7 +4,7 @@ import Image, { ImageProps } from 'next/image';
 import { RemoveFrom } from 'typings';
 import { Container, Overlay } from 'styles/components/common/BackgroundImage';
 
-type Props = RemoveFrom<
+export type Props = RemoveFrom<
   ImageProps,
   'layout' | 'width' | 'height' | 'objectFit'
 >;
