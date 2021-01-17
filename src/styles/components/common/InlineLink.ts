@@ -1,10 +1,6 @@
-import styled, {
-  css,
-  FlattenInterpolation,
-  ThemedStyledProps,
-  DefaultTheme,
-} from 'styled-components';
+import styled, { css } from 'styled-components';
 
+import { StyledComponentsCSS } from 'typings';
 import { toRGBA } from 'utils/general';
 
 export type InlineLinkStyleMode = 'primary' | 'secondaryBeige';
@@ -14,9 +10,7 @@ interface InlineLinkProps {
 }
 
 type StyleModeCSS = {
-  [key in InlineLinkProps['styleMode']]: FlattenInterpolation<
-    ThemedStyledProps<any, DefaultTheme>
-  >;
+  [key in InlineLinkProps['styleMode']]: StyledComponentsCSS;
 };
 
 const styleModeCSS: StyleModeCSS = {

@@ -9,4 +9,9 @@ const unsplash = createApi({
 
 export const APP_NAME_ON_UNSPLASH = 'timeincity';
 
+export const unsplashHostDetails = {
+  name: 'Unsplash',
+  website: 'http://unsplash.com',
+};
+
 export default unsplash;

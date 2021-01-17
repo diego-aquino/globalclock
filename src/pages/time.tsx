@@ -16,6 +16,7 @@ import {
 } from 'services/client/location';
 import { requestCurrentUTCTime } from 'services/client/time';
 import { requestRandomBackgroundPhoto } from 'services/client/unsplash';
+import { unsplashHostDetails } from 'services/unsplash';
 import { encodeQueryObject } from 'utils/general';
 import {
   BackButton,
@@ -139,7 +140,7 @@ const TimePage: FC = () => {
         {backgroundPhoto && (
           <BackgroundPhotoWithAttribution
             photo={backgroundPhoto}
-            host={{ name: 'Unsplash', website: 'https://unsplash.com' }}
+            host={unsplashHostDetails}
           />
         )}
       </Container>

@@ -1,14 +1,34 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { toRGBA } from 'utils/general';
 import theme from 'styles/theme';
+import { StyledComponentsCSS } from 'typings';
 
-export const Attribution = styled.div`
+export type AttributionSide = 'left' | 'right';
+
+interface AttributionProps {
+  side: AttributionSide;
+}
+
+type AttributionSideStyles = {
+  [key in AttributionSide]: StyledComponentsCSS;
+};
+
+const attributionSideStyles: AttributionSideStyles = {
+  left: css`
+    border-top-right-radius: ${theme.general.borderRadius.small};
+    left: 0;
+  `,
+  right: css`
+    border-top-left-radius: ${theme.general.borderRadius.small};
+    right: 0;
+  `,
+};
+
+export const Attribution = styled.div<AttributionProps>`
   padding: 0.4rem 0.8rem;
-  border-top-left-radius: ${theme.general.borderRadius.small};
 
   position: absolute;
-  right: 0;
   bottom: 0;
 
   font-size: ${theme.general.fontSize.small};
@@ -16,4 +36,6 @@ export const Attribution = styled.div`
   text-align: right;
 
   background-color: ${toRGBA(theme.colors.primary, 0.7)};
+
+  ${({ side }) => attributionSideStyles[side]}
 `;
