@@ -4,7 +4,10 @@ import { RemoveFrom } from 'typings';
 import { BackgroundImage, ExternalLink } from 'components/common';
 import { Props as BackgroundImageProps } from 'components/common/BackgroundImage';
 import { withReferralParameters } from 'services/client/unsplash';
-import { Attribution } from 'styles/components/time/BackgroundPhotoWithAttribution';
+import {
+  Attribution,
+  AttributionSide,
+} from 'styles/components/time/BackgroundPhotoWithAttribution';
 
 type Props = RemoveFrom<BackgroundImageProps, 'src'> & {
   photo: Unsplash.PhotoWithAttribution;
@@ -13,12 +16,14 @@ type Props = RemoveFrom<BackgroundImageProps, 'src'> & {
     website: string;
   };
   attributionStart?: string;
+  attributionSide?: AttributionSide;
 };
 
 const BackgroundPhotoWithAttribution: FC<Props> = ({
   photo,
   host,
   attributionStart = 'Photo by',
+  attributionSide = 'right',
   ...rest
 }) => {
   const LinkToCreatorProfile = useCallback(
@@ -49,7 +54,7 @@ const BackgroundPhotoWithAttribution: FC<Props> = ({
   return (
     <>
       <BackgroundImage src={photo.urls.full} {...rest} />
-      <Attribution>
+      <Attribution side={attributionSide}>
         {attributionStart} <LinkToCreatorProfile />
         {host && (
           <>
