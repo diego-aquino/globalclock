@@ -1,6 +1,8 @@
 import { OnlyOne, ServerlessRequestHandler } from 'typings';
 import unsplash from 'services/unsplash';
 
+const CACHE_TIME_IN_SECONDS = 2592000; // 1 month
+
 export type RequestQuery = Partial<
   OnlyOne<{
     query?: string;
@@ -66,6 +68,11 @@ const randomPhotoHandler: ServerlessRequestHandler = async (
   };
 
   const responseData: ResponseData = { type, photo };
+
+  response.setHeader(
+    'Cache-Control',
+    `max-age=0, s-maxage=${CACHE_TIME_IN_SECONDS}, stale-while-revalidate`,
+  );
 
   return response.status(200).json(responseData);
 };
