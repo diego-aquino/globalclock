@@ -12,11 +12,13 @@ type Props = RemoveFrom<BackgroundImageProps, 'src'> & {
     name: string;
     website: string;
   };
+  attributionStart?: string;
 };
 
 const BackgroundPhotoWithAttribution: FC<Props> = ({
   photo,
   host,
+  attributionStart = 'Photo by',
   ...rest
 }) => {
   const LinkToCreatorProfile = useCallback(
@@ -48,7 +50,7 @@ const BackgroundPhotoWithAttribution: FC<Props> = ({
     <>
       <BackgroundImage src={photo.urls.full} {...rest} />
       <Attribution>
-        Photo by <LinkToCreatorProfile />
+        {attributionStart} <LinkToCreatorProfile />
         {host && (
           <>
             &nbsp;on&nbsp;
