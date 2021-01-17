@@ -5,18 +5,19 @@ import { APP_NAME_ON_UNSPLASH } from 'services/unsplash';
 import {
   RequestQuery as RandomPhotoRequestQuery,
   ResponseData as RandomPhotoResponseData,
-} from 'pages/api/photos/random';
+  SpecialRequestIds,
+} from 'pages/api/photos/random/_types';
 import { QueryObject } from 'typings';
 
-interface RequestOptions {
-  query: string;
-  requestId?: string;
+interface RequestBackgroundPhotoOptions {
+  query: RandomPhotoRequestQuery['query'];
+  requestId?: RandomPhotoRequestQuery['requestId'];
 }
 
 export async function requestRandomBackgroundPhoto({
   query,
   requestId,
-}: RequestOptions): Promise<RandomPhotoResponseData> {
+}: RequestBackgroundPhotoOptions): Promise<RandomPhotoResponseData> {
   const queryObject: RandomPhotoRequestQuery & QueryObject = {
     query,
     orientation: 'landscape',
@@ -29,6 +30,22 @@ export async function requestRandomBackgroundPhoto({
   );
 
   return data;
+}
+
+// eslint-disable-next-line prettier/prettier
+export async function requestPhotoOfTheDay(): Promise<
+  Unsplash.PhotoWithAttribution | null
+> {
+  const response = await requestRandomBackgroundPhoto({
+    query: 'landscape',
+    requestId: SpecialRequestIds.PHOTO_OF_THE_DAY,
+  });
+
+  if (response.type === 'error') {
+    return null;
+  }
+
+  return response.photo;
 }
 
 export function withReferralParameters(referralUrl: string): string {

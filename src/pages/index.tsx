@@ -4,20 +4,19 @@ import { useRouter } from 'next/router';
 import { Address } from 'typings';
 import { MyLocationIcon } from 'assets';
 import { useLocation } from 'contexts/location';
-import { BackgroundImage } from 'components/common';
+import { useWindowSize } from 'hooks';
+import { BackgroundPhotoWithAttribution } from 'components/time';
 import { encodeQueryObject } from 'utils/general';
 import { requestUserPosition } from 'utils/location';
 import { geocodeClient, reverseGeocodeClient } from 'services/client/location';
+import { requestPhotoOfTheDay } from 'services/client/unsplash';
+import { unsplashHostDetails } from 'services/unsplash';
 import {
   StyledLayout,
   SearchContainer,
   StyledSmartLocationInput,
   StyledButton,
 } from 'styles/pages/HomePage';
-import { useWindowSize } from 'hooks';
-
-const placeholderThemeImageSrc =
-  'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1366&q=80';
 
 const Home: FC = () => {
   const [_, dispatch] = useLocation();
@@ -25,6 +24,10 @@ const Home: FC = () => {
 
   const windowSize = useWindowSize();
   const [showUseMyLocationLabel, setShowUseMyLocationLabel] = useState(false);
+  const [
+    backgroundPhoto,
+    setBackgroundPhoto,
+  ] = useState<Unsplash.PhotoWithAttribution | null>(null);
 
   const router = useRouter();
 
@@ -91,6 +94,15 @@ const Home: FC = () => {
     setShowUseMyLocationLabel(windowSize.width > 580);
   }, [windowSize]);
 
+  useEffect(() => {
+    const updateBackgroundPhoto = async () => {
+      const photoOfTheDay = await requestPhotoOfTheDay();
+      setBackgroundPhoto(photoOfTheDay);
+    };
+
+    updateBackgroundPhoto();
+  }, []);
+
   return (
     <StyledLayout pageTitle="TimeInCity">
       <SearchContainer>
@@ -106,7 +118,14 @@ const Home: FC = () => {
           Use my location
         </StyledButton>
       </SearchContainer>
-      <BackgroundImage src={placeholderThemeImageSrc} />
+      {backgroundPhoto && (
+        <BackgroundPhotoWithAttribution
+          photo={backgroundPhoto}
+          host={unsplashHostDetails}
+          attributionStart="Photo of the day by"
+          attributionSide="left"
+        />
+      )}
     </StyledLayout>
   );
 };
