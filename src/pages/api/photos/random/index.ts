@@ -1,32 +1,7 @@
-import { OnlyOne, ServerlessRequestHandler } from 'typings';
+import { ServerlessRequestHandler } from 'typings';
 import unsplash from 'services/unsplash';
-
-const CACHE_TIME_IN_SECONDS = 2592000; // 1 month
-
-export type RequestQuery = Partial<
-  OnlyOne<{
-    query?: string;
-    collections?: string;
-  }>
-> & {
-  featured?: string;
-  orientation?: 'landscape' | 'portrait' | 'squarish';
-  requestId?: string;
-};
-
-interface SuccessResponseData {
-  type: 'success';
-  photo: Unsplash.PhotoWithAttribution;
-  errors?: undefined;
-}
-
-export interface ErrorResponseData {
-  type: 'error';
-  photo: null;
-  errors: Unsplash.Errors;
-}
-
-export type ResponseData = SuccessResponseData | ErrorResponseData;
+import { RequestQuery, ResponseData } from './_types';
+import { getCacheControl } from './_cacheControl';
 
 const randomPhotoHandler: ServerlessRequestHandler = async (
   request,
@@ -37,6 +12,7 @@ const randomPhotoHandler: ServerlessRequestHandler = async (
     collections,
     featured: featuredAsString,
     orientation,
+    requestId,
   }: RequestQuery = request.query;
   const collectionIds = collections?.split(',');
 
@@ -69,10 +45,7 @@ const randomPhotoHandler: ServerlessRequestHandler = async (
 
   const responseData: ResponseData = { type, photo };
 
-  response.setHeader(
-    'Cache-Control',
-    `max-age=0, s-maxage=${CACHE_TIME_IN_SECONDS}, stale-while-revalidate`,
-  );
+  response.setHeader('Cache-Control', getCacheControl(requestId));
 
   return response.status(200).json(responseData);
 };
