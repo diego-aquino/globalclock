@@ -33,16 +33,15 @@ export function encodeQueryObject(queryObject: QueryObject): string {
 
   const encodedQueryItems = paramNames
     .filter((paramName) => {
-      const paramValue = queryObject[paramName];
-      const isValueTruthy = !!paramValue;
+      const hasValidValue = queryObject[paramName] != null;
 
-      return isValueTruthy;
+      return hasValidValue;
     })
     .map((paramName) => {
-      const paramValue = queryObject[paramName];
+      const paramValueAsString = String(queryObject[paramName]);
 
       const encodedParamName = encodeURIComponent(paramName);
-      const encodedParamValue = encodeURIComponent(String(paramValue));
+      const encodedParamValue = encodeURIComponent(paramValueAsString);
 
       return `${encodedParamName}=${encodedParamValue}`;
     });

@@ -3,14 +3,20 @@ import { NextRouter, useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
 import { DateTime } from 'luxon';
 
+import { ArrowIcon } from 'assets';
 import { useLocation } from 'contexts/location';
-import { Greeting, LocalTime, CityThemeImage } from 'components/time';
+import {
+  Greeting,
+  LocalTime,
+  BackgroundPhotoWithAttribution,
+} from 'components/time';
 import {
   requestAddressDetails,
   requestLocalTimeZone,
 } from 'services/client/location';
 import { requestCurrentUTCTime } from 'services/client/time';
-import { ArrowIcon } from 'assets';
+import { requestRandomBackgroundPhoto } from 'services/client/unsplash';
+import { encodeQueryObject } from 'utils/general';
 import {
   BackButton,
   StyledLayout,
@@ -31,6 +37,10 @@ interface PageRouter extends NextRouter {
 const TimePage: FC = () => {
   const [{ address, timeZone }, dispatch] = useLocation();
   const [localDateTime, setLocalDateTime] = useState<DateTime | null>(null);
+  const [
+    backgroundPhoto,
+    setBackgroundPhoto,
+  ] = useState<Unsplash.PhotoWithAttribution | null>(null);
 
   const { query, back: historyBack }: PageRouter = useRouter();
 
@@ -69,6 +79,24 @@ const TimePage: FC = () => {
     updateAddressIfNecessary();
   }, [timeZone, address, dispatch, query]);
 
+  useEffect(() => {
+    const requestAndUpdateBackgroundPhoto = async () => {
+      const { city, state, country } = query;
+      const requestId = encodeQueryObject({ city, state, country });
+
+      const response = await requestRandomBackgroundPhoto({
+        query: 'landscape',
+        requestId,
+      });
+
+      if (response.photo) {
+        setBackgroundPhoto(response.photo);
+      }
+    };
+
+    requestAndUpdateBackgroundPhoto();
+  }, [query]);
+
   const cityLocationLabel = useMemo(
     () =>
       address
@@ -101,13 +129,18 @@ const TimePage: FC = () => {
           Go back
         </BackButton>
 
-        {address && localDateTime && (
+        {localDateTime && (
           <>
             <Greeting dateTime={localDateTime} />
             <LocalTime dateTime={localDateTime} />
-            <LocationLabel>In {cityLocationLabel}</LocationLabel>
-            <CityThemeImage address={address} dateTime={localDateTime} />
           </>
+        )}
+        {address && <LocationLabel>In {cityLocationLabel}</LocationLabel>}
+        {backgroundPhoto && (
+          <BackgroundPhotoWithAttribution
+            photo={backgroundPhoto}
+            host={{ name: 'Unsplash', website: 'https://unsplash.com' }}
+          />
         )}
       </Container>
     </StyledLayout>
