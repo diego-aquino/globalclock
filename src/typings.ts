@@ -1,5 +1,10 @@
 import { SVGAttributes } from 'react';
 import { NowRequest, NowResponse } from '@vercel/node';
+import {
+  DefaultTheme,
+  FlattenInterpolation,
+  ThemedStyledProps,
+} from 'styled-components';
 
 export type Optional<T> = { [P in keyof T]?: T[P] };
 
@@ -47,3 +52,7 @@ export type ServerlessRequestHandler = (
   request: NowRequest,
   response: NowResponse,
 ) => Promise<NowResponse>;
+
+export type StyledComponentsCSS = FlattenInterpolation<
+  ThemedStyledProps<any, DefaultTheme>
+>;
