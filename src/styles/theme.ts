@@ -19,6 +19,7 @@ const theme = {
     borderRadius: {
       normal: '1rem',
       small: '0.7rem',
+      tiny: '0.4rem',
     },
     fontSize: {
       large: '2.1rem',
