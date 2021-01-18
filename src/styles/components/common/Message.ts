@@ -6,12 +6,10 @@ import theme from 'styles/theme';
 export const Container = styled.div`
   width: 100%;
   max-width: 768px;
+  margin: 0 auto;
   padding: ${theme.general.padding.normal};
 
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
 
   display: flex;
   align-items: center;
@@ -23,7 +21,7 @@ export const Container = styled.div`
     position: absolute;
     top: 0;
     left: 50%;
-    width: 100vw;
+    width: max(100%, 100vw);
     height: 100%;
     z-index: -1;
     transform: translateX(-50%);

@@ -15,7 +15,10 @@ function init() {
   body.insertBefore(messageContainer, body.firstChild);
 }
 
-function message(content: ReactNode): void {
+function message(
+  content: ReactNode,
+  MessageComponent: typeof Message = Message,
+): void {
   if (!isClient) return;
 
   const messageContainer = document.querySelector('#__messageContainer');
@@ -25,7 +28,7 @@ function message(content: ReactNode): void {
   };
 
   ReactDOM.render(
-    <Message onClose={unmountMessage}>{content}</Message>,
+    <MessageComponent onClose={unmountMessage}>{content}</MessageComponent>,
     messageContainer,
   );
 }
