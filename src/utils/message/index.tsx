@@ -15,6 +15,11 @@ function init() {
   body.insertBefore(messageContainer, body.firstChild);
 }
 
+export function clearMessage(): void {
+  const messageContainer = document.querySelector('#__messageContainer');
+  ReactDOM.render(<></>, messageContainer);
+}
+
 function message(
   content: ReactNode,
   MessageComponent: typeof Message = Message,
@@ -23,12 +28,8 @@ function message(
 
   const messageContainer = document.querySelector('#__messageContainer');
 
-  const unmountMessage = () => {
-    ReactDOM.render(<></>, messageContainer);
-  };
-
   ReactDOM.render(
-    <MessageComponent onClose={unmountMessage}>{content}</MessageComponent>,
+    <MessageComponent onClose={clearMessage}>{content}</MessageComponent>,
     messageContainer,
   );
 }

@@ -7,7 +7,7 @@ import { useLocation } from 'contexts/location';
 import { useWindowSize } from 'hooks';
 import { BackgroundPhotoWithAttribution } from 'components/time';
 import { encodeQueryObject } from 'utils/general';
-import { requestUserPosition } from 'utils/location';
+import { requestUserPosition, ErrorUserPositionResponse } from 'utils/location';
 import { geocodeClient, reverseGeocodeClient } from 'services/client/location';
 import { requestPhotoOfTheDay } from 'services/client/unsplash';
 import { unsplashHostDetails } from 'services/unsplash';
@@ -17,6 +17,8 @@ import {
   StyledSmartLocationInput,
   StyledButton,
 } from 'styles/pages/HomePage';
+import message, { clearMessage } from 'utils/message';
+import messageContents from 'utils/message/messageContents';
 
 const Home: FC = () => {
   const [_, dispatch] = useLocation();
@@ -47,15 +49,32 @@ const Home: FC = () => {
         country: countryCode || countryName,
       });
 
+      clearMessage();
       router.push({ pathname: `/time`, query });
     },
     [router],
   );
 
-  const handleUseUserLocation = useCallback(async () => {
+  const handleUserLocationError = useCallback(
+    (errorResponse: ErrorUserPositionResponse): void => {
+      switch (errorResponse.status) {
+        case 'NOT_SUPPORTED':
+          message(messageContents['userPosition.geolocationNotSupported']);
+          break;
+        case 'FAILED':
+          message(messageContents['userPosition.geolocationRequestFailed']);
+      }
+    },
+    [],
+  );
+
+  const handleUserLocation = useCallback(async () => {
     const userPositionResponse = await requestUserPosition();
 
-    if (userPositionResponse.status !== 'SUCCESS') return;
+    if (userPositionResponse.status !== 'SUCCESS') {
+      handleUserLocationError(userPositionResponse);
+      return;
+    }
 
     setUserLocationIsLoading(true);
 
@@ -71,7 +90,7 @@ const Home: FC = () => {
     });
 
     redirectToTimePageBasedOn(address);
-  }, [dispatch, redirectToTimePageBasedOn]);
+  }, [dispatch, handleUserLocationError, redirectToTimePageBasedOn]);
 
   const handleSmartLocationInputSubmit = useCallback(
     async (suggestion: Here.Suggestion) => {
@@ -113,7 +132,7 @@ const Home: FC = () => {
           showLabel={showUseMyLocationLabel}
           loading={userLocationIsLoading}
           icon={<MyLocationIcon />}
-          onClick={handleUseUserLocation}
+          onClick={handleUserLocation}
         >
           Use my location
         </StyledButton>

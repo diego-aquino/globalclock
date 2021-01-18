@@ -2,15 +2,19 @@ import { Position } from 'typings';
 
 const isClient = typeof window !== 'undefined';
 
+interface SuccessUserPositionResponse {
+  status: 'SUCCESS';
+  position: Position;
+}
+
+export interface ErrorUserPositionResponse {
+  status: 'NOT_SUPPORTED' | 'FAILED';
+  position: null;
+}
+
 type UserPositionResponse =
-  | {
-      status: 'SUCCESS';
-      position: Position;
-    }
-  | {
-      status: 'NOT_SUPPORTED' | 'FAILED';
-      position: null;
-    };
+  | SuccessUserPositionResponse
+  | ErrorUserPositionResponse;
 
 export async function requestUserPosition(): Promise<UserPositionResponse> {
   if (!isClient || !navigator.geolocation)
