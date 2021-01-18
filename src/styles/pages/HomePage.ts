@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Layout, Button } from 'components/common';
+import { Layout, Button, Message } from 'components/common';
 import { SmartLocationInput } from 'components/home';
 import { SelectWithEnterHint as SuggestionSelectWithEnterHint } from 'styles/components/common/smartInput/Suggestion';
 
@@ -10,6 +10,10 @@ export const StyledLayout = styled(Layout)`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+export const StyledMessage = styled(Message)`
+  min-width: 200px;
 `;
 
 export const SearchContainer = styled.div`

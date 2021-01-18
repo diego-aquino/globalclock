@@ -5,6 +5,7 @@ import Button from './Button';
 import Link from './Link';
 import ExternalLink from './ExternalLink';
 import BackgroundImage from './BackgroundImage';
+import Message from './Message';
 
 export {
   Layout,
@@ -14,4 +15,5 @@ export {
   Link,
   ExternalLink,
   BackgroundImage,
+  Message,
 };

@@ -7,6 +7,7 @@ import ArrowIcon from './ArrowIcon';
 import LoadingIcon from './LoadingIcon';
 import ReturnKeyIcon from './ReturnKeyIcon';
 import MyLocationIcon from './MyLocationIcon';
+import XIcon from './XIcon';
 
 export {
   SunIcon,
@@ -18,4 +19,5 @@ export {
   LoadingIcon,
   ReturnKeyIcon,
   MyLocationIcon,
+  XIcon,
 };

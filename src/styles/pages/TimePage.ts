@@ -15,11 +15,10 @@ export const StyledLayout = styled(Layout)`
 export const Container = styled.div`
   width: 100%;
   max-width: 1520px;
-  height: 100%;
-  min-height: 100vh;
   margin: 0 auto;
   padding: 10rem 12rem;
 
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
