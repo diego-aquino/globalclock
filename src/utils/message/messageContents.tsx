@@ -7,6 +7,13 @@ const messageContents = {
     </>
   ),
   'userPosition.geolocationRequestFailed': 'Sorry. Could not locate you.',
+  'default.somethingWentWrong': (
+    <>
+      Oops! Something went wrong.
+      <br />
+      Please try again later.
+    </>
+  ),
 };
 
 export default messageContents;

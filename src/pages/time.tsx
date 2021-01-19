@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 
 import { ArrowIcon } from 'assets';
 import { useLocation } from 'contexts/location';
+import { useMount } from 'hooks';
 import {
   Greeting,
   LocalTime,
@@ -42,19 +43,33 @@ const TimePage: FC = () => {
     backgroundPhoto,
     setBackgroundPhoto,
   ] = useState<Unsplash.PhotoWithAttribution | null>(null);
+  const isMounted = useMount();
 
-  const { query, back: historyBack }: PageRouter = useRouter();
+  const router: PageRouter = useRouter();
 
   useEffect(() => {
-    const { city: cityName, state: stateCode, country: countryCode } = query;
+    const {
+      city: cityName,
+      state: stateCode,
+      country: countryCode,
+    } = router.query;
 
-    if (!cityName || !countryCode) return;
+    if (!cityName || !countryCode) {
+      router.push('/');
+      return;
+    }
 
     const updateLocalTimeDetails = async () => {
       const [localTimeZone, currentUTCTime] = await Promise.all([
         timeZone || requestLocalTimeZone({ cityName, stateCode, countryCode }),
         requestCurrentUTCTime(),
       ]);
+
+      if (!isMounted()) return;
+      if (!localTimeZone) {
+        router.push('/');
+        return;
+      }
 
       const currentLocalDateTime = DateTime.fromISO(currentUTCTime).setZone(
         localTimeZone.id,
@@ -73,16 +88,22 @@ const TimePage: FC = () => {
         countryCode,
       });
 
+      if (!isMounted()) return;
+      if (!localAddress) {
+        router.push('/');
+        return;
+      }
+
       dispatch({ type: 'SET_ADDRESS', address: localAddress });
     };
 
     updateLocalTimeDetails();
     updateAddressIfNecessary();
-  }, [timeZone, address, dispatch, query]);
+  }, [timeZone, address, dispatch, router, isMounted]);
 
   useEffect(() => {
     const requestAndUpdateBackgroundPhoto = async () => {
-      const { city, state, country } = query;
+      const { city, state, country } = router.query;
       const requestId = encodeQueryObject({ city, state, country });
 
       const response = await requestRandomBackgroundPhoto({
@@ -90,13 +111,13 @@ const TimePage: FC = () => {
         requestId,
       });
 
-      if (response.photo) {
+      if (response.photo && isMounted()) {
         setBackgroundPhoto(response.photo);
       }
     };
 
     requestAndUpdateBackgroundPhoto();
-  }, [query]);
+  }, [isMounted, router.query]);
 
   const cityLocationLabel = useMemo(
     () =>
@@ -125,7 +146,7 @@ const TimePage: FC = () => {
           styleMode="primary"
           showLabel={false}
           icon={<ArrowIcon direction="left" />}
-          onClick={historyBack}
+          onClick={() => router.push('/')}
         >
           Go back
         </BackButton>

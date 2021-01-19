@@ -6,8 +6,8 @@ import { RequestQuery as ReverseGeocodeRequestQuery } from 'pages/api/reverse-ge
 import { encodeQueryObject } from 'utils/general';
 
 interface ParsedGeocodeResponse {
-  address: Address;
-  timeZone: TimeZone;
+  address: Address | null;
+  timeZone: TimeZone | null;
 }
 
 type GeocodeClientResponse = ParsedGeocodeResponse;
@@ -15,7 +15,12 @@ type GeocodeClientResponse = ParsedGeocodeResponse;
 function parseHereGeocodeResponse(
   response: Here.GeocodeResponse,
 ): ParsedGeocodeResponse {
-  const [{ result }] = response.response.view;
+  const { view } = response.response;
+  if (view.length === 0) {
+    return { address: null, timeZone: null };
+  }
+
+  const [{ result }] = view;
   const { location } = result[0];
 
   const { city, state, country, additionalData } = location.address;
@@ -84,7 +89,7 @@ export async function geocodeClient(
 
 export async function requestAddressDetails(
   query: Partial<Address>,
-): Promise<Address> {
+): Promise<Address | null> {
   const { address } = await geocodeClient({
     city: query.cityName,
     state: query.stateCode || query.stateName,
@@ -96,7 +101,7 @@ export async function requestAddressDetails(
 
 export async function requestLocalTimeZone(
   query: Partial<Address>,
-): Promise<TimeZone> {
+): Promise<TimeZone | null> {
   const { timeZone } = await geocodeClient({
     city: query.cityName,
     state: query.stateCode || query.stateName,
