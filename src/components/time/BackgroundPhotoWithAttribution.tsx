@@ -53,7 +53,11 @@ const BackgroundPhotoWithAttribution: FC<Props> = ({
 
   return (
     <>
-      <BackgroundImage src={photo.urls.full} {...rest} />
+      <BackgroundImage
+        src={photo.urls.full}
+        blurHash={photo.urls.blurHash}
+        {...rest}
+      />
       <Attribution side={attributionSide}>
         {attributionStart} <LinkToCreatorProfile />
         {host && (
