@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 
 import { ArrowIcon } from 'assets';
 import { useLocation } from 'contexts/location';
+import { useMount } from 'hooks';
 import {
   Greeting,
   LocalTime,
@@ -42,6 +43,7 @@ const TimePage: FC = () => {
     backgroundPhoto,
     setBackgroundPhoto,
   ] = useState<Unsplash.PhotoWithAttribution | null>(null);
+  const isMounted = useMount();
 
   const router: PageRouter = useRouter();
 
@@ -52,7 +54,10 @@ const TimePage: FC = () => {
       country: countryCode,
     } = router.query;
 
-    if (!cityName || !countryCode) return;
+    if (!cityName || !countryCode) {
+      router.push('/');
+      return;
+    }
 
     const updateLocalTimeDetails = async () => {
       const [localTimeZone, currentUTCTime] = await Promise.all([
@@ -60,6 +65,7 @@ const TimePage: FC = () => {
         requestCurrentUTCTime(),
       ]);
 
+      if (!isMounted()) return;
       if (!localTimeZone) {
         router.push('/');
         return;
@@ -82,6 +88,7 @@ const TimePage: FC = () => {
         countryCode,
       });
 
+      if (!isMounted()) return;
       if (!localAddress) {
         router.push('/');
         return;
@@ -92,7 +99,7 @@ const TimePage: FC = () => {
 
     updateLocalTimeDetails();
     updateAddressIfNecessary();
-  }, [timeZone, address, dispatch, router]);
+  }, [timeZone, address, dispatch, router, isMounted]);
 
   useEffect(() => {
     const requestAndUpdateBackgroundPhoto = async () => {
@@ -104,13 +111,13 @@ const TimePage: FC = () => {
         requestId,
       });
 
-      if (response.photo) {
+      if (response.photo && isMounted()) {
         setBackgroundPhoto(response.photo);
       }
     };
 
     requestAndUpdateBackgroundPhoto();
-  }, [router.query]);
+  }, [isMounted, router.query]);
 
   const cityLocationLabel = useMemo(
     () =>

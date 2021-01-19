@@ -77,11 +77,14 @@ const Home: FC = () => {
     }
 
     setUserLocationIsLoading(true);
-
     const { position } = userPositionResponse;
     const { address, timeZone } = await reverseGeocodeClient(position);
-
     setUserLocationIsLoading(false);
+
+    if (!address || !timeZone) {
+      message(messageContents['userPosition.geolocationRequestFailed']);
+      return;
+    }
 
     dispatch({
       type: 'SET_LOCATION_DETAILS',
@@ -97,6 +100,11 @@ const Home: FC = () => {
       const { address, timeZone } = await geocodeClient({
         locationid: suggestion.locationId,
       });
+
+      if (!address || !timeZone) {
+        message(messageContents['default.somethingWentWrong']);
+        return;
+      }
 
       dispatch({
         type: 'SET_LOCATION_DETAILS',
@@ -116,7 +124,10 @@ const Home: FC = () => {
   useEffect(() => {
     const updateBackgroundPhoto = async () => {
       const photoOfTheDay = await requestPhotoOfTheDay();
-      setBackgroundPhoto(photoOfTheDay);
+
+      if (photoOfTheDay) {
+        setBackgroundPhoto(photoOfTheDay);
+      }
     };
 
     updateBackgroundPhoto();
