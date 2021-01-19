@@ -45,7 +45,9 @@ declare namespace Unsplash {
   type ApiResponse<Response> = SuccessApiResponse<Response> | ErrorApiResponse;
 
   interface PhotoWithAttribution {
-    urls: Urls;
+    urls: Urls & {
+      blurHash: string;
+    };
     creator: {
       name: string;
       profileUrl: string;

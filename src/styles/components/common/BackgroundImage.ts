@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Blurhash } from 'react-blurhash';
 
 export const Container = styled.div`
   width: 100%;
@@ -20,4 +21,18 @@ export const Overlay = styled.div`
   z-index: 1;
 
   background-color: rgba(0, 0, 0, 0.5);
+`;
+
+interface ToggleVisible {
+  $visible?: boolean;
+}
+
+export const StyledBlurhash = styled(Blurhash)<ToggleVisible>`
+  width: 2rem;
+  height: 2rem;
+
+  transition: opacity 0.15s;
+  transition-delay: 0.35s;
+
+  opacity: ${({ $visible = true }) => ($visible ? 1 : 0)};
 `;

@@ -1,3 +1,4 @@
 import useWindowSize from './useWindowSize';
+import useNextImageLoad from './useNextImageLoad';
 
-export { useWindowSize };
+export { useWindowSize, useNextImageLoad };
