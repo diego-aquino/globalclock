@@ -139,7 +139,7 @@ const TimePage: FC = () => {
           styleMode="primary"
           showLabel={false}
           icon={<ArrowIcon direction="left" />}
-          onClick={router.back}
+          onClick={() => router.push('/')}
         >
           Go back
         </BackButton>
