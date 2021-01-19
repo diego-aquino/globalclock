@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 import { Blurhash } from 'react-blurhash';
 
-import theme from 'styles/theme';
-import { toRGBA } from 'utils/general';
-
 export const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -12,8 +9,6 @@ export const Container = styled.div`
   top: 0;
   left: 0;
   z-index: -9999;
-
-  background-color: ${toRGBA(theme.colors.primary, 0.15)};
 `;
 
 export const Overlay = styled.div`

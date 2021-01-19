@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
+import { toRGBA } from 'utils/general';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -21,6 +22,8 @@ const GlobalStyle = createGlobalStyle`
 
     display: flex;
     flex-direction: column;
+
+    background-color: ${({ theme }) => toRGBA(theme.colors.primary, 0.35)};
   }
 
   body > #__next {
