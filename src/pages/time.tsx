@@ -43,10 +43,14 @@ const TimePage: FC = () => {
     setBackgroundPhoto,
   ] = useState<Unsplash.PhotoWithAttribution | null>(null);
 
-  const { query, back: historyBack }: PageRouter = useRouter();
+  const router: PageRouter = useRouter();
 
   useEffect(() => {
-    const { city: cityName, state: stateCode, country: countryCode } = query;
+    const {
+      city: cityName,
+      state: stateCode,
+      country: countryCode,
+    } = router.query;
 
     if (!cityName || !countryCode) return;
 
@@ -55,6 +59,11 @@ const TimePage: FC = () => {
         timeZone || requestLocalTimeZone({ cityName, stateCode, countryCode }),
         requestCurrentUTCTime(),
       ]);
+
+      if (!localTimeZone) {
+        router.push('/');
+        return;
+      }
 
       const currentLocalDateTime = DateTime.fromISO(currentUTCTime).setZone(
         localTimeZone.id,
@@ -73,16 +82,21 @@ const TimePage: FC = () => {
         countryCode,
       });
 
+      if (!localAddress) {
+        router.push('/');
+        return;
+      }
+
       dispatch({ type: 'SET_ADDRESS', address: localAddress });
     };
 
     updateLocalTimeDetails();
     updateAddressIfNecessary();
-  }, [timeZone, address, dispatch, query]);
+  }, [timeZone, address, dispatch, router]);
 
   useEffect(() => {
     const requestAndUpdateBackgroundPhoto = async () => {
-      const { city, state, country } = query;
+      const { city, state, country } = router.query;
       const requestId = encodeQueryObject({ city, state, country });
 
       const response = await requestRandomBackgroundPhoto({
@@ -96,7 +110,7 @@ const TimePage: FC = () => {
     };
 
     requestAndUpdateBackgroundPhoto();
-  }, [query]);
+  }, [router.query]);
 
   const cityLocationLabel = useMemo(
     () =>
@@ -125,7 +139,7 @@ const TimePage: FC = () => {
           styleMode="primary"
           showLabel={false}
           icon={<ArrowIcon direction="left" />}
-          onClick={historyBack}
+          onClick={router.back}
         >
           Go back
         </BackButton>
