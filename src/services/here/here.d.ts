@@ -41,12 +41,16 @@ declare namespace Here {
     result: ResultItem[];
   }
 
-  export interface Response {
+  export interface SuccessfulResponse {
     view: ViewItem[];
   }
 
+  export interface ErrorResponse {
+    view: never[];
+  }
+
   export interface GeocodeResponse {
-    response: Response;
+    response: SuccessfulResponse | ErrorResponse;
   }
 
   export interface Suggestion {
