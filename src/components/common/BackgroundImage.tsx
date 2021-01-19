@@ -2,14 +2,12 @@ import React, { FC, useMemo } from 'react';
 import Image, { ImageProps } from 'next/image';
 
 import { RemoveFrom } from 'typings';
-import { useNextImageLoad } from 'hooks';
+import { useNextImageLoad, useWindowSize } from 'hooks';
 import {
   Container,
   Overlay,
   StyledBlurhash,
 } from 'styles/components/common/BackgroundImage';
-
-const isClient = typeof window !== 'undefined';
 
 export type Props = RemoveFrom<
   ImageProps,
@@ -19,6 +17,7 @@ export type Props = RemoveFrom<
 };
 
 const BackgroundImage: FC<Props> = ({ blurHash, ...rest }) => {
+  const windowSize = useWindowSize();
   const [imageIsFullyLoaded, onLoad] = useNextImageLoad();
 
   const showOriginalImage = useMemo(() => imageIsFullyLoaded || !blurHash, [
@@ -29,13 +28,13 @@ const BackgroundImage: FC<Props> = ({ blurHash, ...rest }) => {
   return (
     <Container>
       <Overlay />
-      <Image layout="fill" objectFit="cover" onLoad={onLoad} alt="" {...rest} />
-      {blurHash && isClient && (
+      <Image alt="" layout="fill" objectFit="cover" onLoad={onLoad} {...rest} />
+      {blurHash && (
         <StyledBlurhash
           hash={blurHash}
-          width={window.innerWidth}
-          height={window.innerHeight}
-          $visible={showOriginalImage}
+          width={windowSize.width}
+          height={windowSize.height}
+          $visible={!showOriginalImage}
         />
       )}
     </Container>
