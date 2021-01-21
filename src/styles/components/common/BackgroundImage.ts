@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { Blurhash } from 'react-blurhash';
 
 export const Container = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
 
   position: fixed;
   top: 0;
@@ -12,8 +12,8 @@ export const Container = styled.div`
 `;
 
 export const Overlay = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
 
   position: absolute;
   top: 0;
@@ -28,8 +28,8 @@ interface ToggleVisible {
 }
 
 export const StyledBlurhash = styled(Blurhash)<ToggleVisible>`
-  width: 2rem;
-  height: 2rem;
+  width: 100vw !important;
+  height: 100vh !important;
 
   transition: opacity 0.15s;
   transition-delay: 0.35s;
