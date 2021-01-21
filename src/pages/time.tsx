@@ -54,10 +54,7 @@ const TimePage: FC = () => {
       country: countryCode,
     } = router.query;
 
-    if (!cityName || !countryCode) {
-      router.push('/');
-      return;
-    }
+    if (!cityName || !countryCode) return;
 
     const updateLocalTimeDetails = async () => {
       const [localTimeZone, currentUTCTime] = await Promise.all([
