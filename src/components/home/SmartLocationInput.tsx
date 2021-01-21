@@ -99,6 +99,7 @@ const SmartLocationInput: FC<Props> = ({ onSubmit, ...rest }) => {
       loading={isLoadingSuggestions}
       onSuggestionSelect={handleSuggestionSelect}
       onChange={handleSmartInputChange}
+      clearButtonEnabled
       {...rest}
     />
   );
