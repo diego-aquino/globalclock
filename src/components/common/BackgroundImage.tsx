@@ -32,8 +32,8 @@ const BackgroundImage: FC<Props> = ({ blurHash, ...rest }) => {
       {blurHash && (
         <StyledBlurhash
           hash={blurHash}
-          width={windowSize.width}
-          height={windowSize.height}
+          width={windowSize.innerWidth}
+          height={windowSize.innerHeight}
           $visible={!showOriginalImage}
         />
       )}

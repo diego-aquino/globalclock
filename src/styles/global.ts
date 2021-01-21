@@ -1,7 +1,11 @@
 import { createGlobalStyle } from 'styled-components';
 import { toRGBA } from 'utils/general';
 
-const GlobalStyle = createGlobalStyle`
+interface GlobalStyleProps {
+  minBodyHeight?: number;
+}
+
+const GlobalStyle = createGlobalStyle<GlobalStyleProps>`
   * {
     margin: 0;
     padding: 0;
@@ -16,14 +20,15 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     width: 100%;
-    min-height: 100vh;
+    min-height: ${({ minBodyHeight }) =>
+      minBodyHeight ? `${minBodyHeight}px` : '100vh'};
 
     font-size: 1.6rem;
 
     display: flex;
     flex-direction: column;
 
-    background-color: ${({ theme }) => toRGBA(theme.colors.primary, 0.35)};
+    background-color: ${({ theme }) => toRGBA(theme.colors.primary, 0.3)};
   }
 
   body > #__next {

@@ -118,7 +118,7 @@ const Home: FC = () => {
   );
 
   useEffect(() => {
-    setShowUseMyLocationLabel(windowSize.width > 580);
+    setShowUseMyLocationLabel(windowSize.innerWidth > 580);
   }, [windowSize]);
 
   useEffect(() => {
