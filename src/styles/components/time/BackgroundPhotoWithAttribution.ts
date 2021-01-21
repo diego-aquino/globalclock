@@ -17,10 +17,12 @@ type AttributionSideStyles = {
 const attributionSideStyles: AttributionSideStyles = {
   left: css`
     border-top-right-radius: ${theme.general.borderRadius.small};
+    text-align: left;
     left: 0;
   `,
   right: css`
     border-top-left-radius: ${theme.general.borderRadius.small};
+    text-align: right;
     right: 0;
   `,
 };
@@ -30,10 +32,10 @@ export const Attribution = styled.div<AttributionProps>`
 
   position: absolute;
   bottom: 0;
+  z-index: -9998;
 
   font-size: ${theme.general.fontSize.small};
   color: ${toRGBA(theme.colors.secondaryWhite, 0.9)};
-  text-align: right;
 
   background-color: ${toRGBA(theme.colors.primary, 0.7)};
 
