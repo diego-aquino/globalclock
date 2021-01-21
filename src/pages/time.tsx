@@ -72,7 +72,7 @@ const TimePage: FC = () => {
         localTimeZone.id,
       );
 
-      dispatch({ type: 'SET_TIME_ZONE', timeZone });
+      dispatch({ type: 'SET_TIME_ZONE', timeZone: localTimeZone });
       setLocalDateTime(currentLocalDateTime);
     };
 
@@ -148,10 +148,10 @@ const TimePage: FC = () => {
           Go back
         </BackButton>
 
-        {localDateTime && (
+        {localDateTime && timeZone && (
           <>
             <Greeting dateTime={localDateTime} />
-            <LocalTime dateTime={localDateTime} />
+            <LocalTime dateTime={localDateTime} timeZone={timeZone} />
           </>
         )}
         {address && <LocationLabel>In {cityLocationLabel}</LocationLabel>}

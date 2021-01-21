@@ -45,14 +45,13 @@ export const StyledTime = styled(Time)`
   }
 `;
 
-export const TimeZone = styled.p`
+export const TimeZoneLabel = styled.p`
   margin: 2rem 0 4.5rem;
   padding: 0 0.5rem;
 
-  flex: 1;
-
   font-size: 3.2rem;
   word-wrap: break-word;
+  cursor: default;
 
   @media (max-width: 1080px) {
     font-size: 2.9rem;
