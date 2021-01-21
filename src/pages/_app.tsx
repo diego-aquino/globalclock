@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import Head from 'next/head';
 import { AppProps } from 'next/app';
 import { ThemeProvider } from 'styled-components';
@@ -19,7 +19,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
 
       <ThemeProvider theme={theme}>
         <LocationContextProvider>
-          <GlobalStyle minBodyHeight={windowSize.height} />
+          <GlobalStyle minBodyHeight={windowSize.innerHeight} />
           <Component {...pageProps} />
         </LocationContextProvider>
       </ThemeProvider>
