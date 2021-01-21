@@ -4,6 +4,7 @@ import {
   Container,
   StyledInput,
   SuggestionsContainer,
+  LoadingSuggestionsSign,
 } from 'styles/components/common/smartInput/SmartInput';
 import {
   SmartInputKeydownActions,
@@ -19,15 +20,19 @@ import { InputComponentProps } from '../Input';
 
 type Props = InputComponentProps & {
   suggestionGroups?: SuggestionGroup[];
+  loading?: boolean;
   onSuggestionSelect?: SuggestionSelectHandler;
 };
 
 const SmartInput: FC<Props> = ({
   suggestionGroups = [],
+  loading = false,
   onSuggestionSelect,
   ...rest
 }) => {
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showSuggestionsContainer, setShowSuggestionsContainer] = useState(
+    false,
+  );
   const {
     highlightedSuggestion,
     highlight,
@@ -102,16 +107,14 @@ const SmartInput: FC<Props> = ({
   );
 
   useEffect(() => {
-    const keepShowSuggestionsStatusUpdated = () => {
-      const atLeastOneGroupHasSuggestions = !!suggestionGroups?.some(
-        (group) => group.suggestions.length > 0,
-      );
+    const atLeastOneGroupHasSuggestions = () =>
+      !!suggestionGroups?.some((group) => group.suggestions.length > 0);
 
-      setShowSuggestions(atLeastOneGroupHasSuggestions);
-    };
+    const shouldShowSuggestionsContainer =
+      loading || atLeastOneGroupHasSuggestions();
 
-    keepShowSuggestionsStatusUpdated();
-  }, [suggestionGroups]);
+    setShowSuggestionsContainer(shouldShowSuggestionsContainer);
+  }, [suggestionGroups, loading]);
 
   useEffect(() => {
     const setupKeydownActions = () => {
@@ -142,10 +145,16 @@ const SmartInput: FC<Props> = ({
   ]);
 
   return (
-    <Container hasActiveSuggestions={showSuggestions}>
-      <StyledInput hasActiveSuggestions={showSuggestions} {...rest} />
-      {showSuggestions && (
-        <SuggestionsContainer>{renderSuggestionGroups()}</SuggestionsContainer>
+    <Container hasActiveSuggestions={showSuggestionsContainer}>
+      <StyledInput hasActiveSuggestions={showSuggestionsContainer} {...rest} />
+      {showSuggestionsContainer && (
+        <SuggestionsContainer>
+          {loading ? (
+            <LoadingSuggestionsSign styleMode="primary" />
+          ) : (
+            renderSuggestionGroups()
+          )}
+        </SuggestionsContainer>
       )}
     </Container>
   );

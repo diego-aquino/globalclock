@@ -33,6 +33,7 @@ const SmartLocationInput: FC<Props> = ({ onSubmit, ...rest }) => {
     DisplaySuggestion[]
   >([]);
   const detailedSuggestions = useRef<Here.Suggestion[]>([]);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
 
   const suggestionGroups = useMemo(
     () => [{ key: 'Cities', label: 'Cities', suggestions: displaySuggestions }],
@@ -48,6 +49,7 @@ const SmartLocationInput: FC<Props> = ({ onSubmit, ...rest }) => {
       return;
     }
 
+    setIsLoadingSuggestions(true);
     const suggestions = await requestAutocompleteSuggestions(searchString);
 
     const hasSearchStringChanged = searchString !== searchStringRef.current;
@@ -66,6 +68,7 @@ const SmartLocationInput: FC<Props> = ({ onSubmit, ...rest }) => {
 
     setDisplaySuggestions(newDisplaySuggestions);
     detailedSuggestions.current = suggestions;
+    setIsLoadingSuggestions(false);
   }, []);
 
   const handleSmartInputChange = useCallback(
@@ -93,6 +96,7 @@ const SmartLocationInput: FC<Props> = ({ onSubmit, ...rest }) => {
       icon={<SearchIcon />}
       placeholder="Search for a city..."
       suggestionGroups={suggestionGroups}
+      loading={isLoadingSuggestions}
       onSuggestionSelect={handleSuggestionSelect}
       onChange={handleSmartInputChange}
       {...rest}
