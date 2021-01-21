@@ -32,7 +32,7 @@ export const Attribution = styled.div<AttributionProps>`
 
   position: absolute;
   bottom: 0;
-  z-index: -9998;
+  z-index: 0;
 
   font-size: ${theme.general.fontSize.small};
   color: ${toRGBA(theme.colors.secondaryWhite, 0.9)};

@@ -8,7 +8,12 @@ export const Container = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+
   z-index: -9999;
+
+  img {
+    z-index: -9998;
+  }
 `;
 
 export const Overlay = styled.div`
@@ -18,7 +23,7 @@ export const Overlay = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: -9997;
 
   background-color: rgba(0, 0, 0, 0.5);
 `;

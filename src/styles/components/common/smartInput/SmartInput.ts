@@ -10,6 +10,14 @@ interface ActiveSuggestionProps {
 
 export const Container = styled.div<ActiveSuggestionProps>`
   position: relative;
+
+  > *:nth-child(1) {
+    z-index: 2;
+  }
+
+  > *:nth-child(2) {
+    z-index: 1;
+  }
 `;
 
 export const StyledInput = styled(Input)<ActiveSuggestionProps>`
@@ -38,7 +46,6 @@ export const SuggestionsContainer = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 0;
 
   ::after {
     content: '';
