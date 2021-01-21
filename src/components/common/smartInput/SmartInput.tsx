@@ -143,10 +143,10 @@ const SmartInput: FC<Props> = ({
 
   return (
     <Container hasActiveSuggestions={showSuggestions}>
+      <StyledInput hasActiveSuggestions={showSuggestions} {...rest} />
       {showSuggestions && (
         <SuggestionsContainer>{renderSuggestionGroups()}</SuggestionsContainer>
       )}
-      <StyledInput hasActiveSuggestions={showSuggestions} {...rest} />
     </Container>
   );
 };
