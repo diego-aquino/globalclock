@@ -1,6 +1,7 @@
 import { Input } from 'components/common';
 import styled, { css } from 'styled-components';
 
+import { LoadingIcon } from 'assets';
 import { toRGBA } from 'utils/general';
 import theme from 'styles/theme';
 
@@ -63,4 +64,9 @@ export const SuggestionsContainer = styled.div`
     box-shadow: ${theme.general.boxShadowBase},
       ${theme.general.secondaryBoxShadowOnFocus};
   }
+`;
+
+export const LoadingSuggestionsSign = styled(LoadingIcon)`
+  width: 100%;
+  opacity: 0.65;
 `;
