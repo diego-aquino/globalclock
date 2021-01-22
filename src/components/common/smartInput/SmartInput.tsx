@@ -198,6 +198,12 @@ const SmartInput: FC<Props> = ({
   }, [loading, suggestionsContainerRef]);
 
   useEffect(() => {
+    if (loading || suggestionGroups.length === 0) {
+      removeHighlight();
+    }
+  }, [loading, suggestionGroups, removeHighlight]);
+
+  useEffect(() => {
     const setupKeydownActions = () => {
       const keydownActions: SmartInputKeydownActions = {
         Enter: () => handleSuggestionSelect(highlightedSuggestion),
