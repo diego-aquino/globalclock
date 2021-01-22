@@ -90,6 +90,7 @@
     "no-plusplus": "off",
     "prefer-template": "off",
     "default-case": "off",
+    "radix": "off",
     // "object-curly-newline": [
     //   "warn",
     //   {

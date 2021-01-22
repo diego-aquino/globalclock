@@ -1,5 +1,7 @@
 import { QueryObject } from 'typings';
 
+const isClient = typeof window !== 'undefined';
+
 export function getTypedObjectKeys<T>(object: T): (keyof T)[] {
   return Object.keys(object) as (keyof T)[];
 }
@@ -47,4 +49,35 @@ export function encodeQueryObject(queryObject: QueryObject): string {
     });
 
   return encodedQueryItems.join('&');
+}
+
+interface ViewOptions {
+  viewLimits: {
+    top: number;
+    left: number;
+    bottom: number;
+    right: number;
+  };
+}
+
+export function isIntoView(element: Element, options?: ViewOptions): boolean {
+  if (!isClient) return false;
+
+  const { viewLimits } = options || {};
+  const {
+    top: topLimit = 0,
+    left: leftLimit = 0,
+    bottom: bottomLimit = window.innerHeight,
+    right: rightLimit = window.innerWidth,
+  } = viewLimits || {};
+
+  const { top, bottom, left, right } = element.getBoundingClientRect();
+
+  const elementIsIntoView =
+    top >= topLimit &&
+    left >= leftLimit &&
+    bottom <= bottomLimit &&
+    right <= rightLimit;
+
+  return elementIsIntoView;
 }

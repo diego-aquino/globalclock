@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import theme from 'styles/theme';
 
 export const Container = styled.div`
+  height: 100%;
+  overflow-y: auto;
+
   > p {
     margin-bottom: 0.5rem;
 

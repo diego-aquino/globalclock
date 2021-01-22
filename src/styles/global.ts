@@ -25,6 +25,8 @@ const GlobalStyle = createGlobalStyle<GlobalStyleProps>`
 
     font-size: 1.6rem;
 
+    overflow: hidden;
+
     display: flex;
     flex-direction: column;
 
