@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useConstrainedHeightRef } from 'hooks';
 import {
   Container,
   StyledInput,
@@ -41,6 +42,11 @@ const SmartInput: FC<Props> = ({
     removeHighlight,
     isHighlighted,
   } = useSuggestionHighlight(suggestionGroups);
+
+  const suggestionsContainerRef = useConstrainedHeightRef<HTMLDivElement>(
+    null,
+    [suggestionGroups],
+  );
 
   const handleSuggestionSelect = useCallback(
     (suggestion: SuggestionIdentifier) => {
@@ -117,6 +123,12 @@ const SmartInput: FC<Props> = ({
   }, [suggestionGroups, loading]);
 
   useEffect(() => {
+    if (loading && suggestionsContainerRef.current) {
+      suggestionsContainerRef.current.style.height = '';
+    }
+  }, [loading, suggestionsContainerRef]);
+
+  useEffect(() => {
     const setupKeydownActions = () => {
       const keydownActions: SmartInputKeydownActions = {
         Enter: () => handleSuggestionSelect(highlightedSuggestion),
@@ -148,7 +160,7 @@ const SmartInput: FC<Props> = ({
     <Container hasActiveSuggestions={showSuggestionsContainer}>
       <StyledInput hasActiveSuggestions={showSuggestionsContainer} {...rest} />
       {showSuggestionsContainer && (
-        <SuggestionsContainer>
+        <SuggestionsContainer ref={suggestionsContainerRef}>
           {loading ? (
             <LoadingSuggestionsSign styleMode="primary" />
           ) : (
