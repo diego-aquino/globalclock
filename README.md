@@ -88,7 +88,7 @@ I've learned a ton with this project! Some of my experiences and learning outcom
 
 ## :newspaper_roll: License
 
-This project if under **GNU GPLv3** license. Check [LICENSE](./LICENSE) for more information.
+This project is under **GNU GPLv3** license. Check [LICENSE](./LICENSE) for more information.
 
 ---
 
