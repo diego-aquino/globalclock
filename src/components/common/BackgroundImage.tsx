@@ -1,34 +1,38 @@
-import React, { FC, useMemo } from 'react';
-import Image, { ImageProps } from 'next/image';
+import React, {
+  FC,
+  ImgHTMLAttributes,
+  SyntheticEvent,
+  useCallback,
+  useState,
+} from 'react';
 
-import { RemoveFrom } from 'typings';
-import { useNextImageLoad, useWindowSize } from 'hooks';
+import { useWindowSize } from 'hooks';
 import {
   Container,
   Overlay,
   StyledBlurhash,
 } from 'styles/components/common/BackgroundImage';
 
-export type Props = RemoveFrom<
-  ImageProps,
-  'layout' | 'width' | 'height' | 'objectFit'
-> & {
+export interface Props extends ImgHTMLAttributes<HTMLImageElement> {
   blurHash?: string;
-};
+}
 
-const BackgroundImage: FC<Props> = ({ blurHash, ...rest }) => {
+const BackgroundImage: FC<Props> = ({ blurHash, alt, onLoad, ...rest }) => {
+  const [showOriginalImage, setShowOriginalImage] = useState(!blurHash);
   const windowSize = useWindowSize();
-  const [imageIsFullyLoaded, onLoad] = useNextImageLoad();
 
-  const showOriginalImage = useMemo(() => imageIsFullyLoaded || !blurHash, [
-    imageIsFullyLoaded,
-    blurHash,
-  ]);
+  const onImageLoad = useCallback(
+    (event: SyntheticEvent<HTMLImageElement, Event>) => {
+      setShowOriginalImage(true);
+      onLoad?.(event);
+    },
+    [onLoad],
+  );
 
   return (
     <Container>
       <Overlay />
-      <Image alt="" layout="fill" objectFit="cover" onLoad={onLoad} {...rest} />
+      <img alt={alt} onLoad={onImageLoad} {...rest} />
       {blurHash && (
         <StyledBlurhash
           hash={blurHash}
