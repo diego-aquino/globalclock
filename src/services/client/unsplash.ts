@@ -62,3 +62,23 @@ export function withReferralParameters(referralUrl: string): string {
 
   return `${referralUrl}?${encodedReferralParameters}`;
 }
+
+type DynamicPhotoAttributes = {
+  w?: string;
+  h?: string;
+  crop?: string;
+  auto?: 'format';
+  q?: string;
+  fit?: string;
+};
+
+export function withDynamicAttributes(
+  photoUrl: string,
+  attributes: DynamicPhotoAttributes,
+): string {
+  const urlHasQueryParams = photoUrl.includes('?');
+  const separator = urlHasQueryParams ? '&' : '?';
+
+  const encodedAttributes = encodeQueryObject(attributes);
+  return `${photoUrl}${separator}${encodedAttributes}`;
+}

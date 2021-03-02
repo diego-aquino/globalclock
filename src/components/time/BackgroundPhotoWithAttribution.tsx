@@ -1,13 +1,19 @@
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 import { RemoveFrom } from 'typings';
 import { BackgroundImage, ExternalLink } from 'components/common';
 import { Props as BackgroundImageProps } from 'components/common/BackgroundImage';
-import { withReferralParameters } from 'services/client/unsplash';
+import {
+  withDynamicAttributes,
+  withReferralParameters,
+} from 'services/client/unsplash';
 import {
   Attribution,
   AttributionSide,
 } from 'styles/components/time/BackgroundPhotoWithAttribution';
+import { useWindowSize } from 'hooks';
+
+const MIN_IMAGE_WIDTH = 1000;
 
 type Props = RemoveFrom<BackgroundImageProps, 'src'> & {
   photo: Unsplash.PhotoWithAttribution;
@@ -26,6 +32,9 @@ const BackgroundPhotoWithAttribution: FC<Props> = ({
   attributionSide = 'right',
   ...rest
 }) => {
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const windowSize = useWindowSize();
+
   const LinkToCreatorProfile = useCallback(
     () => (
       <ExternalLink
@@ -51,10 +60,33 @@ const BackgroundPhotoWithAttribution: FC<Props> = ({
     [host],
   );
 
-  return (
+  useEffect(() => {
+    setPhotoUrl((currentPhotoUrl) => {
+      const rawUrlHasChanged = !currentPhotoUrl?.includes(photo.urls.raw);
+      const shouldUpdatePhotoUrl =
+        windowSize.innerWidth > 0 &&
+        currentPhotoUrl === null &&
+        rawUrlHasChanged;
+
+      if (!shouldUpdatePhotoUrl) {
+        return currentPhotoUrl;
+      }
+
+      const newPhotoUrl = withDynamicAttributes(photo.urls.raw, {
+        w: Math.max(windowSize.innerWidth, MIN_IMAGE_WIDTH).toString(),
+        auto: 'format',
+        fit: 'crop',
+        q: '60',
+      });
+
+      return newPhotoUrl;
+    });
+  }, [photo.urls.raw, windowSize.innerWidth]);
+
+  return photoUrl ? (
     <>
       <BackgroundImage
-        src={photo.urls.full}
+        src={photoUrl}
         blurHash={photo.urls.blurHash}
         {...rest}
       />
@@ -68,7 +100,7 @@ const BackgroundPhotoWithAttribution: FC<Props> = ({
         )}
       </Attribution>
     </>
-  );
+  ) : null;
 };
 
 export default BackgroundPhotoWithAttribution;
