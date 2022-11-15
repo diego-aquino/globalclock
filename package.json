@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@vercel/node": "^1.8.5",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "blurhash": "^1.1.3",
     "luxon": "^1.25.0",
     "next": "10.0.4",
