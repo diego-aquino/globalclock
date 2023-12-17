@@ -132,7 +132,7 @@ const TimePage: FC = () => {
 
   const pageTitle = useMemo(
     () =>
-      cityLocationLabel ? `${cityLocationLabel} | TimeInCity` : 'TimeInCity',
+      cityLocationLabel ? `${cityLocationLabel} | GlobalClock` : 'GlobalClock',
     [cityLocationLabel],
   );
 

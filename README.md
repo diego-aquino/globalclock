@@ -1,11 +1,11 @@
 <h1 align="center">
-  <img align="top" src="public/logo.svg" alt="TimeInCity" width="35px"> TimeInCity
+  <img align="top" src="public/logo.svg" alt="GlobalClock" width="35px"> GlobalClock
 </h1>
 
 <p align="center">
   <i>
     :earth_africa: Check the local time and time zone of any city in the world
-    <a href="https://timeincity.vercel.app">
+    <a href="https://globalclock.vercel.app">
       <img alt="Go to website" src="./.github/diagonal-arrow.svg" align="center">
     </a>
   </i>
@@ -15,18 +15,18 @@
   <a href="https://github.com/diego-aquino">
     <img alt="Author" src="https://img.shields.io/badge/author-Diego%20Aquino-EDEFFC?labelColor=060A26">
   </a>
-  <a href="https://github.com/diego-aquino/timeincity">
-    <img alt="Top language" src="https://img.shields.io/github/languages/top/diego-aquino/timeincity.svg?color=EDEFFC&labelColor=060A26">
+  <a href="https://github.com/diego-aquino/globalclock">
+    <img alt="Top language" src="https://img.shields.io/github/languages/top/diego-aquino/globalclock.svg?color=EDEFFC&labelColor=060A26">
   </a>
-  <a href="https://timeincity.vercel.app">
-    <img alt="Website status" src="https://img.shields.io/website?down_color=yellow&down_message=offline&up_message=online&up_color=EDEFFC&url=https%3A%2F%2Ftimeincity.vercel.app&labelColor=060A26">
+  <a href="https://globalclock.vercel.app">
+    <img alt="Website status" src="https://img.shields.io/website?down_color=yellow&down_message=offline&up_message=online&up_color=EDEFFC&url=https%3A%2F%2Fglobalclock.vercel.app&labelColor=060A26">
   </a>
   <br>
   <a href="./LICENSE">
-    <img alt="License" src="https://img.shields.io/github/license/diego-aquino/timeincity.svg?color=EDEFFC&labelColor=060A26">
+    <img alt="License" src="https://img.shields.io/github/license/diego-aquino/globalclock.svg?color=EDEFFC&labelColor=060A26">
   </a>
-  <a href="https://github.com/diego-aquino/timeincity">
-    <img alt="Stars" src="https://img.shields.io/github/stars/diego-aquino/timeincity.svg?style=social">
+  <a href="https://github.com/diego-aquino/globalclock">
+    <img alt="Stars" src="https://img.shields.io/github/stars/diego-aquino/globalclock.svg?style=social">
   </a>
 </p>
 
@@ -41,9 +41,9 @@
 ---
 
 <p align="center">
-<img alt="TimeInCity on Desktop" src="./.github/desktop.png" width="600" align="top">
+<img alt="GlobalClock on Desktop" src="./.github/desktop.png" width="600" align="top">
 &nbsp;&nbsp;&nbsp;
-<img alt="TimeInCity on Mobile" src="./.github/mobile.png" width="172" align="center">
+<img alt="GlobalClock on Mobile" src="./.github/mobile.png" width="172" align="center">
 </p>
 
 ## :rocket: Features
@@ -68,7 +68,7 @@
 
 ## :computer: How to use
 
-<img align="center" src="public/logo.svg" alt="TimeInCity" width="15px"> <b>TimeInCity</b> is available at <a href="https://timeincity.vercel.app">https://timeincity.vercel.app</a>. Check it out!
+<img align="center" src="public/logo.svg" alt="GlobalClock" width="15px"> <b>GlobalClock</b> is available at <a href="https://globalclock.vercel.app">https://globalclock.vercel.app</a>. Check it out!
 
 ## :bulb: Learning outcomes
 
@@ -80,8 +80,8 @@ I've learned a ton with this project! Some of my experiences and learning outcom
 - Using [Styled Components](https://styled-components.com/), a CSS-in-JS library useful to improve the styling workflow in React applications.
 - Integrating the app with:
   - [HERE API](https://developer.here.com), for features that rely on location data, such as searching cities by name, showing location suggestions based on the user entries, using the current coordinates to determine the user location, and retrieving information about time zones.
-  - [Unsplash API](https://unsplash.com/developers), to show dynamic, high-quality images in the background of pages. 
-- Implementing serverless (lambda) functions. They offer many benefits of servers, without having to build a full-fledged backend. In TimeInCity, serverless functions implement response caching and other features tailored the needs of the app, preventing most rate-limiting issues and making the most external APIs.
+  - [Unsplash API](https://unsplash.com/developers), to show dynamic, high-quality images in the background of pages.
+- Implementing serverless (lambda) functions. They offer many benefits of servers, without having to build a full-fledged backend. In GlobalClock, serverless functions implement response caching and other features tailored the needs of the app, preventing most rate-limiting issues and making the most external APIs.
 - Showing a lightweight, [blur hash](https://blurha.sh/) version of images while loading. Once they are ready, the background will transition to the original image, enhancing the overall UX by not letting the screen go blank.
 - Keeping the layouts responsive to different screen sizes.
 - Manipulating dates, time zones and offsets.

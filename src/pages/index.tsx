@@ -134,7 +134,7 @@ const Home: FC = () => {
   }, []);
 
   return (
-    <StyledLayout pageTitle="TimeInCity">
+    <StyledLayout pageTitle="GlobalClock">
       <SearchContainer>
         <StyledSmartLocationInput onSubmit={handleSmartLocationInputSubmit} />
         <StyledButton
