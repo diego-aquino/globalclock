@@ -7,7 +7,7 @@ const unsplash = createApi({
   headers: { 'Accept-Version': 'v1' },
 });
 
-export const APP_NAME_ON_UNSPLASH = 'timeincity';
+export const APP_NAME_ON_UNSPLASH = 'globalclock';
 
 export const unsplashHostDetails = {
   name: 'Unsplash',

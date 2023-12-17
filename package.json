@@ -1,6 +1,6 @@
 {
-  "name": "timeincity",
-  "version": "0.1.0",
+  "name": "globalclock",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
