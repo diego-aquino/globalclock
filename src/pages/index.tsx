@@ -78,8 +78,13 @@ const Home: FC = () => {
 
     setUserLocationIsLoading(true);
     const { position } = userPositionResponse;
-    const { address, timeZone } = await reverseGeocodeClient(position);
+    const locationDetails = await reverseGeocodeClient(position).catch(
+      () => null,
+    );
     setUserLocationIsLoading(false);
+
+    const address = locationDetails?.address;
+    const timeZone = locationDetails?.timeZone;
 
     if (!address || !timeZone) {
       message(messageContents['userPosition.geolocationRequestFailed']);
@@ -97,9 +102,12 @@ const Home: FC = () => {
 
   const handleSmartLocationInputSubmit = useCallback(
     async (suggestion: CitySuggestion) => {
-      const { address, timeZone } = await geocodeClient({
+      const locationDetails = await geocodeClient({
         locationid: suggestion.locationId,
-      });
+      }).catch(() => null);
+
+      const address = locationDetails?.address;
+      const timeZone = locationDetails?.timeZone;
 
       if (!address || !timeZone) {
         message(messageContents['default.somethingWentWrong']);

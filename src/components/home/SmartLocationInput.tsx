@@ -16,6 +16,8 @@ import {
 } from 'components/common/smartInput/types';
 import { InputComponentProps } from 'components/common/Input';
 import { requestAutocompleteSuggestions } from 'services/client/location';
+import message from 'utils/message';
+import messageContents from 'utils/message/messageContents';
 
 const suggestionIcon = <MapMarkerIcon />;
 
@@ -50,10 +52,19 @@ const SmartLocationInput: FC<Props> = ({ onSubmit, ...rest }) => {
     }
 
     setIsLoadingSuggestions(true);
-    const suggestions = await requestAutocompleteSuggestions(searchString);
+    const suggestions = await requestAutocompleteSuggestions(
+      searchString,
+    ).catch(() => null);
 
     const hasSearchStringChanged = searchString !== searchStringRef.current;
     if (hasSearchStringChanged) return;
+
+    setIsLoadingSuggestions(false);
+
+    if (!suggestions) {
+      message(messageContents['default.somethingWentWrong']);
+      return;
+    }
 
     const newDisplaySuggestions = suggestions.map(
       ({ locationId, address }) => ({
@@ -68,7 +79,6 @@ const SmartLocationInput: FC<Props> = ({ onSubmit, ...rest }) => {
 
     setDisplaySuggestions(newDisplaySuggestions);
     detailedSuggestions.current = suggestions;
-    setIsLoadingSuggestions(false);
   }, []);
 
   const handleSmartInputChange = useCallback(
