@@ -19,6 +19,8 @@ import { requestCurrentUTCTime } from 'services/client/time';
 import { requestRandomBackgroundPhoto } from 'services/client/unsplash';
 import { unsplashHostDetails } from 'services/unsplash';
 import { encodeQueryObject } from 'utils/general';
+import message from 'utils/message';
+import messageContents from 'utils/message/messageContents';
 import {
   BackButton,
   StyledLayout,
@@ -55,6 +57,13 @@ const TimePage: FC = () => {
     } = router.query;
 
     if (!cityName || !countryCode) return;
+
+    const returnHomeWithError = () => {
+      if (!isMounted()) return;
+
+      message(messageContents['default.somethingWentWrong']);
+      router.push('/');
+    };
 
     const updateLocalTimeDetails = async () => {
       const [localTimeZone, currentUTCTime] = await Promise.all([
@@ -94,8 +103,8 @@ const TimePage: FC = () => {
       dispatch({ type: 'SET_ADDRESS', address: localAddress });
     };
 
-    updateLocalTimeDetails();
-    updateAddressIfNecessary();
+    updateLocalTimeDetails().catch(returnHomeWithError);
+    updateAddressIfNecessary().catch(returnHomeWithError);
   }, [timeZone, address, dispatch, router, isMounted]);
 
   useEffect(() => {
