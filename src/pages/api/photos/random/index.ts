@@ -32,7 +32,7 @@ const randomPhotoHandler: ServerlessRequestHandler = async (
 
   const {
     type,
-    response: { urls, user, blur_hash: blurHash },
+    response: { urls, links, user, blur_hash: blurHash },
   } = unsplashResponse;
 
   const photo: Unsplash.PhotoWithAttribution = {
@@ -40,6 +40,7 @@ const randomPhotoHandler: ServerlessRequestHandler = async (
       ...urls,
       blurHash,
     },
+    pageUrl: links.html,
     creator: {
       name: user.name,
       profileUrl: user.links.html,

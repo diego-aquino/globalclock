@@ -1,101 +1,139 @@
 import axios from 'axios';
 
-import { Address, Position, QueryObject } from 'typings';
-import { encodeQueryObject } from 'utils/general';
+import {
+  Address,
+  CitySuggestion,
+  LocationDetails,
+  Position,
+  QueryObject,
+} from 'typings';
 
-export const hereEndpoints = {
-  geocode: 'https://geocoder.ls.hereapi.com/6.2/geocode.json',
-  reverseGeocode:
-    'https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json',
-  autocomplete: 'https://autocomplete.geocoder.ls.hereapi.com/6.2/suggest.json',
+const hereEndpoints = {
+  geocode: 'https://geocode.search.hereapi.com/v1/geocode',
+  reverseGeocode: 'https://revgeocode.search.hereapi.com/v1/revgeocode',
+  autocomplete: 'https://autocomplete.search.hereapi.com/v1/autocomplete',
+  lookup: 'https://lookup.search.hereapi.com/v1/lookup',
 } as const;
 
+type HereEndpointURL = typeof hereEndpoints[keyof typeof hereEndpoints];
+
 const defaultQueryParams = {
-  language: 'en-US',
-  gen: '9',
-  jsonattributes: '1',
+  lang: 'en-US',
   apiKey: process.env.HERE_API_KEY,
 };
 
-type HereEndpointName = keyof typeof hereEndpoints;
-type HereEndpointURL = typeof hereEndpoints[HereEndpointName];
-
-export function generateHereRequestURL(
+async function requestHere<ResponseData>(
   endpointURL: HereEndpointURL,
   query: QueryObject,
-): string {
-  const completeQuery = Object.assign(query, defaultQueryParams);
-  const encodedCompleteQuery = encodeQueryObject(completeQuery);
-
-  const requestURL = `${endpointURL}?${encodedCompleteQuery}`;
-
-  return requestURL;
-}
-
-type GeocodeQuery = Partial<Address> & {
-  searchtext?: string;
-  locationId?: string;
-};
-
-export async function geocode(
-  query: GeocodeQuery,
-): Promise<Here.GeocodeResponse> {
-  const queryObject = {
-    searchtext: query.searchtext,
-    city: query.cityName,
-    state: query.stateCode || query.stateName,
-    country: query.countryCode || query.countryName,
-    locationid: query.locationId,
-  };
-
-  const requestURL = generateHereRequestURL(hereEndpoints.geocode, {
-    ...queryObject,
-    locationattributes: 'adminInfo,timeZone',
+): Promise<ResponseData> {
+  const { data } = await axios.get<ResponseData>(endpointURL, {
+    params: { ...query, ...defaultQueryParams },
   });
 
-  const { data: locationResponse } = await axios.get<Here.GeocodeResponse>(
-    requestURL,
+  return data;
+}
+
+function toAddress(hereAddress: Here.Address): Address {
+  const { city, state, stateCode, countryCode, countryName } = hereAddress;
+
+  // HERE geocodes some cities, such as Tokyo, as a state-level area without a
+  // city field.
+  if (!city) {
+    return { cityName: state ?? countryName, countryCode, countryName };
+  }
+
+  return {
+    cityName: city,
+    stateCode,
+    stateName: state,
+    countryCode,
+    countryName,
+  };
+}
+
+function toLocationDetails(place: Here.Place | undefined): LocationDetails {
+  if (!place) {
+    return { address: null, timeZone: null };
+  }
+
+  return {
+    address: toAddress(place.address),
+    timeZone: { id: place.timeZone.name },
+  };
+}
+
+function toQualifiedQuery(address: Partial<Address>): string {
+  const qualifiedFields = [
+    ['city', address.cityName],
+    ['state', address.stateCode || address.stateName],
+  ];
+
+  return qualifiedFields
+    .filter(([, value]) => !!value)
+    .map(([field, value]) => `${field}=${value}`)
+    .join(';');
+}
+
+// The `country` field of a qualified query does not match ISO country codes
+// reliably, so the country is applied as a filter instead. Results are not
+// limited to cities because HERE geocodes some cities as administrative areas.
+export async function geocode(
+  address: Partial<Address>,
+): Promise<LocationDetails> {
+  const { items } = await requestHere<Here.ItemList<Here.Place>>(
+    hereEndpoints.geocode,
+    {
+      qq: toQualifiedQuery(address),
+      in: address.countryCode && `countryCode:${address.countryCode}`,
+      show: 'tz',
+      limit: '1',
+    },
   );
 
-  return locationResponse;
+  return toLocationDetails(items[0]);
+}
+
+export async function lookup(locationId: string): Promise<LocationDetails> {
+  const place = await requestHere<Here.Place>(hereEndpoints.lookup, {
+    id: locationId,
+    show: 'tz',
+  });
+
+  return toLocationDetails(place);
 }
 
 export async function reverseGeocode(
   position: Position,
-): Promise<Here.GeocodeResponse> {
-  const requestURL = generateHereRequestURL(hereEndpoints.reverseGeocode, {
-    prox: `${position.latitude},${position.longitude}`,
-    mode: 'retrieveAddresses',
-    maxresults: '1',
-    locationattributes: 'adminInfo,timeZone',
-  });
-
-  const { data: locationResponse } = await axios.get<Here.GeocodeResponse>(
-    requestURL,
+): Promise<LocationDetails> {
+  const { items } = await requestHere<Here.ItemList<Here.Place>>(
+    hereEndpoints.reverseGeocode,
+    {
+      at: `${position.latitude},${position.longitude}`,
+      types: 'city',
+      show: 'tz',
+      limit: '1',
+    },
   );
 
-  return locationResponse;
+  return toLocationDetails(items[0]);
 }
 
-interface AutocompleteOptions {
-  resultType?: 'areas' | 'postalCode' | 'city';
-}
+const MAX_AUTOCOMPLETE_SUGGESTIONS = '4';
 
-export async function autocomplete(
+export async function autocompleteCities(
   queryString: string,
-  options?: AutocompleteOptions,
-): Promise<Here.AutocompleteResponse> {
-  const requestURL = generateHereRequestURL(hereEndpoints.autocomplete, {
-    query: queryString,
-    beginHighlight: '[',
-    endHighlight: ']',
-    resultType: options?.resultType,
-    maxresults: '4',
-  });
+): Promise<CitySuggestion[]> {
+  const { items } = await requestHere<Here.ItemList<Here.AutocompleteItem>>(
+    hereEndpoints.autocomplete,
+    {
+      q: queryString,
+      types: 'city',
+      limit: MAX_AUTOCOMPLETE_SUGGESTIONS,
+    },
+  );
 
-  const {
-    data: autocompleteResponse,
-  } = await axios.get<Here.AutocompleteResponse>(requestURL);
-
-  return autocompleteResponse;
+  return items.map((item) => ({
+    locationId: item.id,
+    address: toAddress(item.address),
+  }));
 }

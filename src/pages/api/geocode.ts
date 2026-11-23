@@ -1,5 +1,5 @@
-import { ServerlessRequestHandler } from 'typings';
-import { geocode } from 'services/here';
+import { LocationDetails, ServerlessRequestHandler } from 'typings';
+import { geocode, lookup } from 'services/here';
 
 const CACHE_TIME_IN_SECONDS = 21024000; // 8 months
 
@@ -10,7 +10,7 @@ export interface RequestQuery {
   locationid?: string;
 }
 
-type ResponseData = Here.GeocodeResponse;
+type ResponseData = LocationDetails;
 
 const geocodeHandler: ServerlessRequestHandler = async (request, response) => {
   const {
@@ -20,12 +20,13 @@ const geocodeHandler: ServerlessRequestHandler = async (request, response) => {
     locationid: locationId,
   }: RequestQuery = request.query;
 
-  const locationResponseData: ResponseData = await geocode({
-    cityName: city,
-    stateCode: state,
-    countryCode: country,
-    locationId,
-  });
+  const locationResponseData: ResponseData = locationId
+    ? await lookup(locationId)
+    : await geocode({
+        cityName: city,
+        stateCode: state,
+        countryCode: country,
+      });
 
   response.setHeader(
     'Cache-Control',

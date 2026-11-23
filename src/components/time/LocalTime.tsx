@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import { DateTime } from 'luxon';
 
-import { TimeZone } from 'typings';
 import { WithTooltip } from 'components/common';
 import {
   Container,
@@ -12,10 +11,9 @@ import {
 
 interface Props {
   dateTime: DateTime;
-  timeZone: TimeZone;
 }
 
-const LocalTime: FC<Props> = ({ dateTime, timeZone }) => (
+const LocalTime: FC<Props> = ({ dateTime }) => (
   <Container>
     <StyledTime initialDateTime={dateTime} />
     <WithTooltip
@@ -23,9 +21,11 @@ const LocalTime: FC<Props> = ({ dateTime, timeZone }) => (
       place="right"
       overridePosition={(position) => position}
       render={(elementProps) => (
-        <TimeZoneLabel {...elementProps}>{timeZone.nameShort}</TimeZoneLabel>
+        <TimeZoneLabel {...elementProps}>
+          {dateTime.offsetNameShort}
+        </TimeZoneLabel>
       )}
-      tooltip={timeZone.nameLong}
+      tooltip={dateTime.offsetNameLong}
     />
   </Container>
 );

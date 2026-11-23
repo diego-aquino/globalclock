@@ -10,18 +10,19 @@ declare namespace Unsplash {
     thumb: string;
   }
 
-  interface UserLinks {
+  interface HtmlLinks {
     html: string;
   }
 
   interface User {
     name: string;
-    links: UserLinks;
+    links: HtmlLinks;
   }
 
   interface Photo {
     blur_hash: string;
     urls: Urls;
+    links: HtmlLinks;
     user: User;
   }
 
@@ -48,6 +49,7 @@ declare namespace Unsplash {
     urls: Urls & {
       blurHash: string;
     };
+    pageUrl: string;
     creator: {
       name: string;
       profileUrl: string;

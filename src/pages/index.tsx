@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import { Address } from 'typings';
+import { Address, CitySuggestion } from 'typings';
 import { MyLocationIcon } from 'assets';
 import { useLocation } from 'contexts/location';
 import { useWindowSize } from 'hooks';
@@ -78,8 +78,13 @@ const Home: FC = () => {
 
     setUserLocationIsLoading(true);
     const { position } = userPositionResponse;
-    const { address, timeZone } = await reverseGeocodeClient(position);
+    const locationDetails = await reverseGeocodeClient(position).catch(
+      () => null,
+    );
     setUserLocationIsLoading(false);
+
+    const address = locationDetails?.address;
+    const timeZone = locationDetails?.timeZone;
 
     if (!address || !timeZone) {
       message(messageContents['userPosition.geolocationRequestFailed']);
@@ -96,10 +101,13 @@ const Home: FC = () => {
   }, [dispatch, handleUserLocationError, redirectToTimePageBasedOn]);
 
   const handleSmartLocationInputSubmit = useCallback(
-    async (suggestion: Here.Suggestion) => {
-      const { address, timeZone } = await geocodeClient({
+    async (suggestion: CitySuggestion) => {
+      const locationDetails = await geocodeClient({
         locationid: suggestion.locationId,
-      });
+      }).catch(() => null);
+
+      const address = locationDetails?.address;
+      const timeZone = locationDetails?.timeZone;
 
       if (!address || !timeZone) {
         message(messageContents['default.somethingWentWrong']);
@@ -152,7 +160,7 @@ const Home: FC = () => {
         <BackgroundPhotoWithAttribution
           photo={backgroundPhoto}
           host={unsplashHostDetails}
-          attributionStart="Photo of the day by"
+          photoQualifier="of the day"
           attributionSide="left"
         />
       )}
