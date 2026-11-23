@@ -160,7 +160,7 @@ const Home: FC = () => {
         <BackgroundPhotoWithAttribution
           photo={backgroundPhoto}
           host={unsplashHostDetails}
-          attributionStart="Photo of the day by"
+          photoQualifier="of the day"
           attributionSide="left"
         />
       )}

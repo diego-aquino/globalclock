@@ -21,19 +21,31 @@ type Props = RemoveFrom<BackgroundImageProps, 'src'> & {
     name: string;
     website: string;
   };
-  attributionStart?: string;
+  photoQualifier?: string;
   attributionSide?: AttributionSide;
 };
 
 const BackgroundPhotoWithAttribution: FC<Props> = ({
   photo,
   host,
-  attributionStart = 'Photo by',
+  photoQualifier,
   attributionSide = 'right',
   ...rest
 }) => {
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const windowSize = useWindowSize();
+
+  const LinkToPhotoPage = useCallback(
+    () => (
+      <ExternalLink
+        styleMode="secondaryBeige"
+        href={withReferralParameters(photo.pageUrl)}
+      >
+        Photo
+      </ExternalLink>
+    ),
+    [photo.pageUrl],
+  );
 
   const LinkToCreatorProfile = useCallback(
     () => (
@@ -91,7 +103,8 @@ const BackgroundPhotoWithAttribution: FC<Props> = ({
         {...rest}
       />
       <Attribution side={attributionSide}>
-        {attributionStart} <LinkToCreatorProfile />
+        <LinkToPhotoPage />
+        {photoQualifier && ` ${photoQualifier}`} by <LinkToCreatorProfile />
         {host && (
           <>
             &nbsp;on&nbsp;
