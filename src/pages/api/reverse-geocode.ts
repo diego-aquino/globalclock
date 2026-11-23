@@ -1,4 +1,4 @@
-import { ServerlessRequestHandler } from 'typings';
+import { LocationDetails, ServerlessRequestHandler } from 'typings';
 import { reverseGeocode } from 'services/here';
 
 const CACHE_TIME_IN_SECONDS = 21024000; // 8 months
@@ -7,7 +7,7 @@ export interface RequestQuery {
   position?: string;
 }
 
-type ResponseData = Here.GeocodeResponse;
+type ResponseData = LocationDetails;
 
 const reverseGeocodeHandler: ServerlessRequestHandler = async (
   request,

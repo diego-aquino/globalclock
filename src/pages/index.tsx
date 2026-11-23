@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import { Address } from 'typings';
+import { Address, CitySuggestion } from 'typings';
 import { MyLocationIcon } from 'assets';
 import { useLocation } from 'contexts/location';
 import { useWindowSize } from 'hooks';
@@ -96,7 +96,7 @@ const Home: FC = () => {
   }, [dispatch, handleUserLocationError, redirectToTimePageBasedOn]);
 
   const handleSmartLocationInputSubmit = useCallback(
-    async (suggestion: Here.Suggestion) => {
+    async (suggestion: CitySuggestion) => {
       const { address, timeZone } = await geocodeClient({
         locationid: suggestion.locationId,
       });

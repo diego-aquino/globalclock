@@ -30,13 +30,25 @@ export interface Position {
 
 export interface Address {
   cityName: string;
-  stateCode: string;
+  stateCode?: string;
   stateName?: string;
   countryCode: string;
   countryName?: string;
 }
 
-export type TimeZone = Here.TimeZone;
+export interface TimeZone {
+  id: string;
+}
+
+export type LocationDetails = PossiblyNull<{
+  address: Address;
+  timeZone: TimeZone;
+}>;
+
+export interface CitySuggestion {
+  locationId: string;
+  address: Address;
+}
 
 export interface QueryObject {
   [key: string]: string | undefined | null;

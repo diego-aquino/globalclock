@@ -151,7 +151,7 @@ const TimePage: FC = () => {
         {localDateTime && timeZone && (
           <>
             <Greeting dateTime={localDateTime} />
-            <LocalTime dateTime={localDateTime} timeZone={timeZone} />
+            <LocalTime dateTime={localDateTime} />
           </>
         )}
         {address && <LocationLabel>In {cityLocationLabel}</LocationLabel>}

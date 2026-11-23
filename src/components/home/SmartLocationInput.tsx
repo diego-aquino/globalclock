@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 
-import { Merge } from 'typings';
+import { CitySuggestion, Merge } from 'typings';
 import { MapMarkerIcon, SearchIcon } from 'assets';
 import { SmartInput } from 'components/common';
 import {
@@ -22,7 +22,7 @@ const suggestionIcon = <MapMarkerIcon />;
 type DisplaySuggestion = SuggestionDetails;
 
 interface PartialProps {
-  onSubmit(selectedSuggestion: Here.Suggestion): void;
+  onSubmit(selectedSuggestion: CitySuggestion): void;
 }
 
 type Props = Merge<InputComponentProps, PartialProps>;
@@ -32,7 +32,7 @@ const SmartLocationInput: FC<Props> = ({ onSubmit, ...rest }) => {
   const [displaySuggestions, setDisplaySuggestions] = useState<
     DisplaySuggestion[]
   >([]);
-  const detailedSuggestions = useRef<Here.Suggestion[]>([]);
+  const detailedSuggestions = useRef<CitySuggestion[]>([]);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
 
   const suggestionGroups = useMemo(
@@ -59,8 +59,8 @@ const SmartLocationInput: FC<Props> = ({ onSubmit, ...rest }) => {
       ({ locationId, address }) => ({
         key: locationId,
         icon: suggestionIcon,
-        title: address.city,
-        subtitle: [address.state, address.country]
+        title: address.cityName,
+        subtitle: [address.stateName, address.countryName]
           .filter((resource) => !!resource)
           .join(', '),
       }),
