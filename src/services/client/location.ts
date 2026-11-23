@@ -10,7 +10,10 @@ import {
 } from 'typings';
 import { RequestQuery as GeocodeRequestQuery } from 'pages/api/geocode';
 import { RequestQuery as ReverseGeocodeRequestQuery } from 'pages/api/reverse-geocode';
-import { ResponseData as AutocompleteResponseData } from 'pages/api/autocomplete';
+import {
+  RequestQuery as AutocompleteRequestQuery,
+  ResponseData as AutocompleteResponseData,
+} from 'pages/api/autocomplete';
 import { encodeQueryObject } from 'utils/general';
 
 export async function reverseGeocodeClient(
@@ -73,8 +76,11 @@ export async function requestLocalTimeZone(
 export async function requestAutocompleteSuggestions(
   queryString: string,
 ): Promise<CitySuggestion[]> {
+  const requestQuery: AutocompleteRequestQuery = { query: queryString };
+  const encodedQuery = encodeQueryObject(requestQuery as QueryObject);
+
   const autocompleteResponse = await axios.get<AutocompleteResponseData>(
-    `/api/autocomplete?query=${queryString}`,
+    `/api/autocomplete?${encodedQuery}`,
   );
 
   const { suggestions } = autocompleteResponse.data;
